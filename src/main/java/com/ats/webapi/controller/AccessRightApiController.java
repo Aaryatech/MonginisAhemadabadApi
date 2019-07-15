@@ -32,8 +32,7 @@ public class AccessRightApiController {
 
 	@Autowired
 	GetUserDetailRepo userDetail;//22 MArch
-	
-	
+		
 	@Autowired
 	AssignRoleDetailListRepository assignRoleDetailListRepository;
 	
