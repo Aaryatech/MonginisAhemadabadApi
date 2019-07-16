@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ats.webapi.commons.Common;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwiseAllFr;
+import com.ats.webapi.model.report.frpurchase.SalesReportFranchisee;
 import com.ats.webapi.model.report.frpurchase.SalesReportItemwise;
 import com.ats.webapi.model.report.frpurchase.SalesReportRoyalty;
 import com.ats.webapi.model.report.frpurchase.SalesReportRoyaltyFr;
@@ -30,6 +31,7 @@ import com.ats.webapi.model.taxreport.Tax2Report;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportItemwiseRepo;
+import com.ats.webapi.repository.frpurchasereport.SalesReportFranchiseeRepo;
 import com.ats.webapi.repository.frpurchasereport.SalesReportRoyaltyFrRepo;
 import com.ats.webapi.repository.frpurchasereport.SalesReportRoyaltyRepo;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnQtyDaoRepository;
@@ -68,6 +70,29 @@ public class SalesReportController {
 
 	@Autowired
 	SalesReturnValueItemDaoRepo salesReturnValueItemDaoRepo;
+
+	@Autowired
+	SalesReportFranchiseeRepo salesReportFranchiseeRepo;
+
+	@RequestMapping(value = { "/getSaleReportFrwiseSummery" }, method = RequestMethod.POST)
+	public @ResponseBody List<SalesReportFranchisee> getSaleReportFrwiseSummery(
+			@RequestParam("frIdList") List<String> frIdList, @RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<SalesReportFranchisee> salesReportFranchisee = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+			System.out.println("Input received " + fromDate + "" + toDate + "" + frIdList);
+			salesReportFranchisee = salesReportFranchiseeRepo.getSaleReportBillwise(frIdList, fromDate, toDate);
+			System.out.println("salesReportFranchisee" + salesReportFranchisee.toString());
+
+		} catch (Exception e) {
+			System.out.println(" Exce in sale Report Billwise  " + e.getMessage());
+			e.printStackTrace();
+		}
+		return salesReportFranchisee;
+	}
 
 	@RequestMapping(value = { "/getTax1Report" }, method = RequestMethod.POST)
 	public @ResponseBody List<Tax1Report> getTax1Report(@RequestParam("fromDate") String fromDate,
