@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class SubCatCreditGrnFrRep {
+public class SubCatCreditGrnFrItemRep {
 
 	@Id
 	private int crndId;
@@ -15,6 +15,9 @@ public class SubCatCreditGrnFrRep {
 	private String subCatName;
 	private float varQty;
 	private float varAmt;
+
+	private int itemId;
+	private String itemName;
 
 	public int getCrndId() {
 		return crndId;
@@ -72,10 +75,27 @@ public class SubCatCreditGrnFrRep {
 		this.varAmt = varAmt;
 	}
 
+	public int getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
+	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
 	@Override
 	public String toString() {
-		return "SubCatCreditGrnFrRep [subCatId=" + subCatId + ", frId=" + frId + ", frName=" + frName + ", subCatName="
-				+ subCatName + ", varQty=" + varQty + ", varAmt=" + varAmt + "]";
+		return "SubCatCreditGrnFrItemRep [crndId=" + crndId + ", subCatId=" + subCatId + ", frId=" + frId + ", frName="
+				+ frName + ", subCatName=" + subCatName + ", varQty=" + varQty + ", varAmt=" + varAmt + ", itemId="
+				+ itemId + ", itemName=" + itemName + "]";
 	}
 
 }
