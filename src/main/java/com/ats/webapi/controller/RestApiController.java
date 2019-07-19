@@ -3004,6 +3004,14 @@ public class RestApiController {
 
 	}
 
+	@RequestMapping(value = "/getSubCateList", method = RequestMethod.GET)
+	public @ResponseBody List<SubCategory> getSubCateList() {
+
+		List<SubCategory> subCategoryList = subCategoryService.getAllSubCategory();
+		return subCategoryList;
+
+	}
+
 	@RequestMapping(value = "/getSubCatListByCatIdInForDisp", method = RequestMethod.POST)
 	public @ResponseBody List<SubCategory> getSubCatListByCatIdInForDisp(@RequestParam("catId") List<String> catId,
 			@RequestParam("isAllCatSelected") boolean isAllCatSelected) {

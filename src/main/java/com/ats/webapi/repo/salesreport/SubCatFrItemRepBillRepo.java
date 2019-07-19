@@ -10,7 +10,7 @@ import com.ats.webapi.model.salesreport.SubCatFrItemRepBill;
 
 public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBill, Integer> {
 
-	@Query(value = " SELECT\n" + "        td.bill_detail_no,\n" + "        SUM(tb.grand_total) AS sold_amt,\n"
+	@Query(value = " SELECT\n" + "        td.bill_detail_no,\n" + "        SUM(td.grand_total) AS sold_amt,\n"
 			+ "        SUM(td.bill_qty) AS sold_qty ,\n" + "        f.fr_name,\n" + "        sc.sub_cat_id,\n"
 			+ "        sc.sub_cat_name ,\n" + "        f.fr_id ,\n" + "        m_item.id as item_id,m_item.item_name\n"
 			+ "    FROM\n" + "        t_bill_header tb,\n" + "        t_bill_detail td,\n"

@@ -10,10 +10,10 @@ import com.ats.webapi.model.salesreport.SubCatCreditGrnRep;
 
 public interface SubCatCreditGrnRepRepo extends JpaRepository<SubCatCreditGrnRep, Integer> {
 
-	@Query(value = "     SELECT SUM(td.grn_gvn_amt) AS var_amt, SUM(td.grn_gvn_qty) AS var_qty    ,sc.sub_cat_id,sc.sub_cat_name,c.cat_id FROM t_credit_note_header tb, t_credit_note_details  td  ,m_cat_sub sc ,m_category c,m_item i  WHERE    tb.crn_id=td.crn_id AND tb.crn_date BETWEEN  :fromDate  AND  :toDate  AND td.cat_id=c.cat_id AND i.item_id=td.item_id AND i.item_grp2=sc.sub_cat_id AND td.is_grn=1 GROUP BY i.item_grp2 ", nativeQuery = true)
+	@Query(value = "     SELECT SUM(td.grn_gvn_amt) AS var_amt, SUM(td.grn_gvn_qty) AS var_qty    ,sc.sub_cat_id,sc.sub_cat_name,c.cat_id FROM t_credit_note_header tb, t_credit_note_details  td  ,m_cat_sub sc ,m_category c,m_item i  WHERE    tb.crn_id=td.crn_id AND tb.crn_date BETWEEN  :fromDate  AND  :toDate  AND td.cat_id=c.cat_id AND i.id=td.item_id AND i.item_grp2=sc.sub_cat_id AND td.is_grn=1 GROUP BY i.item_grp2 ", nativeQuery = true)
 	List<SubCatCreditGrnRep> getDataGRN(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
-	@Query(value = "     SELECT SUM(td.grn_gvn_amt) AS var_amt, SUM(td.grn_gvn_qty) AS var_qty    ,sc.sub_cat_id,sc.sub_cat_name,c.cat_id FROM t_credit_note_header tb, t_credit_note_details  td  ,m_cat_sub sc ,m_category c,m_item i  WHERE    tb.crn_id=td.crn_id AND tb.crn_date BETWEEN  :fromDate  AND  :toDate  AND td.cat_id=c.cat_id AND i.item_id=td.item_id AND i.item_grp2=sc.sub_cat_id AND td.is_grn=0 GROUP BY i.item_grp2 ", nativeQuery = true)
+	@Query(value = "     SELECT SUM(td.grn_gvn_amt) AS var_amt, SUM(td.grn_gvn_qty) AS var_qty    ,sc.sub_cat_id,sc.sub_cat_name,c.cat_id FROM t_credit_note_header tb, t_credit_note_details  td  ,m_cat_sub sc ,m_category c,m_item i  WHERE    tb.crn_id=td.crn_id AND tb.crn_date BETWEEN  :fromDate  AND  :toDate  AND td.cat_id=c.cat_id AND i.id=td.item_id AND i.item_grp2=sc.sub_cat_id AND td.is_grn=0 GROUP BY i.item_grp2 ", nativeQuery = true)
 	List<SubCatCreditGrnRep> getDataGVN(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
 }
