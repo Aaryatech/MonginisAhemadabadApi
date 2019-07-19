@@ -83,9 +83,9 @@ public class SalesReportController {
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
-			System.out.println("Input received " + fromDate + "" + toDate + "" + frIdList);
+			// System.out.println("Input received " + fromDate + "" + toDate + "" +
+			// frIdList);
 			salesReportFranchisee = salesReportFranchiseeRepo.getSaleReportBillwise(frIdList, fromDate, toDate);
-			System.out.println("salesReportFranchisee" + salesReportFranchisee.toString());
 
 		} catch (Exception e) {
 			System.out.println(" Exce in sale Report Billwise  " + e.getMessage());
