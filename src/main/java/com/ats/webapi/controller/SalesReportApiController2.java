@@ -121,6 +121,89 @@ public class SalesReportApiController2 {
 		}
 		return catReportList;
 	}
+	
+	
+	@RequestMapping(value = { "/getSubCatReportApiByFrId" }, method = RequestMethod.POST)
+	public @ResponseBody List<SubCatReport> getSubCatReportApiByFrId(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate,@RequestParam("frId") int frId) {
+
+		List<SubCatReport> catReportList = new ArrayList<>();
+		List<SubCatBillRep> catReportBill = null;
+
+		List<SubCatCreditGrnRep> subCatCreditGrnRep = null;
+		List<SubCatCreditGrnRep> subCatCreditGvnRep = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			// catReportList = subCatReportRepo.getData(fromDate, toDate);
+
+			catReportBill = subCatBillRepRepo.getDataByFrId(fromDate, toDate,frId);
+
+			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
+
+			subCatCreditGvnRep = subCatCreditGrnRepRepo.getDataGVN(fromDate, toDate);
+
+			for (int i = 0; i < catReportBill.size(); i++) {
+
+				SubCatReport subCatReport = new SubCatReport();
+
+				subCatReport.setCatId(catReportBill.get(i).getCatId());
+				subCatReport.setSubCatId(catReportBill.get(i).getSubCatId());
+				subCatReport.setSubCatName(catReportBill.get(i).getSubCatName());
+
+				subCatReport.setSoldAmt(catReportBill.get(i).getSoldAmt());
+				subCatReport.setSoldQty(catReportBill.get(i).getSoldQty());
+
+				catReportList.add(subCatReport);
+
+			}
+
+			for (int i = 0; i < catReportList.size(); i++) {
+				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
+
+					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+
+						System.err.println("Matched -------------------- " + subCatCreditGrnRep.get(j).getSubCatId());
+
+						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
+						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
+
+						break;
+
+					} else {
+
+						catReportList.get(i).setRetAmt(0);
+						catReportList.get(i).setRetQty(0);
+					}
+
+				}
+			}
+
+			for (int i = 0; i < catReportList.size(); i++) {
+				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
+
+					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+
+						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
+						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
+						break;
+
+					} else {
+
+						catReportList.get(i).setVarAmt(0);
+						catReportList.get(i).setVarQty(0);
+					}
+
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return catReportList;
+	}
 
 	@Autowired
 	SubCatCreditGrnFrRepRepo subCatCreditGrnFrRepRepo;
