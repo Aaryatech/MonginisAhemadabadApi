@@ -2606,7 +2606,20 @@ public class RestApiController {
 
 		return flavourList;
 	}
+	@RequestMapping(value = { "/showFlavourListBySpId" }, method = RequestMethod.POST)
+	@ResponseBody
+	public FlavourList showFlavourListBySpId(@RequestParam("spId") int spId) {
 
+		List<Flavour> jsonFlavourtList = flavourRepository.findBySpId(spId);
+		FlavourList flavourList = new FlavourList();
+		flavourList.setFlavour(jsonFlavourtList);
+		Info info = new Info();
+		info.setError(false);
+		info.setMessage("Flavour list displayed Successfully");
+		flavourList.setInfo(info);
+
+		return flavourList;
+	}
 	// Show Scheduler List
 	@RequestMapping(value = { "/showSchedulerList" }, method = RequestMethod.GET)
 	@ResponseBody

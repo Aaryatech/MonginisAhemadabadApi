@@ -31,6 +31,7 @@ import com.ats.webapi.model.CategoryList;
 import com.ats.webapi.model.ConfigureFranchisee;
 import com.ats.webapi.model.ErrorMessage;
 import com.ats.webapi.model.Flavour;
+import com.ats.webapi.model.FlavourConf;
 import com.ats.webapi.model.FrItemStockConfigureList;
 import com.ats.webapi.model.FrListForSupp;
 import com.ats.webapi.model.FrMenuConfigure;
@@ -62,6 +63,7 @@ import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tray.TrayType;
 import com.ats.webapi.repository.ConfigureFrRepository;
+import com.ats.webapi.repository.FlavourConfRepository;
 import com.ats.webapi.repository.FlavourRepository;
 import com.ats.webapi.repository.FrItemStockConfigureRepository;
 import com.ats.webapi.repository.FrListForSuppRepository;
@@ -185,6 +187,9 @@ public class MasterController {
 	
 	@Autowired
 	NewSettingRepository newSettingRepository;
+	
+	@Autowired
+	FlavourConfRepository flavourConfRepository;
 	
 	
 	 @RequestMapping(value = { "/updateBillStatusToProduction" }, method = RequestMethod.POST)
@@ -401,7 +406,7 @@ public class MasterController {
 					} catch (Exception e) {
 
 						info.setError(true);
-						info.setMessage("SpCakeSupplement Not Saved .");
+						info.setMessage("SpCakeSupplement Not Saved");
 
 						e.printStackTrace();
 						System.out.println("Exception In MasterController /saveSpCakeSup" + e.getMessage());
@@ -1266,4 +1271,62 @@ public class MasterController {
 					return newSetting;
 				}
 				
+				
+				@RequestMapping(value = { "/saveFlavourConf" }, method = RequestMethod.POST)
+				public @ResponseBody List<FlavourConf> saveFlavourConf(@RequestBody List<FlavourConf> flavourConfList) {
+
+					List<FlavourConf> flList = new ArrayList<FlavourConf>();
+					try {
+                        for(FlavourConf flavourConf:flavourConfList)
+                        {
+                        	FlavourConf isPresent=flavourConfRepository.findByDelStatusAndSpfIdAndSpId(0,flavourConf.getSpfId(),flavourConf.getSpId());
+                        	if(isPresent!=null)
+                        	{
+                        	    flavourConf.setFlavId(isPresent.getFlavId());
+                        	    FlavourConf flr= flavourConfRepository.save(flavourConf);
+                        	    flList.add(flr);
+                        	}else
+                        	{
+                        		 FlavourConf flr= flavourConfRepository.save(flavourConf);
+                          	     flList.add(flr);
+                        	}
+                        }
+						
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					
+					}
+					return flList;
+				}
+				@RequestMapping(value = "/getAllFlConf", method = RequestMethod.GET)
+				public @ResponseBody List<FlavourConf> getAllFlConf() {
+
+					List<FlavourConf> flList;
+					try {
+						flList = flavourConfRepository.findByDelStatus(0);
+					}
+					catch (Exception e) {
+						flList=new ArrayList<>();
+						e.printStackTrace();
+
+					}
+					return flList;
+
+				}
+				@RequestMapping(value = "/getFlConfByIds", method = RequestMethod.POST)
+				public @ResponseBody FlavourConf getFlConfByIds(@RequestParam("spfId") int  spfId,@RequestParam("spId") int  spId) {
+
+					FlavourConf flavour=new FlavourConf();
+					try {
+						flavour = flavourConfRepository.findBySpIdAndSpfIdAndDelStatus(spId,spfId,0);
+					}
+					catch (Exception e) {
+						flavour=new FlavourConf();
+						e.printStackTrace();
+
+					}
+					return flavour;
+
+				}
 }

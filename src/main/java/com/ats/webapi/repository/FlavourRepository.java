@@ -3,6 +3,8 @@ package com.ats.webapi.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ats.webapi.model.Flavour;
@@ -18,4 +20,6 @@ public interface FlavourRepository extends JpaRepository<Flavour, Integer>{
 	List<Flavour> findBySpTypeAndDelStatus(int type, int i);
 	List<Flavour> findBySpfIdNotInAndDelStatus(List<Integer> spfId, int i);
 	List<Flavour> findBySpfIdNotInAndSpTypeAndDelStatus(List<Integer> spfId, int type, int i);
+	@Query(value="select * from m_sp_flavour where spf_id IN(select DISTINCT spf_id from m_sp_flavour_conf where m_sp_flavour_conf.del_status=0 and m_sp_flavour_conf.sp_id=:spId) and del_status=0",nativeQuery=true)
+	List<Flavour> findBySpId(@Param("spId")int spId);
 }
