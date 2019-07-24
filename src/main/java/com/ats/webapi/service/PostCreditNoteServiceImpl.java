@@ -1,13 +1,16 @@
 package com.ats.webapi.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ats.webapi.model.bill.Company;
 import com.ats.webapi.model.grngvn.PostCreditNoteDetails;
 import com.ats.webapi.model.grngvn.PostCreditNoteHeader;
+import com.ats.webapi.repository.CompanyRepository;
 import com.ats.webapi.repository.FrItemStockConfigureRepository;
 import com.ats.webapi.repository.PostCreditNoteDetailsRepository;
 import com.ats.webapi.repository.PostCreditNoteHeaderRepository;
@@ -37,6 +40,8 @@ public class PostCreditNoteServiceImpl implements PostCreditNoteService {
 	@Autowired
 	UpdateSeetingForPBRepo updateSeetingForPBRepo;
 	
+	@Autowired
+	CompanyRepository companyRepository;
 	@Override
 	public List<PostCreditNoteHeader> savePostCreditNote(List<PostCreditNoteHeader> postCreditNoteHeader) {
 
@@ -46,9 +51,42 @@ public class PostCreditNoteServiceImpl implements PostCreditNoteService {
 		for (int i = 0; i < postCreditNoteHeader.size(); i++) {
 
 			creditNoteHeader = new PostCreditNoteHeader();
-			int crnSrNo=frItemStockConfRepo.findBySettingKey("CRE_NOTE_NO");
+			int isgrn=postCreditNoteHeader.get(i).getIsGrn();
+			int crnSrNo=0;
+			String invoiceNo = null;
+			
+			String pattern = "yyyy-MM-dd";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+			
+			Company company=new Company();
+			String date = simpleDateFormat.format(postCreditNoteHeader.get(i).getCrnDate());
+			 company=companyRepository.findByBillDate(date);
+			
+			
+			
+			
+			if(isgrn==1)
+			{
+				
+			 crnSrNo=frItemStockConfRepo.findBySettingKey("CRE_NOTE_NO");
+			
+			 invoiceNo=company.getExVar5();
+			 invoiceNo =invoiceNo+crnSrNo;
+			 
+			 postCreditNoteHeader.get(i).setCrnNo(""+invoiceNo);
+			}
+			else
+			{
+				
+			crnSrNo=frItemStockConfRepo.findBySettingKey("CRE_NOTE_NO_GVN");
+			invoiceNo=company.getExVar6();
+			invoiceNo =invoiceNo+crnSrNo;
+				
+			postCreditNoteHeader.get(i).setCrnNo(""+invoiceNo);
+			}
 			//System.err.println("crnSrNo"+crnSrNo);
-			postCreditNoteHeader.get(i).setCrnNo(""+crnSrNo);
+			
 
 			creditNoteHeader = postCreditNoteHeaderRepository.save(postCreditNoteHeader.get(i));
 
@@ -57,7 +95,16 @@ public class PostCreditNoteServiceImpl implements PostCreditNoteService {
 					int result= updateGrnGvnForCreditNoteRepository.updateGrnGvnForCreditNoteInsert(
 							creditNoteHeader.getGrnGvnId(), 1);*/
 					System.err.println("crnSrNo  while update " +crnSrNo);
-					int result = updateSeetingForPBRepo.updateSeetingForPurBill(crnSrNo+1, "CRE_NOTE_NO");
+					int result= 0;
+					if(isgrn==1)
+					{	
+					result= updateSeetingForPBRepo.updateSeetingForPurBill(crnSrNo+1, "CRE_NOTE_NO");
+					}	
+					else
+					{
+						result= updateSeetingForPBRepo.updateSeetingForPurBill(crnSrNo+1, "CRE_NOTE_NO_GVN");
+					}
+					
 					
 				}
 
