@@ -2246,12 +2246,13 @@ public class RestApiController {
 
 		System.out.println("" + franchisee.toString());
 		Franchisee frResponse = franchiseeRepository.save(franchisee);
-//neha
+
 		if (frResponse != null) {
 			FrSetting frSetting = new FrSetting();
 
 			frSetting = frSettingRepo.findByFrId(frResponse.getFrId());
-			/* if (frSetting != null) { */
+			
+			if (frSetting==null) { 
 			FrSetting frSettingSave = new FrSetting();
 			frSettingSave.setFrCode(frResponse.getFrCode());
 			frSettingSave.setFrId(frResponse.getFrId());
@@ -2262,11 +2263,7 @@ public class RestApiController {
 			System.out.println("***************" + frSettingSave.toString());
 			FrSetting frSettingSaveResponse = frSettingRepo.save(frSettingSave);
 			System.out.println(frSettingSaveResponse.toString());
-			/*
-			 * } else {
-			 * 
-			 * }
-			 */
+		 }
 		}
 
 		return frResponse;

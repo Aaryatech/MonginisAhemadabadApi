@@ -1329,4 +1329,42 @@ public class MasterController {
 					return flavour;
 
 				}
+				@RequestMapping(value ="/updateFlavourConf", method = RequestMethod.POST)
+				public Info updateFlavourConf(@RequestParam("flavId") int flavId, @RequestParam("rate") float rate,@RequestParam("mrp") float mrp)
+				{
+					Info info=new Info();
+					try {
+						int isUpdated=flavourConfRepository.updateFlavourConf(flavId,rate,mrp);
+						if(isUpdated>0)
+						{
+							info.setError(false);
+							info.setMessage("FlavourConf Updated Successfully.");
+						}else
+						{
+							info.setError(true);
+							info.setMessage("FlavourConf Updation Failed.");
+						}
+						
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					return info;
+				}
+				@RequestMapping(value="/deleteFlavourConf", method=RequestMethod.POST)
+				public @ResponseBody Info deleteFlavourConf(@RequestParam int flavId) {
+					
+					Info info =new Info();
+					int isDelete = flavourConfRepository.deleteByFlavId(flavId);
+					
+					if(isDelete!=0) {
+						info.setError(false);
+						info.setMessage("Success");
+					}else {
+						info.setError(true);
+						info.setMessage("Fail");
+					}
+					return info;
+					
+				}
 }
