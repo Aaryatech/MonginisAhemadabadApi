@@ -59,7 +59,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	@Query(value = "select m_item.* from m_item where m_item.del_status=0 And m_item.item_grp1=:itemGrp1 And m_item.id not in(select m_item_sup.item_id from m_item_sup where m_item_sup.del_status=0) order by m_item.item_name ", nativeQuery = true)
 	public List<Item> findByItemGrp1(@Param("itemGrp1") String itemGrp1);
 
-	@Query(value = "select * from m_item where m_item.id IN (:itemList) Order By item_grp2", nativeQuery = true)
+	@Query(value = "select * from m_item where m_item.id IN (:itemList) Order By item_grp1,item_grp2,item_name", nativeQuery = true)
 	public List<Item> findAllItems(@Param("itemList") List<Integer> itemList);
 
 	/*
@@ -100,7 +100,8 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 	public List<Item> findByItemGrp2InAndDelStatusOrderByItemGrp2AscItemNameAsc(List<String> catIdList, int delStatus);
 
 	@Query(value = "\n"
-			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i where  i.id IN (:itemList) AND i.del_status=0", nativeQuery = true)
+			+ "select i.id,i.item_id,i.item_name,i.item_grp1,i.item_grp2,i.item_grp3,i.item_rate1,i.item_rate2,i.item_rate3,i.item_mrp1,i.item_mrp2,i.item_mrp3,i.item_image,i.item_tax1,i.item_tax2,i.item_tax3,i.item_is_used,i.item_sort_id,i.grn_two,i.del_status,i.min_qty,i.item_shelf_life from m_item i where  i.id IN (:itemList) AND i.del_status=0  ORDER BY \n" + 
+			"        i.item_grp1,i.item_grp2,i.item_name", nativeQuery = true)
 	public List<Item> findItemsNameByItemId(@Param("itemList") List<Integer> itemList);
 
 }
