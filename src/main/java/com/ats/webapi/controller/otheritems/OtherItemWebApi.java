@@ -17,7 +17,7 @@ import com.ats.webapi.model.otheritems.Otheritems;
 import com.ats.webapi.repositories.OtheritemsRepo;
 
 
-@RestController
+@RestController 
 public class OtherItemWebApi {
 	
 	@Autowired 
