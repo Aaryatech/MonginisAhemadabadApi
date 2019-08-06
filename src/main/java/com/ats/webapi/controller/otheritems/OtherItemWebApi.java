@@ -25,7 +25,7 @@ public class OtherItemWebApi {
 	
 	@RequestMapping(value = {"/getOtherItemListByDel"}, method=RequestMethod.GET)
 	public @ResponseBody List<Otheritems> getOtherItemList(){
-		return otIRepo.findAllByDelStatusAndIsActive(1, 1);
+		return otIRepo.findAllByDelStatusAndIsActive(0, 1);
 		
 	}
 	

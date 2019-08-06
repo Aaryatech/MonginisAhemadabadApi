@@ -59,6 +59,7 @@ import com.ats.webapi.model.SpCake;
 import com.ats.webapi.model.SpCakeSupplement;
 import com.ats.webapi.model.SubCategory;
 import com.ats.webapi.model.SubCategoryRes;
+import com.ats.webapi.model.frsetting.FrSetting;
 import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.tally.FranchiseeList;
 import com.ats.webapi.model.tray.TrayType;
@@ -86,6 +87,7 @@ import com.ats.webapi.repository.SpCkDeleteOrderRepository;
 import com.ats.webapi.repository.SubCategoryRepository;
 import com.ats.webapi.repository.SubCategoryResRepository;
 import com.ats.webapi.repository.UpdateSeetingForPBRepo;
+import com.ats.webapi.repository.frsetting.FrSettingRepo;
 import com.ats.webapi.service.ConfigureFranchiseeService;
 import com.ats.webapi.service.FrItemStockConfigureService;
 import com.ats.webapi.service.FranchiseeService;
@@ -190,7 +192,8 @@ public class MasterController {
 	
 	@Autowired
 	FlavourConfRepository flavourConfRepository;
-	
+	@Autowired
+	FrSettingRepo frSettingRepo;
 	
 	 @RequestMapping(value = { "/updateBillStatusToProduction" }, method = RequestMethod.POST)
 		public @ResponseBody Info updateBillStatusToProduction(@RequestParam("spOrderNo") List<Integer> spOrderNo,@RequestParam("billStatus") int billStatus) {
@@ -224,7 +227,7 @@ public class MasterController {
 		@RequestMapping(value = { "/getFlavoursByType" }, method = RequestMethod.POST)
 		public @ResponseBody List<Flavour> getFlavoursByType(@RequestParam("type") int type) {
 			
-			List<Flavour> flavourList=flavourRepository.findBySpTypeAndDelStatus(type,0);
+			List<Flavour> flavourList=flavourRepository.findBySpType(type);
 
 		  return flavourList;
 		}
@@ -240,11 +243,11 @@ public class MasterController {
 
 			List<Flavour> flavourList=null;
 			if(type!=0) {
-			 flavourList = flavourRepository.findBySpfIdNotInAndSpTypeAndDelStatus(spfId,type,0);
+			 flavourList = flavourRepository.findBySpfIdNotInAndSpType(spfId,type);
 			}
 			else
 			{
-			 flavourList = flavourRepository.findBySpfIdNotInAndDelStatus(spfId,0);
+			 flavourList = flavourRepository.findBySpfIdNotIn(spfId);
 			}
 			
 			return flavourList;
@@ -1024,8 +1027,14 @@ public class MasterController {
 								System.err.println("1111111  j"+j);
 								ConfigureFranchisee configureFranchisee = configureService.findFranchiseeById(Integer.parseInt(menuIdList.get(j)));
 								System.err.println("8 configureFranchisee"+configureFranchisee.toString());
+								NewSetting	newSetting = newSettingRepository.findBySettingKeyAndDelStatus("cat_id_open_stock",0);
+								List<Integer> catIdForStock= Stream.of(newSetting.getSettingValue1().split(","))
+						                .map(Integer::parseInt)
+						                .collect(Collectors.toList());
 								List<PostFrItemStockHeader> prevStockHeader=postFrOpStockHeaderRepository.findByFrIdAndIsMonthClosedAndCatId(Integer.parseInt(frIdList.get(i)),0,configureFranchisee.getCatId());
 								System.err.println("9 prevStockHeader"+prevStockHeader);
+								if (!catIdForStock.contains(configureFranchisee.getCatId())) {
+
 								if(prevStockHeader.size()==0)
 								{
 									PostFrItemStockHeader postFrItemStockHeader = new PostFrItemStockHeader();
@@ -1088,7 +1097,7 @@ public class MasterController {
 								    postFrOpStockDetailRepository.save(postFrItemStockDetailList);
 								    System.err.println("20 postFrItemStockDetailList --"+postFrItemStockDetailList.toString());
 								}
-								
+								}
 								
 						
 							}
@@ -1252,11 +1261,13 @@ public class MasterController {
 					return catlist;
 				}
 				@RequestMapping(value = "/generateSpBillOps", method = RequestMethod.POST)
-				public @ResponseBody Boolean generateSpBillOps(@RequestParam int spOrderNo,@RequestParam String invoiceNo)
+				public @ResponseBody Boolean generateSpBillOps(@RequestParam int spOrderNo,@RequestParam String invoiceNo,@RequestParam int frId)
 				{
 					Boolean msg=false;
 					int isUpdated=spCakeOrdersRepository.generateSpBillOps(spOrderNo,invoiceNo);
-						if(isUpdated>0)
+					FrSetting frSetting=frSettingRepo.findByFrId(frId);
+				    int	updateResponse = frSettingRepo.updateFrSettingBillNo((frSetting.getSellBillNo()+1), frId);
+						if(updateResponse>0)
 						{
 							msg=true;
 						}

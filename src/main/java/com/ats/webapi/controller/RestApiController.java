@@ -2785,13 +2785,13 @@ public class RestApiController {
 	}
 
 	// Delete Flavor
-	@RequestMapping(value = "/deleteFlavour", method = RequestMethod.POST)
-	public @ResponseBody String deleteFlavour(@RequestParam List<Integer> spfId) {
+	@RequestMapping(value = "/updateFlavourStatus", method = RequestMethod.POST)
+	public @ResponseBody String updateFlavourStatus(@RequestParam List<Integer> spfId,@RequestParam int status) {
 
 		ErrorMessage errorMessage = null;
 		List<Flavour> flavour = flavourRepository.findBySpfIdIn(spfId);
 		for (int i = 0; i < flavour.size(); i++) {
-			flavour.get(i).setDelStatus(1);
+			flavour.get(i).setDelStatus(status);
 
 			errorMessage = flavourService.save(flavour.get(i));
 		}

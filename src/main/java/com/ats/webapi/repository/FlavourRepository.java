@@ -15,11 +15,11 @@ public interface FlavourRepository extends JpaRepository<Flavour, Integer>{
 	Flavour save(Flavour flavour);
     Flavour findOne(int spfId);
 	List<Flavour> findByDelStatus(int i);
-	List<Flavour> findByDelStatusOrderBySpfNameAsc(int i);
+	List<Flavour> findByOrderBySpfNameAsc();
 	List<Flavour> findBySpfIdIn(List<Integer> spfId);
-	List<Flavour> findBySpTypeAndDelStatus(int type, int i);
-	List<Flavour> findBySpfIdNotInAndDelStatus(List<Integer> spfId, int i);
-	List<Flavour> findBySpfIdNotInAndSpTypeAndDelStatus(List<Integer> spfId, int type, int i);
-	@Query(value="select * from m_sp_flavour where spf_id IN(select DISTINCT spf_id from m_sp_flavour_conf where m_sp_flavour_conf.del_status=0 and m_sp_flavour_conf.sp_id=:spId) and del_status=0",nativeQuery=true)
+	List<Flavour> findBySpType(int type);
+	List<Flavour> findBySpfIdNotIn(List<Integer> spfId);
+	List<Flavour> findBySpfIdNotInAndSpType(List<Integer> spfId, int type);
+	@Query(value="select * from m_sp_flavour where spf_id IN(select DISTINCT spf_id from m_sp_flavour_conf where m_sp_flavour_conf.del_status=0 and m_sp_flavour_conf.sp_id=:spId) and del_status=0 order by spf_name",nativeQuery=true)
 	List<Flavour> findBySpId(@Param("spId")int spId);
 }
