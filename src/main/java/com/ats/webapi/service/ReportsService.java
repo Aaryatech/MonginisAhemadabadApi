@@ -18,6 +18,8 @@ public interface ReportsService {
 	ItemWiseDetailList getItemWiseDetailReport(int frId,int catId, String fromDate, String toDate);
 
 	MonthWiseReportList getMonthWiseReport(int frId, String fromDate, String toDate);
+	
+	MonthWiseReportList getMonthWiseReportByTypeId(int frId, String fromDate, String toDate, int typeId);
 
 	BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate);
 

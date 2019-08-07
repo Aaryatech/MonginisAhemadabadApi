@@ -144,6 +144,72 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		return monthWiseReportList;
 	}
+	
+	@Override
+	public MonthWiseReportList getMonthWiseReportByTypeId(int frId, String fromDate, String toDate,int typeId) {
+		
+		
+		MonthWiseReportList monthWiseReportList=new MonthWiseReportList();
+		
+		try {
+			
+			List<MonthWiseReport> monthWiseReport = new ArrayList<>();
+			
+			if(typeId==1) {
+				
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId,fromDate,toDate);
+				
+			}else if(typeId==2) {
+				
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReportGrn(frId,fromDate,toDate);
+				
+			}else {
+				
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId,fromDate,toDate);
+				List<MonthWiseReport> grn = monthWiseReportRepository.findMonthWiseReportGrn(frId,fromDate,toDate);
+				
+				for(int i=0; i<monthWiseReport.size() ; i++) {
+					
+					for(int j=0 ; j<grn.size() ;j++) {
+						
+						if(monthWiseReport.get(i).getMonth().equals(grn.get(j).getMonth())) {
+							
+							monthWiseReport.get(i).setTaxableAmt(monthWiseReport.get(i).getTaxableAmt()-grn.get(j).getTaxableAmt());
+							monthWiseReport.get(i).setCgstRs(monthWiseReport.get(i).getCgstRs()-grn.get(j).getCgstRs());
+							monthWiseReport.get(i).setSgstRs(monthWiseReport.get(i).getSgstRs()-grn.get(j).getSgstRs());
+							monthWiseReport.get(i).setIgstRs(monthWiseReport.get(i).getIgstRs()-grn.get(j).getIgstRs());
+							monthWiseReport.get(i).setGrandTotal(monthWiseReport.get(i).getGrandTotal()-grn.get(j).getGrandTotal());
+							break;
+						}
+					}
+				}
+				 
+			}
+			
+			ErrorMessage errorMessage=new ErrorMessage();
+
+			
+			if(monthWiseReport==null)
+			{
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			}
+			else
+			{     errorMessage.setError(false);
+			      errorMessage.setMessage("Records Found Successfully.");
+			      
+			      monthWiseReportList.setErrorMessage(errorMessage);
+			      monthWiseReportList.setMonthWiseReportList(monthWiseReport);
+			}
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+    
+		 
+		return monthWiseReportList;
+	}
 
 	@Override
 	public BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate) {

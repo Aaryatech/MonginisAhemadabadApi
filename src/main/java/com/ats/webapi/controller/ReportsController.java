@@ -165,6 +165,15 @@ public class ReportsController {
 
 		return monthWiseReportList;
 	}
+	
+	@RequestMapping(value = { "/showMonthWiseReportByTypeId" }, method = RequestMethod.POST)
+	public @ResponseBody MonthWiseReportList showMonthWiseReportByTypeId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeId") int typeId) {
+
+		MonthWiseReportList monthWiseReportList = reportsService.getMonthWiseReportByTypeId(frId, fromDate, toDate,typeId);
+
+		return monthWiseReportList;
+	}
 
 	@RequestMapping(value = { "/showBillWiseTaxReport" }, method = RequestMethod.POST)
 	public @ResponseBody BillWiseTaxReportList showBillWiseTaxReport(@RequestParam("frId") int frId,
