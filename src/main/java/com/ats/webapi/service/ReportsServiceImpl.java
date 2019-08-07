@@ -233,6 +233,67 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		return billWiseTaxReportList;
 	}
+	
+	@Override
+	public BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate,int typeId) {
+		
+		
+		BillWiseTaxReportList billWiseTaxReportList=new BillWiseTaxReportList();
+		try {
+			
+			List<BillWiseTaxReport> billWiseTax = new ArrayList<>();
+			
+			if(typeId==1) {
+				
+				 billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReport(frId,fromDate,toDate);
+			}else if(typeId==2) {
+				
+				 billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId,fromDate,toDate);
+			}else {
+				
+				billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReport(frId,fromDate,toDate);
+				List<BillWiseTaxReport> grn = billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId,fromDate,toDate);
+				
+				for(int i=0; i<billWiseTax.size() ; i++) {
+					
+					for(int j=0 ; j<grn.size() ;j++) {
+						
+						if(billWiseTax.get(i).getTaxRate()==grn.get(j).getTaxRate()) {
+							
+							billWiseTax.get(i).setTaxableAmt(billWiseTax.get(i).getTaxableAmt()-grn.get(j).getTaxableAmt());
+							billWiseTax.get(i).setCgstRs(billWiseTax.get(i).getCgstRs()-grn.get(j).getCgstRs());
+							billWiseTax.get(i).setSgstRs(billWiseTax.get(i).getSgstRs()-grn.get(j).getSgstRs());
+							billWiseTax.get(i).setIgstRs(billWiseTax.get(i).getIgstRs()-grn.get(j).getIgstRs());
+							billWiseTax.get(i).setGrandTotal(billWiseTax.get(i).getGrandTotal()-grn.get(j).getGrandTotal());
+							break;
+						}
+					}
+				}
+			}
+			
+			
+			
+			ErrorMessage errorMessage=new ErrorMessage();
+			
+			if(billWiseTax==null)
+			{
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			}
+			else
+			{     errorMessage.setError(false);
+			      errorMessage.setMessage("Records Found Successfully.");
+			      
+			      billWiseTaxReportList.setBillWiseTaxReportList(billWiseTax);
+			      billWiseTaxReportList.setErrorMessage(errorMessage);
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+       
+		return billWiseTaxReportList;
+	}
 
 	@Override
 	public ItemWiseReportList getItemWiseReport(int frId, int catId, String fromDate, String toDate) {

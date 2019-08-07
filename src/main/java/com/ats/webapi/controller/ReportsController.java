@@ -183,6 +183,15 @@ public class ReportsController {
 
 		return billWiseTaxReportList;
 	}
+	
+	@RequestMapping(value = { "/showBillWiseTaxReportByTypeId" }, method = RequestMethod.POST)
+	public @ResponseBody BillWiseTaxReportList showBillWiseTaxReportByTypeId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,@RequestParam("typeId") int typeId) {
+
+		BillWiseTaxReportList billWiseTaxReportList = reportsService.getBillWiseTaxReport(frId, fromDate, toDate,typeId);
+
+		return billWiseTaxReportList;
+	}
 
 	// -----------------------------------------------------------------------------------
 	// Sell Reports start

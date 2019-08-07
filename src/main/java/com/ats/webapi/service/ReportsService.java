@@ -27,4 +27,6 @@ public interface ReportsService {
 
 	List<DispatchReport> getDispatchItemReport(String billDateYMD, List<String> frId, List<String> categories);
 
+	BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate, int typeId);
+
 }
