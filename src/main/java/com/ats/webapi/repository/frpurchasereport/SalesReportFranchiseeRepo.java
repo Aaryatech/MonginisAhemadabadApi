@@ -92,7 +92,7 @@ public interface SalesReportFranchiseeRepo extends JpaRepository<SalesReportFran
 			"        m_franchisee fr,\n" + 
 			"        t_credit_note_header ch     \n" + 
 			"    WHERE\n" + 
-			"        ch.crn_date    BETWEEN '2019-01-01' AND '2019-09-01'   \n" + 
+			"        ch.crn_date    BETWEEN :fromDate AND :toDate    \n" + 
 			"        and         ch.is_grn in(\n" + 
 			"            1\n" + 
 			"        )         \n" + 
