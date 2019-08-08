@@ -146,6 +146,32 @@ public class ReportsController {
 
 		return ItemWiseDetailList;
 	}
+	
+	@RequestMapping(value = { "/showItemWiseDetailsReportByCatId" }, method = RequestMethod.POST)
+	public @ResponseBody ItemWiseDetailList showItemWiseDetailsReportByCatId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("catId") int catId,@RequestParam("itemIds") List<Integer> itemIds) {
+
+		ItemWiseDetailList ItemWiseDetailList = new ItemWiseDetailList();
+		
+		try {
+			
+			if(itemIds.contains(0)) {
+				ItemWiseDetailList = reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate);
+			}else {
+				
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId, itemIds, fromDate, toDate);
+				
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+
+		return ItemWiseDetailList;
+	}
 
 	@RequestMapping(value = { "/showItemWiseReport" }, method = RequestMethod.POST)
 	public @ResponseBody ItemWiseReportList showItemWiseReport(@RequestParam("frId") int frId,

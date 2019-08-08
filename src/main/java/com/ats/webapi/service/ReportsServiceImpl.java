@@ -24,328 +24,333 @@ import com.ats.webapi.repository.DispatchReportRepository;
 import com.ats.webapi.repository.ItemWiseDetailRepository;
 import com.ats.webapi.repository.ItemWiseReportRepository;
 import com.ats.webapi.repository.MonthWiseReportRepository;
+
 @Service
 public class ReportsServiceImpl implements ReportsService {
 
 	@Autowired
-	BillWisePurchaseRepository billWisePurchaseRepository; 
-	
+	BillWisePurchaseRepository billWisePurchaseRepository;
+
 	@Autowired
 	ItemWiseDetailRepository itemWiseDetailRepository;
-	
+
 	@Autowired
 	ItemWiseReportRepository itemWiseReportRepository;
-	
+
 	@Autowired
-	MonthWiseReportRepository	monthWiseReportRepository;
-	
+	MonthWiseReportRepository monthWiseReportRepository;
+
 	@Autowired
 	BillWiseTaxReportRepository billWiseTaxReportRepository;
-	
+
 	@Autowired
 	DispatchReportRepository dispatchReportRepository;
-	
+
 	@Override
 	public BillWisePurchaseList getBillWisePurchaseReport(int frId, String fromDate, String toDate) {
 
-		List<BillWisePurchase> billWisePurchase=billWisePurchaseRepository.findBillWisePurchaseReport(frId,fromDate,toDate);
-		
-		BillWisePurchaseList billWisePurchaseList=new BillWisePurchaseList();
-		ErrorMessage errorMessage=new ErrorMessage();
-		
-		if(billWisePurchase==null)
-		{
+		List<BillWisePurchase> billWisePurchase = billWisePurchaseRepository.findBillWisePurchaseReport(frId, fromDate,
+				toDate);
+
+		BillWisePurchaseList billWisePurchaseList = new BillWisePurchaseList();
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		if (billWisePurchase == null) {
 			errorMessage.setError(true);
 			errorMessage.setMessage("Records Not Found.");
-		}
-		else
-		{     errorMessage.setError(false);
-		      errorMessage.setMessage("Records Found Successfully.");
-		      
-			  billWisePurchaseList.setBillWisePurchaseList(billWisePurchase);
-			  billWisePurchaseList.setErrorMessage(errorMessage);
+		} else {
+			errorMessage.setError(false);
+			errorMessage.setMessage("Records Found Successfully.");
+
+			billWisePurchaseList.setBillWisePurchaseList(billWisePurchase);
+			billWisePurchaseList.setErrorMessage(errorMessage);
 		}
 		return billWisePurchaseList;
 	}
 
 	@Override
-	public ItemWiseDetailList getItemWiseDetailReport(int frId, int catId,String fromDate, String toDate) {
+	public ItemWiseDetailList getItemWiseDetailReport(int frId, int catId, String fromDate, String toDate) {
 
-		System.out.println("Date: "+fromDate+"To"+toDate);
-		ItemWiseDetailList itemWiseDetailList=new ItemWiseDetailList();
-		if(catId==5)
-		{
-			List<ItemWiseDetail> itemWiseDetail=itemWiseDetailRepository.findSpecialCakeWiseDetailReport(frId,catId,fromDate,toDate);
-			
-			
-			
-			ErrorMessage errorMessage=new ErrorMessage();
+		System.out.println("Date: " + fromDate + "To" + toDate);
+		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();
+		if (catId == 5) {
+			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findSpecialCakeWiseDetailReport(frId, catId,
+					fromDate, toDate);
 
-			
-			if(itemWiseDetail==null)
-			{
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
 				errorMessage.setError(true);
 				errorMessage.setMessage("Records Not Found.");
-			}
-			else
-			{     errorMessage.setError(false);
-			      errorMessage.setMessage("Records Found Successfully.");
-			      
-			      itemWiseDetailList.setErrorMessage(errorMessage);
-			      itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
-			}
-			
-		}
-		else
-		{
-		List<ItemWiseDetail> itemWiseDetail=itemWiseDetailRepository.findItemWiseDetailReport(frId,catId,fromDate,toDate);
-		
-		
-		
-		ErrorMessage errorMessage=new ErrorMessage();
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
 
-		
-		if(itemWiseDetail==null)
-		{
-			errorMessage.setError(true);
-			errorMessage.setMessage("Records Not Found.");
-		}
-		else
-		{     errorMessage.setError(false);
-		      errorMessage.setMessage("Records Found Successfully.");
-		      
-		      itemWiseDetailList.setErrorMessage(errorMessage);
-		      itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
-		}
-		
-   	} return itemWiseDetailList;
-	}
-	@Override
-	public MonthWiseReportList getMonthWiseReport(int frId, String fromDate, String toDate) {
-		
-    List<MonthWiseReport> monthWiseReport=monthWiseReportRepository.findMonthWiseReport(frId,fromDate,toDate);
-		
-		
-    MonthWiseReportList monthWiseReportList=new MonthWiseReportList();
-		ErrorMessage errorMessage=new ErrorMessage();
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
 
-		
-		if(monthWiseReport==null)
-		{
-			errorMessage.setError(true);
-			errorMessage.setMessage("Records Not Found.");
+		} else {
+			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findItemWiseDetailReport(frId, catId,
+					fromDate, toDate);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
+
 		}
-		else
-		{     errorMessage.setError(false);
-		      errorMessage.setMessage("Records Found Successfully.");
-		      
-		      monthWiseReportList.setErrorMessage(errorMessage);
-		      monthWiseReportList.setMonthWiseReportList(monthWiseReport);
-		}
-		return monthWiseReportList;
+		return itemWiseDetailList;
 	}
-	
+
 	@Override
-	public MonthWiseReportList getMonthWiseReportByTypeId(int frId, String fromDate, String toDate,int typeId) {
-		
-		
-		MonthWiseReportList monthWiseReportList=new MonthWiseReportList();
+	public ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId, List<Integer> itemIds, String fromDate, String toDate) {
+
+		System.out.println("Date: " + fromDate + "To" + toDate);
+		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();
 		
 		try {
 			
-			List<MonthWiseReport> monthWiseReport = new ArrayList<>();
-			
-			if(typeId==1) {
-				
-				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId,fromDate,toDate);
-				
-			}else if(typeId==2) {
-				
-				monthWiseReport = monthWiseReportRepository.findMonthWiseReportGrn(frId,fromDate,toDate);
-				
-			}else {
-				
-				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId,fromDate,toDate);
-				List<MonthWiseReport> grn = monthWiseReportRepository.findMonthWiseReportGrn(frId,fromDate,toDate);
-				
-				for(int i=0; i<monthWiseReport.size() ; i++) {
-					
-					for(int j=0 ; j<grn.size() ;j++) {
-						
-						if(monthWiseReport.get(i).getMonth().equals(grn.get(j).getMonth())) {
-							
-							monthWiseReport.get(i).setTaxableAmt(monthWiseReport.get(i).getTaxableAmt()-grn.get(j).getTaxableAmt());
-							monthWiseReport.get(i).setCgstRs(monthWiseReport.get(i).getCgstRs()-grn.get(j).getCgstRs());
-							monthWiseReport.get(i).setSgstRs(monthWiseReport.get(i).getSgstRs()-grn.get(j).getSgstRs());
-							monthWiseReport.get(i).setIgstRs(monthWiseReport.get(i).getIgstRs()-grn.get(j).getIgstRs());
-							monthWiseReport.get(i).setGrandTotal(monthWiseReport.get(i).getGrandTotal()-grn.get(j).getGrandTotal());
-							break;
-						}
-					}
-				}
-				 
-			}
-			
-			ErrorMessage errorMessage=new ErrorMessage();
+			 
+				List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.getItemWiseDetailReportByItemIds(frId, itemIds,
+						fromDate, toDate);
 
-			
-			if(monthWiseReport==null)
-			{
-				errorMessage.setError(true);
-				errorMessage.setMessage("Records Not Found.");
-			}
-			else
-			{     errorMessage.setError(false);
-			      errorMessage.setMessage("Records Found Successfully.");
-			      
-			      monthWiseReportList.setErrorMessage(errorMessage);
-			      monthWiseReportList.setMonthWiseReportList(monthWiseReport);
-			}
-			
+				ErrorMessage errorMessage = new ErrorMessage();
+
+				if (itemWiseDetail == null) {
+					errorMessage.setError(true);
+					errorMessage.setMessage("Records Not Found.");
+				} else {
+					errorMessage.setError(false);
+					errorMessage.setMessage("Records Found Successfully.");
+
+					itemWiseDetailList.setErrorMessage(errorMessage);
+					itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+				}
+ 
 			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-    
-		 
+		
+		return itemWiseDetailList;
+	}
+
+	@Override
+	public MonthWiseReportList getMonthWiseReport(int frId, String fromDate, String toDate) {
+
+		List<MonthWiseReport> monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId, fromDate, toDate);
+
+		MonthWiseReportList monthWiseReportList = new MonthWiseReportList();
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		if (monthWiseReport == null) {
+			errorMessage.setError(true);
+			errorMessage.setMessage("Records Not Found.");
+		} else {
+			errorMessage.setError(false);
+			errorMessage.setMessage("Records Found Successfully.");
+
+			monthWiseReportList.setErrorMessage(errorMessage);
+			monthWiseReportList.setMonthWiseReportList(monthWiseReport);
+		}
+		return monthWiseReportList;
+	}
+
+	@Override
+	public MonthWiseReportList getMonthWiseReportByTypeId(int frId, String fromDate, String toDate, int typeId) {
+
+		MonthWiseReportList monthWiseReportList = new MonthWiseReportList();
+
+		try {
+
+			List<MonthWiseReport> monthWiseReport = new ArrayList<>();
+
+			if (typeId == 1) {
+
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId, fromDate, toDate);
+
+			} else if (typeId == 2) {
+
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReportGrn(frId, fromDate, toDate);
+
+			} else {
+
+				monthWiseReport = monthWiseReportRepository.findMonthWiseReport(frId, fromDate, toDate);
+				List<MonthWiseReport> grn = monthWiseReportRepository.findMonthWiseReportGrn(frId, fromDate, toDate);
+
+				for (int i = 0; i < monthWiseReport.size(); i++) {
+
+					for (int j = 0; j < grn.size(); j++) {
+
+						if (monthWiseReport.get(i).getMonth().equals(grn.get(j).getMonth())) {
+
+							monthWiseReport.get(i)
+									.setTaxableAmt(monthWiseReport.get(i).getTaxableAmt() - grn.get(j).getTaxableAmt());
+							monthWiseReport.get(i)
+									.setCgstRs(monthWiseReport.get(i).getCgstRs() - grn.get(j).getCgstRs());
+							monthWiseReport.get(i)
+									.setSgstRs(monthWiseReport.get(i).getSgstRs() - grn.get(j).getSgstRs());
+							monthWiseReport.get(i)
+									.setIgstRs(monthWiseReport.get(i).getIgstRs() - grn.get(j).getIgstRs());
+							monthWiseReport.get(i)
+									.setGrandTotal(monthWiseReport.get(i).getGrandTotal() - grn.get(j).getGrandTotal());
+							break;
+						}
+					}
+				}
+
+			}
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (monthWiseReport == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				monthWiseReportList.setErrorMessage(errorMessage);
+				monthWiseReportList.setMonthWiseReportList(monthWiseReport);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return monthWiseReportList;
 	}
 
 	@Override
 	public BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate) {
-		
-       List<BillWiseTaxReport> billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReport(frId,fromDate,toDate);
-		
-		BillWiseTaxReportList billWiseTaxReportList=new BillWiseTaxReportList();
-		ErrorMessage errorMessage=new ErrorMessage();
-		
-		if(billWiseTax==null)
-		{
+
+		List<BillWiseTaxReport> billWiseTax = billWiseTaxReportRepository.findBillWiseTaxReport(frId, fromDate, toDate);
+
+		BillWiseTaxReportList billWiseTaxReportList = new BillWiseTaxReportList();
+		ErrorMessage errorMessage = new ErrorMessage();
+
+		if (billWiseTax == null) {
 			errorMessage.setError(true);
 			errorMessage.setMessage("Records Not Found.");
-		}
-		else
-		{     errorMessage.setError(false);
-		      errorMessage.setMessage("Records Found Successfully.");
-		      
-		      billWiseTaxReportList.setBillWiseTaxReportList(billWiseTax);
-		      billWiseTaxReportList.setErrorMessage(errorMessage);
+		} else {
+			errorMessage.setError(false);
+			errorMessage.setMessage("Records Found Successfully.");
+
+			billWiseTaxReportList.setBillWiseTaxReportList(billWiseTax);
+			billWiseTaxReportList.setErrorMessage(errorMessage);
 		}
 		return billWiseTaxReportList;
 	}
-	
+
 	@Override
-	public BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate,int typeId) {
-		
-		
-		BillWiseTaxReportList billWiseTaxReportList=new BillWiseTaxReportList();
+	public BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate, int typeId) {
+
+		BillWiseTaxReportList billWiseTaxReportList = new BillWiseTaxReportList();
 		try {
-			
+
 			List<BillWiseTaxReport> billWiseTax = new ArrayList<>();
-			
-			if(typeId==1) {
-				
-				 billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReport(frId,fromDate,toDate);
-			}else if(typeId==2) {
-				
-				 billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId,fromDate,toDate);
-			}else {
-				
-				billWiseTax=billWiseTaxReportRepository.findBillWiseTaxReport(frId,fromDate,toDate);
-				List<BillWiseTaxReport> grn = billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId,fromDate,toDate);
-				
-				for(int i=0; i<billWiseTax.size() ; i++) {
-					
-					for(int j=0 ; j<grn.size() ;j++) {
-						
-						if(billWiseTax.get(i).getTaxRate()==grn.get(j).getTaxRate()) {
-							
-							billWiseTax.get(i).setTaxableAmt(billWiseTax.get(i).getTaxableAmt()-grn.get(j).getTaxableAmt());
-							billWiseTax.get(i).setCgstRs(billWiseTax.get(i).getCgstRs()-grn.get(j).getCgstRs());
-							billWiseTax.get(i).setSgstRs(billWiseTax.get(i).getSgstRs()-grn.get(j).getSgstRs());
-							billWiseTax.get(i).setIgstRs(billWiseTax.get(i).getIgstRs()-grn.get(j).getIgstRs());
-							billWiseTax.get(i).setGrandTotal(billWiseTax.get(i).getGrandTotal()-grn.get(j).getGrandTotal());
+
+			if (typeId == 1) {
+
+				billWiseTax = billWiseTaxReportRepository.findBillWiseTaxReport(frId, fromDate, toDate);
+			} else if (typeId == 2) {
+
+				billWiseTax = billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId, fromDate, toDate);
+			} else {
+
+				billWiseTax = billWiseTaxReportRepository.findBillWiseTaxReport(frId, fromDate, toDate);
+				List<BillWiseTaxReport> grn = billWiseTaxReportRepository.findBillWiseTaxReportGrn(frId, fromDate,
+						toDate);
+
+				for (int i = 0; i < billWiseTax.size(); i++) {
+
+					for (int j = 0; j < grn.size(); j++) {
+
+						if (billWiseTax.get(i).getTaxRate() == grn.get(j).getTaxRate()) {
+
+							billWiseTax.get(i)
+									.setTaxableAmt(billWiseTax.get(i).getTaxableAmt() - grn.get(j).getTaxableAmt());
+							billWiseTax.get(i).setCgstRs(billWiseTax.get(i).getCgstRs() - grn.get(j).getCgstRs());
+							billWiseTax.get(i).setSgstRs(billWiseTax.get(i).getSgstRs() - grn.get(j).getSgstRs());
+							billWiseTax.get(i).setIgstRs(billWiseTax.get(i).getIgstRs() - grn.get(j).getIgstRs());
+							billWiseTax.get(i)
+									.setGrandTotal(billWiseTax.get(i).getGrandTotal() - grn.get(j).getGrandTotal());
 							break;
 						}
 					}
 				}
 			}
-			
-			
-			
-			ErrorMessage errorMessage=new ErrorMessage();
-			
-			if(billWiseTax==null)
-			{
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (billWiseTax == null) {
 				errorMessage.setError(true);
 				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				billWiseTaxReportList.setBillWiseTaxReportList(billWiseTax);
+				billWiseTaxReportList.setErrorMessage(errorMessage);
 			}
-			else
-			{     errorMessage.setError(false);
-			      errorMessage.setMessage("Records Found Successfully.");
-			      
-			      billWiseTaxReportList.setBillWiseTaxReportList(billWiseTax);
-			      billWiseTaxReportList.setErrorMessage(errorMessage);
-			}
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-       
+
 		return billWiseTaxReportList;
 	}
 
 	@Override
 	public ItemWiseReportList getItemWiseReport(int frId, int catId, String fromDate, String toDate) {
-		
-		System.out.println("Date: "+fromDate+"To"+toDate);
-		ItemWiseReportList itemWiseReportList=new ItemWiseReportList();
-		if(catId==5)
-		{
-			List<ItemWiseReport> itemWiseReport=itemWiseReportRepository.findSpecialCakeWiseReport(frId,catId,fromDate,toDate);
-			
-			
-			
-			ErrorMessage errorMessage=new ErrorMessage();
 
-			
-			if(itemWiseReport==null)
-			{
+		System.out.println("Date: " + fromDate + "To" + toDate);
+		ItemWiseReportList itemWiseReportList = new ItemWiseReportList();
+		if (catId == 5) {
+			List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findSpecialCakeWiseReport(frId, catId,
+					fromDate, toDate);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseReport == null) {
 				errorMessage.setError(true);
 				errorMessage.setMessage("Records Not Found.");
-			}
-			else
-			{     errorMessage.setError(false);
-			      errorMessage.setMessage("Records Found Successfully.");
-			      
-			      itemWiseReportList.setErrorMessage(errorMessage);
-			      itemWiseReportList.setItemWiseReportList(itemWiseReport);
-			}
-			
-		}
-		else
-		{
-		List<ItemWiseReport> itemWiseReport=itemWiseReportRepository.findItemWiseReport(frId,catId,fromDate,toDate);
-		
-		
-		
-		ErrorMessage errorMessage=new ErrorMessage();
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
 
-		
-		if(itemWiseReport==null)
-		{
-			errorMessage.setError(true);
-			errorMessage.setMessage("Records Not Found.");
+				itemWiseReportList.setErrorMessage(errorMessage);
+				itemWiseReportList.setItemWiseReportList(itemWiseReport);
+			}
+
+		} else {
+			List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findItemWiseReport(frId, catId, fromDate,
+					toDate);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseReport == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseReportList.setErrorMessage(errorMessage);
+				itemWiseReportList.setItemWiseReportList(itemWiseReport);
+			}
+
 		}
-		else
-		{     errorMessage.setError(false);
-		      errorMessage.setMessage("Records Found Successfully.");
-		      
-		      itemWiseReportList.setErrorMessage(errorMessage);
-		      itemWiseReportList.setItemWiseReportList(itemWiseReport);
-		}
-		
-   	} return itemWiseReportList;
+		return itemWiseReportList;
 	}
 
 	@Override
@@ -353,12 +358,11 @@ public class ReportsServiceImpl implements ReportsService {
 
 		List<DispatchReport> dispatchReportList;
 		try {
-		dispatchReportList=dispatchReportRepository.findDispatchReportList(billDateYMD,frId,categories);
-		
-		}
-		catch (Exception e) {
-			dispatchReportList=new ArrayList<>();
-            e.printStackTrace();
+			dispatchReportList = dispatchReportRepository.findDispatchReportList(billDateYMD, frId, categories);
+
+		} catch (Exception e) {
+			dispatchReportList = new ArrayList<>();
+			e.printStackTrace();
 		}
 		return dispatchReportList;
 	}

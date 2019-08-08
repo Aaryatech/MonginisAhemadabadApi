@@ -29,4 +29,7 @@ public interface ReportsService {
 
 	BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate, int typeId);
 
+	ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId, List<Integer> itemIds, String fromDate,
+			String toDate);
+
 }
