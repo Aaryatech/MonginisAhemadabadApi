@@ -41,6 +41,8 @@ public class ItemWiseDetail implements Serializable{
 	@Column(name="grn_type")
 	private int grnType;
 
+	@Column(name="expiry_date")
+	private Date expiryDate;
 	
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
 	public Date getBillDate() {
@@ -114,6 +116,14 @@ public class ItemWiseDetail implements Serializable{
 
 	public void setGrnType(int grnType) {
 		this.grnType = grnType;
+	}
+	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
 	

@@ -160,7 +160,7 @@ public class ReportsController {
 				ItemWiseDetailList = reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate);
 			}else {
 				
-				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId, itemIds, fromDate, toDate);
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId,catId, itemIds, fromDate, toDate);
 				
 			}
 			
@@ -179,6 +179,16 @@ public class ReportsController {
 			@RequestParam("catId") int catId) {
 
 		ItemWiseReportList ItemWiseReportList = reportsService.getItemWiseReport(frId, catId, fromDate, toDate);
+
+		return ItemWiseReportList;
+	}
+	
+	@RequestMapping(value = { "/showItemWiseReportByTypeId" }, method = RequestMethod.POST)
+	public @ResponseBody ItemWiseReportList showItemWiseReportByTypeId(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("catId") int catId,@RequestParam("typeId") int typeId) {
+
+		ItemWiseReportList ItemWiseReportList = reportsService.showItemWiseReportByTypeId(frId, catId, fromDate, toDate,typeId);
 
 		return ItemWiseReportList;
 	}

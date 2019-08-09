@@ -1,6 +1,8 @@
 package com.ats.webapi.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,35 +114,46 @@ public class ReportsServiceImpl implements ReportsService {
 	}
 
 	@Override
-	public ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId, List<Integer> itemIds, String fromDate, String toDate) {
+	public ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId,int catId, List<Integer> itemIds, String fromDate,
+			String toDate) {
 
 		System.out.println("Date: " + fromDate + "To" + toDate);
 		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();
-		
+
 		try {
+
+			List<ItemWiseDetail> itemWiseDetail = new ArrayList<>();
 			
-			 
-				List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.getItemWiseDetailReportByItemIds(frId, itemIds,
+			if (catId == 5) {
+				 itemWiseDetail = itemWiseDetailRepository.findSpecialCakeWiseDetailReportByItemIds(frId,catId, itemIds,
 						fromDate, toDate);
-
-				ErrorMessage errorMessage = new ErrorMessage();
-
-				if (itemWiseDetail == null) {
-					errorMessage.setError(true);
-					errorMessage.setMessage("Records Not Found.");
-				} else {
-					errorMessage.setError(false);
-					errorMessage.setMessage("Records Found Successfully.");
-
-					itemWiseDetailList.setErrorMessage(errorMessage);
-					itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
-				}
  
+
+			} else {
+				
+				 itemWiseDetail = itemWiseDetailRepository.getItemWiseDetailReportByItemIds(frId,catId,
+						itemIds, fromDate, toDate); 
+
+			}
 			
-		}catch(Exception e) {
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
+			 
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return itemWiseDetailList;
 	}
 
@@ -284,12 +297,27 @@ public class ReportsServiceImpl implements ReportsService {
 							billWiseTax.get(i).setIgstRs(billWiseTax.get(i).getIgstRs() - grn.get(j).getIgstRs());
 							billWiseTax.get(i)
 									.setGrandTotal(billWiseTax.get(i).getGrandTotal() - grn.get(j).getGrandTotal());
+							grn.remove(j);
 							break;
 						}
 					}
 				}
+				
+				for (int j = 0; j < grn.size(); j++) {
+
+					billWiseTax.add(grn.get(j)); 
+				}
 			}
 
+			Collections.sort(billWiseTax, new Comparator<BillWiseTaxReport>() {
+				public int compare(BillWiseTaxReport c1, BillWiseTaxReport c2) {
+					if (c1.getTaxRate() > c2.getTaxRate())
+						return 1;
+					if (c1.getTaxRate() < c2.getTaxRate())
+						return -1;
+					return 0;
+				}
+			});
 			ErrorMessage errorMessage = new ErrorMessage();
 
 			if (billWiseTax == null) {
@@ -350,6 +378,184 @@ public class ReportsServiceImpl implements ReportsService {
 			}
 
 		}
+		return itemWiseReportList;
+	}
+
+	@Override
+	public ItemWiseReportList showItemWiseReportByTypeId(int frId, int catId, String fromDate, String toDate,
+			int typeId) {
+
+		ItemWiseReportList itemWiseReportList = new ItemWiseReportList();
+
+		try {
+
+			if (typeId == 1) {
+
+				if (catId == 5) {
+					List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findSpecialCakeWiseReport(frId,
+							catId, fromDate, toDate);
+
+					ErrorMessage errorMessage = new ErrorMessage();
+
+					if (itemWiseReport == null) {
+						errorMessage.setError(true);
+						errorMessage.setMessage("Records Not Found.");
+					} else {
+						errorMessage.setError(false);
+						errorMessage.setMessage("Records Found Successfully.");
+
+						itemWiseReportList.setErrorMessage(errorMessage);
+						itemWiseReportList.setItemWiseReportList(itemWiseReport);
+					}
+
+				} else {
+					List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findItemWiseReport(frId, catId,
+							fromDate, toDate);
+
+					ErrorMessage errorMessage = new ErrorMessage();
+
+					if (itemWiseReport == null) {
+						errorMessage.setError(true);
+						errorMessage.setMessage("Records Not Found.");
+					} else {
+						errorMessage.setError(false);
+						errorMessage.setMessage("Records Found Successfully.");
+
+						itemWiseReportList.setErrorMessage(errorMessage);
+						itemWiseReportList.setItemWiseReportList(itemWiseReport);
+					}
+
+				}
+
+			} else if (typeId == 2) {
+
+				if (catId == 5) {
+					List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findSpecialCakeWiseReportGrn(frId,
+							fromDate, toDate);
+
+					ErrorMessage errorMessage = new ErrorMessage();
+
+					if (itemWiseReport == null) {
+						errorMessage.setError(true);
+						errorMessage.setMessage("Records Not Found.");
+					} else {
+						errorMessage.setError(false);
+						errorMessage.setMessage("Records Found Successfully.");
+
+						itemWiseReportList.setErrorMessage(errorMessage);
+						itemWiseReportList.setItemWiseReportList(itemWiseReport);
+					}
+
+				} else {
+					List<ItemWiseReport> itemWiseReport = itemWiseReportRepository.findItemWiseReportGrn(frId, catId,
+							fromDate, toDate);
+
+					ErrorMessage errorMessage = new ErrorMessage();
+
+					if (itemWiseReport == null) {
+						errorMessage.setError(true);
+						errorMessage.setMessage("Records Not Found.");
+					} else {
+						errorMessage.setError(false);
+						errorMessage.setMessage("Records Found Successfully.");
+
+						itemWiseReportList.setErrorMessage(errorMessage);
+						itemWiseReportList.setItemWiseReportList(itemWiseReport);
+					}
+
+				}
+
+			} else {
+
+				if (catId == 5) {
+
+					List<ItemWiseReport> purchse = itemWiseReportRepository.findSpecialCakeWiseReport(frId, catId,
+							fromDate, toDate);
+
+					List<ItemWiseReport> grn = itemWiseReportRepository.findSpecialCakeWiseReportGrn(frId, fromDate,
+							toDate);
+
+					for (int i = 0; i < purchse.size(); i++) {
+
+						for (int j = 0; j < grn.size(); j++) {
+
+							if (purchse.get(i).getItemId() == grn.get(j).getItemId()) {
+
+								purchse.get(i).setQty(purchse.get(i).getQty() - grn.get(j).getQty());
+								purchse.get(i).setTotal(purchse.get(i).getTotal() - grn.get(j).getTotal());
+								grn.remove(j);
+								break;
+							}
+						}
+
+					}
+
+					for (int j = 0; j < grn.size(); j++) {
+
+						purchse.add(grn.get(j));
+					}
+
+					ErrorMessage errorMessage = new ErrorMessage();
+					errorMessage.setError(false);
+					errorMessage.setMessage("Records Found Successfully.");
+
+					itemWiseReportList.setErrorMessage(errorMessage);
+					itemWiseReportList.setItemWiseReportList(purchse);
+
+				} else {
+
+					List<ItemWiseReport> purchse = itemWiseReportRepository.findItemWiseReport(frId, catId, fromDate,
+							toDate);
+
+					List<ItemWiseReport> grn = itemWiseReportRepository.findItemWiseReportGrn(frId, catId, fromDate,
+							toDate);
+
+					for (int i = 0; i < purchse.size(); i++) {
+
+						for (int j = 0; j < grn.size(); j++) {
+
+							if (purchse.get(i).getItemId() == grn.get(j).getItemId()) {
+
+								purchse.get(i).setQty(purchse.get(i).getQty() - grn.get(j).getQty());
+								purchse.get(i).setTotal(purchse.get(i).getTotal() - grn.get(j).getTotal());
+								grn.remove(j);
+								break;
+							}
+						}
+
+					}
+
+					for (int j = 0; j < grn.size(); j++) {
+
+						purchse.add(grn.get(j));
+					}
+
+					ErrorMessage errorMessage = new ErrorMessage();
+					errorMessage.setError(false);
+					errorMessage.setMessage("Records Found Successfully.");
+
+					itemWiseReportList.setErrorMessage(errorMessage);
+					itemWiseReportList.setItemWiseReportList(purchse);
+
+				}
+
+				Collections.sort(itemWiseReportList.getItemWiseReportList(), new Comparator<ItemWiseReport>() {
+					public int compare(ItemWiseReport c1, ItemWiseReport c2) {
+						if (c1.getItemId() > c2.getItemId())
+							return 1;
+						if (c1.getItemId() < c2.getItemId())
+							return -1;
+						return 0;
+					}
+				});
+			}
+
+		} catch (
+
+		Exception e) {
+			e.printStackTrace();
+		}
+
 		return itemWiseReportList;
 	}
 
