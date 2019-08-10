@@ -39,9 +39,7 @@ public class OtherItemStockController {
 				stockItemHeaderList = otherstockRepo.findAllByFrIdAndStatus(frId, 0);
 		
 				for(int i = 0 ; i < stockItemHeaderList.size() ; i++) {
-					System.out.println("HeaderId="+stockItemHeaderList.get(i).getOtherStockHeaderId());
 					List<OtherItemStockDetail> stockItemDetailList = otherstockDetailRepo.getstockOtherDetailByHeaderId(stockItemHeaderList.get(i).getOtherStockHeaderId());
-					System.out.println("Stock Detail List:"+stockItemDetailList);
 					stockItemHeaderList.get(i).setOtherItemStockList(stockItemDetailList);
 					}
 		

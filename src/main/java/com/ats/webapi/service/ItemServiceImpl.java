@@ -207,7 +207,12 @@ public class ItemServiceImpl implements ItemService{
 		GetItemSup itemSup=getItemSupRepository.findGetItemSupById(id);
 		return itemSup;
 	}
+	@Override
+	public GetItemSup getItemSupByItemId(int itemId) {
 
+		GetItemSup itemSup=getItemSupRepository.findGetItemSupByItemId(itemId);
+		return itemSup;
+	}
 	@Override
 	public int getUniqueItemCode() {
 

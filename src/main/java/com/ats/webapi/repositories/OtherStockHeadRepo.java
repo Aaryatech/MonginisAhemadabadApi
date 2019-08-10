@@ -13,10 +13,10 @@ import com.ats.webapi.model.OtherItemStockHeader;
 
 public interface OtherStockHeadRepo extends JpaRepository<OtherItemStockHeader, Integer> {
 
-	public @ResponseBody List<OtherItemStockHeader> findAllByFrIdAndStatus(int frId, int i);
+	public List<OtherItemStockHeader> findAllByFrIdAndStatus(int frId, int i);
 
 	
-	public @ResponseBody List<OtherItemStockHeader> findAllByOtherStockHeaderIdAndStatus(int herderId, int i);
+	public  List<OtherItemStockHeader> findAllByOtherStockHeaderIdAndStatus(int herderId, int i);
 
 
 	

@@ -35,4 +35,5 @@ public interface ItemService {
 	public List<Item> getItemsByIsAllowBday();
 	public List<Item> getItemsByCatIdForSup(String itemGrp1);
 	public List<Item> findAllItemsByItemId(List<Integer> itemList);
+	public GetItemSup getItemSupByItemId(int itemId);
 }

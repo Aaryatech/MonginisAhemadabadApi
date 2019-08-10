@@ -3053,7 +3053,14 @@ public class RestApiController {
 		return items;
 
 	}
+	/*@RequestMapping(value = "/getItemsByCatIdAndFrId", method = RequestMethod.POST)
+	public @ResponseBody List<Item> getItems(@RequestParam int itemGrp1,@RequestParam int frId) {
 
+		List<Item> items = itemRepository.findByItemGrp1AndItemRate2AndDelStatus(itemGrp1,frId);
+		return items;
+
+	}
+*/
 	@RequestMapping(value = "/getDiscById", method = RequestMethod.POST)
 	public @ResponseBody float findByIdAndFrId(@RequestParam int id, @RequestParam int frId) {
 		float discPer = 0.0f;
@@ -3188,7 +3195,23 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+	@RequestMapping(value = "/getItemsNameByIdWithOtherItem", method = RequestMethod.POST)
+	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItem(@RequestParam List<Integer> itemList,@RequestParam int frId) {
 
+		ItemResponse itemResponse = new ItemResponse();
+		ErrorMessage errorMessage = new ErrorMessage();
+		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList,7,frId);
+		if (items != null) {
+			itemResponse.setItemList(items);
+			errorMessage.setError(false);
+			errorMessage.setMessage("Success");
+		} else {
+			errorMessage.setError(true);
+			errorMessage.setMessage("No Items Found");
+		}
+		return itemResponse;
+
+	}
 	//
 	@RequestMapping(value = "/getFrMenus11", method = RequestMethod.POST)
 	public @ResponseBody FrMenusList getFrMenus(@RequestParam int frId) {

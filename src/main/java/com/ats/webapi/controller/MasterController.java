@@ -48,6 +48,7 @@ import com.ats.webapi.model.Info;
 import com.ats.webapi.model.Item;
 import com.ats.webapi.model.ItemForMOrder;
 import com.ats.webapi.model.ItemIdOnly;
+import com.ats.webapi.model.ItemResponse;
 import com.ats.webapi.model.ItemSup;
 import com.ats.webapi.model.ItemSupList;
 import com.ats.webapi.model.MCategory;
@@ -195,6 +196,14 @@ public class MasterController {
 	@Autowired
 	FrSettingRepo frSettingRepo;
 	
+	@RequestMapping(value = "/getOtherItemsByCatIdAndFrId", method = RequestMethod.POST)
+	public @ResponseBody List<Item> getOtherItemsByCatIdAndFrId(@RequestParam double frId) {
+
+		List<Item> items = itemRepository.findByItemGrp1AndItemRate2AndDelStatus("7",frId,0);
+		
+		return items;
+
+	}
 	 @RequestMapping(value = { "/updateBillStatusToProduction" }, method = RequestMethod.POST)
 		public @ResponseBody Info updateBillStatusToProduction(@RequestParam("spOrderNo") List<Integer> spOrderNo,@RequestParam("billStatus") int billStatus) {
 		 int res=0;
@@ -308,6 +317,20 @@ public class MasterController {
 
 			}
 			return info;
+
+		}
+		@RequestMapping(value = { "/saveItem" }, method = RequestMethod.POST)
+		public @ResponseBody Item saveItem(@RequestBody Item item) {
+
+			Item itemRes = null;
+			try {
+
+				itemRes = itemRepository.save(item);
+
+			} catch (Exception e) {
+				itemRes=new Item();
+			}
+			return itemRes;
 
 		}
       //---------------------------------------------------------------------------
@@ -515,6 +538,31 @@ public class MasterController {
 			GetItemSup getItemSupRes = null;
 			try {
 				getItemSupRes = itemService.getItemSup(id);
+
+				if (getItemSupRes != null) {
+					getItemSupRes.setError(false);
+					getItemSupRes.setMessage("ItemSup Found Successfully");
+				} else {
+					getItemSupRes = new GetItemSup();
+					getItemSupRes.setError(true);
+					getItemSupRes.setMessage("ItemSup Not Found");
+				}
+			} catch (Exception e) {
+				getItemSupRes = new GetItemSup();
+				getItemSupRes.setError(true);
+				getItemSupRes.setMessage("ItemSup Not Found");
+				System.out.println("Exception In getItemSup:" + e.getMessage());
+			}
+
+			return getItemSupRes;
+
+		}
+		@RequestMapping(value = { "/getItemSupByItemId" }, method = RequestMethod.POST)
+		public @ResponseBody GetItemSup getItemSupByItemId(@RequestParam("itemId") int itemId) {
+
+			GetItemSup getItemSupRes = null;
+			try {
+				getItemSupRes = itemService.getItemSupByItemId(itemId);
 
 				if (getItemSupRes != null) {
 					getItemSupRes.setError(false);
