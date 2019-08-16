@@ -10,7 +10,7 @@ import com.ats.webapi.model.salesreport.SubCatCreditGrnFrItemRep;
 
 public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCreditGrnFrItemRep, Integer> {
 
-	@Query(value = " SELECT\n" + 
+	@Query(value = " SELECT UUID() as id," + 
 			"        t_credit_note_details.crnd_id,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_amt) AS var_amt,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_qty) AS var_qty ,\n" + 
@@ -49,7 +49,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"    ALL   \n" + 
 			"    \n" + 
 			"    \n" + 
-			"     SELECT\n" + 
+			"     SELECT UUID() as id," + 
 			"        t_credit_note_details.crnd_id,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_amt) AS var_amt,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_qty) AS var_qty ,\n" + 
@@ -75,7 +75,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"          \n" + 
 			"        AND t_credit_note_header.fr_id IN(\n" + 
 			"           :frIdList \n" + 
-			"        )          \n" + 
+			"        )     AND sc.cat_id=5      \n" + 
 			"        AND sc.sub_cat_id IN(\n" + 
 			"           :subCatIdList   \n" + 
 			"        )          \n" + 
@@ -86,7 +86,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 	List<SubCatCreditGrnFrItemRep> getDataGVN(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 
-	@Query(value = " SELECT\n" + 
+	@Query(value = " SELECT UUID() as id," + 
 			"        t_credit_note_details.crnd_id,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_amt) AS var_amt,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_qty) AS var_qty ,\n" + 
@@ -125,7 +125,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"    ALL   \n" + 
 			"    \n" + 
 			"    \n" + 
-			"     SELECT\n" + 
+			"     SELECT UUID() as id," + 
 			"        t_credit_note_details.crnd_id,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_amt) AS var_amt,\n" + 
 			"        SUM(t_credit_note_details.grn_gvn_qty) AS var_qty ,\n" + 
@@ -151,7 +151,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"          \n" + 
 			"        AND t_credit_note_header.fr_id IN(\n" + 
 			"            :frIdList  \n" + 
-			"        )          \n" + 
+			"        )     AND sc.cat_id=5      \n" + 
 			"        AND sc.sub_cat_id IN(\n" + 
 			"          :subCatIdList  \n" + 
 			"        )          \n" + 

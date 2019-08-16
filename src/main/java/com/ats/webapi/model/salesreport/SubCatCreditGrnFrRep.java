@@ -7,6 +7,7 @@ import javax.persistence.Id;
 public class SubCatCreditGrnFrRep {
 
 	@Id
+	private String id;
 	private int crndId;
 	private int subCatId;
 
@@ -15,6 +16,15 @@ public class SubCatCreditGrnFrRep {
 	private String subCatName;
 	private float varQty;
 	private float varAmt;
+
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public int getCrndId() {
 		return crndId;
@@ -74,8 +84,11 @@ public class SubCatCreditGrnFrRep {
 
 	@Override
 	public String toString() {
-		return "SubCatCreditGrnFrRep [subCatId=" + subCatId + ", frId=" + frId + ", frName=" + frName + ", subCatName="
-				+ subCatName + ", varQty=" + varQty + ", varAmt=" + varAmt + "]";
+		return "SubCatCreditGrnFrRep [id=" + id + ", crndId=" + crndId + ", subCatId=" + subCatId + ", frId=" + frId
+				+ ", frName=" + frName + ", subCatName=" + subCatName + ", varQty=" + varQty + ", varAmt=" + varAmt
+				+ "]";
 	}
+
+	
 
 }

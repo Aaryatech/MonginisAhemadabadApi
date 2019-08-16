@@ -10,7 +10,7 @@ import com.ats.webapi.model.salesreport.SubCatFrItemRepBill;
 
 public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBill, Integer> {
 
-	@Query(value = "  SELECT\n" + 
+	@Query(value = "  SELECT UUID() as id," + 
 			"        td.bill_detail_no,\n" + 
 			"        SUM(td.grand_total) AS sold_amt,\n" + 
 			"        SUM(td.bill_qty) AS sold_qty ,\n" + 
@@ -41,13 +41,13 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 			"           :subCatIdList   \n" + 
 			"        )       \n" + 
 			"    GROUP BY\n" + 
-			"        tb.fr_id,\n" + 
+			"        tb.fr_id, \n" + 
 			"        m_item.id   \n" + 
 			"        \n" + 
 			"        \n" + 
 			"        UNION All\n" + 
 			"        \n" + 
-			"        SELECT\n" + 
+			"        SELECT UUID() as id," + 
 			"        td.bill_detail_no,\n" + 
 			"        SUM(td.grand_total) AS sold_amt,\n" + 
 			"        SUM(td.bill_qty) AS sold_qty ,\n" + 
@@ -73,7 +73,7 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 			"        AND f.fr_id=tb.fr_id          \n" + 
 			"        AND m_sp_cake.sp_id=td.item_id          \n" + 
 			"          \n" + 
-			"          AND td.cat_id=5 \n" + 
+			"          AND td.cat_id=5  AND sc.cat_id=5 \n" + 
 			"        AND sc.sub_cat_id IN(\n" + 
 			"          :subCatIdList   \n" + 
 			"        )       \n" + 

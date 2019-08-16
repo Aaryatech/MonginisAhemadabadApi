@@ -575,7 +575,7 @@ public class FrStockApiController {
 		System.out.println("inside rest getCurrentStock : I/p : itemIdList: " + itemIdList.toString());
 
 		List<GetCurrentStockDetails> stockDetailsList = new ArrayList<GetCurrentStockDetails>();
-		PostFrItemStockDetail postFrItemStockDetail = new PostFrItemStockDetail();
+		PostFrItemStockDetail postFrItemStockDetail = null;
 
 		List<Item> itemsList = itemService.findAllItemsByItemId(itemIdList);
 

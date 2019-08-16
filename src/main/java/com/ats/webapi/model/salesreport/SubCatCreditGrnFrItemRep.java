@@ -7,6 +7,7 @@ import javax.persistence.Id;
 public class SubCatCreditGrnFrItemRep {
 
 	@Id
+	private String id;
 	private int crndId;
 	private int subCatId;
 
@@ -18,6 +19,15 @@ public class SubCatCreditGrnFrItemRep {
 
 	private int itemId;
 	private String itemName;
+
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public int getCrndId() {
 		return crndId;

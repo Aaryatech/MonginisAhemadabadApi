@@ -256,17 +256,17 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
 
-					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId() && catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						break;
 
-					} else {
+					} /*else {
 
 						catReportList.get(i).setRetAmt(0);
 						catReportList.get(i).setRetQty(0);
-					}
+					}*/
 
 				}
 			}
@@ -274,17 +274,17 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getFrId() == subCatCreditGrnRep.get(j).getFrId() && catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
 						break;
 
-					} else {
+					} /*else {
 
 						catReportList.get(i).setVarAmt(0);
 						catReportList.get(i).setVarQty(0);
-					}
+					}*/
 
 				}
 			}
@@ -348,17 +348,17 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGrnRep.size(); j++) {
 
-					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()) {
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId() && catReportList.get(i).getSubCatId() ==subCatCreditGrnRep.get(j).getSubCatId()&& catReportList.get(i).getFrId() ==subCatCreditGrnRep.get(j).getFrId()) {
 
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						break;
 
-					} else {
+					} /*else {
 
 						catReportList.get(i).setRetAmt(0);
 						catReportList.get(i).setRetQty(0);
-					}
+					}*/
 
 				}
 			}
@@ -366,17 +366,17 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId()) {
+					if (catReportList.get(i).getItemId() == subCatCreditGrnRep.get(j).getItemId() && catReportList.get(i).getSubCatId() ==subCatCreditGrnRep.get(j).getSubCatId()&& catReportList.get(i).getFrId() ==subCatCreditGrnRep.get(j).getFrId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
 						break;
 
-					} else {
+					} /*else {
 
 						catReportList.get(i).setVarAmt(0);
 						catReportList.get(i).setVarQty(0);
-					}
+					}*/
 
 				}
 			}

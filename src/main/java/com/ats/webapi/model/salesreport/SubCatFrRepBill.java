@@ -7,6 +7,7 @@ import javax.persistence.Id;
 public class SubCatFrRepBill {
 
 	@Id
+	private String id;
 	private int billDetailNo;
 	private int subCatId;
 
@@ -17,6 +18,16 @@ public class SubCatFrRepBill {
 
 	private float soldQty;
 	private float soldAmt;
+
+	
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public int getBillDetailNo() {
 		return billDetailNo;
@@ -76,9 +87,11 @@ public class SubCatFrRepBill {
 
 	@Override
 	public String toString() {
-		return "SubCatFrRepBill [billDetailNo=" + billDetailNo + ", subCatId=" + subCatId + ", frId=" + frId
-				+ ", frName=" + frName + ", subCatName=" + subCatName + ", soldQty=" + soldQty + ", soldAmt=" + soldAmt
-				+ "]";
+		return "SubCatFrRepBill [id=" + id + ", billDetailNo=" + billDetailNo + ", subCatId=" + subCatId + ", frId="
+				+ frId + ", frName=" + frName + ", subCatName=" + subCatName + ", soldQty=" + soldQty + ", soldAmt="
+				+ soldAmt + "]";
 	}
+
+	
 
 }

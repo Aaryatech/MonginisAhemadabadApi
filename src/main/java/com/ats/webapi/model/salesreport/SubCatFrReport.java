@@ -3,10 +3,8 @@ package com.ats.webapi.model.salesreport;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity
 public class SubCatFrReport {
 
-	@Id
 	private int billDetailNo;
 	private int subCatId;
 	private int catId;
