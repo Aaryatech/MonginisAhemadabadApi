@@ -21,6 +21,7 @@ import com.ats.webapi.model.opssalesreport.FrItemwiseData;
 import com.ats.webapi.model.opssalesreport.FrItemwiseVarAndRetData;
 import com.ats.webapi.model.opssalesreport.FrSubCatWiseSellData;
 import com.ats.webapi.model.opssalesreport.ItemList;
+import com.ats.webapi.model.opssalesreport.SubCatDateWiseData;
 import com.ats.webapi.model.opssalesreport.SubCatWiseItems;
 import com.ats.webapi.model.opssalesreport.TempItemList;
 import com.ats.webapi.model.opssalesreport.TempSubCatWiseItems;
@@ -32,6 +33,7 @@ import com.ats.webapi.model.salesreport.SubCatWiseItemWiseFrSold;
 import com.ats.webapi.model.salesreport3.FrAndSubCatBillData;
 import com.ats.webapi.model.salesreport3.FrAndSubCatGrnGvnData;
 import com.ats.webapi.model.salesreport3.FrWiseSubCat;
+import com.ats.webapi.model.salesreport3.HsnDateWiseSellReport;
 import com.ats.webapi.model.salesreport3.SubCatWiseBillData;
 import com.ats.webapi.model.salesreport3.TempFrWiseSubCat;
 import com.ats.webapi.model.salesreport3.TempSubCatWiseBillData;
@@ -43,6 +45,8 @@ import com.ats.webapi.repo.salesreport3.FrItemWiseGrnGvnRepo;
 import com.ats.webapi.repo.salesreport3.FrItemWiseSellDataRepo;
 import com.ats.webapi.repo.salesreport3.FrItemWiseSoldDataRepo;
 import com.ats.webapi.repo.salesreport3.FrSubCatWiseSellDataRepo;
+import com.ats.webapi.repo.salesreport3.HsnDateWiseSellReportRepo;
+import com.ats.webapi.repo.salesreport3.SubCatDateWiseDataRepo;
 import com.ats.webapi.model.salesreport3.FrSubCatBillData;
 import com.ats.webapi.model.salesreport3.YearlyFrSubCatData;
 
@@ -60,10 +64,10 @@ public class SalesReportApiController3 {
 
 	@Autowired
 	FrAndSubCatGrnGvnDataRepo frAndSubCatGrnGvnDataRepo;
-	
+
 	@Autowired
 	FrItemWiseSoldDataRepo frItemWiseSoldDataRepo;
-	
+
 	@Autowired
 	FrItemWiseGrnGvnRepo frItemWiseGrnGvnRepo;
 
@@ -72,6 +76,12 @@ public class SalesReportApiController3 {
 
 	@Autowired
 	FrSubCatWiseSellDataRepo frSubCatWiseSellDataRepo;
+
+	@Autowired
+	SubCatDateWiseDataRepo subCatDateWiseDataRepo;
+	
+	@Autowired
+	HsnDateWiseSellReportRepo hsnDateWiseSellReportRepo;
 	
 
 	@RequestMapping(value = { "/getFrWiseItemSoldReport" }, method = RequestMethod.POST)
@@ -546,7 +556,6 @@ public class SalesReportApiController3 {
 
 				if (retList != null) {
 
-
 					for (int i = 0; i < retList.size(); i++) {
 
 						if (retList.get(i).getMonth() == month
@@ -640,10 +649,9 @@ public class SalesReportApiController3 {
 		return reportList;
 	}
 
-	
-	//----------------------------SELL REPORT YEARLY SUB CAT WISE------------------------------
-	
-	
+	// ----------------------------SELL REPORT YEARLY SUB CAT
+	// WISE------------------------------
+
 	@RequestMapping(value = { "/getFrSubCatSellYearlyReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<YearlyFrSubCatData> getFrSubCatSellYearlyReport(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("subCatIdList") List<Integer> subCatIdList,
@@ -673,7 +681,6 @@ public class SalesReportApiController3 {
 					}
 				}
 			}
-
 
 			System.err.println("FR IDS ----------------------------------- " + frIds);
 			System.err.println("FR NAMES ----------------------------------- " + frNames);
@@ -707,7 +714,6 @@ public class SalesReportApiController3 {
 					}
 
 				}
-
 
 				frWiseList.setSubCatList(subCatBillList);
 
@@ -829,295 +835,325 @@ public class SalesReportApiController3 {
 		return reportList;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//---------------------OPS ITEM WISE YEARLY REPORT-------------------------------
-	
+	// ---------------------OPS ITEM WISE YEARLY
+	// REPORT-------------------------------
 
-		@RequestMapping(value = { "/getOpsItemwiseYearlyPurchaseReport" }, method = RequestMethod.POST)
-		public @ResponseBody List<FrItemWiseYearlyData> getOpsItemwiseYearlyPurchaseReport(@RequestParam("fromDate") String fromDate,
-				@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<Integer> catIdList,
-				@RequestParam("frId") int frId) {
+	@RequestMapping(value = { "/getOpsItemwiseYearlyPurchaseReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<FrItemWiseYearlyData> getOpsItemwiseYearlyPurchaseReport(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("catIdList") List<Integer> catIdList, @RequestParam("frId") int frId) {
 
-			System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
-					+ "     CAT : " + catIdList + "          FRID : " + frId);
+		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
+				+ "     CAT : " + catIdList + "          FRID : " + frId);
 
-			List<FrItemWiseYearlyData> reportList = new ArrayList<>();
-			List<SubCatWiseItems> frWiseSubCatList = new ArrayList<>();
+		List<FrItemWiseYearlyData> reportList = new ArrayList<>();
+		List<SubCatWiseItems> frWiseSubCatList = new ArrayList<>();
 
-			try {
+		try {
 
-				List<FrItemwiseData> soldList = frItemWiseSoldDataRepo.getItemwiseBillData(fromDate, toDate, catIdList, frId);
-				List<FrItemwiseVarAndRetData> varList = frItemWiseGrnGvnRepo.getVariation(fromDate, toDate, catIdList, frId);
-				List<FrItemwiseVarAndRetData> retList = frItemWiseGrnGvnRepo.getReturn(fromDate, toDate, catIdList, frId);
+			List<FrItemwiseData> soldList = frItemWiseSoldDataRepo.getItemwiseBillData(fromDate, toDate, catIdList,
+					frId);
+			List<FrItemwiseVarAndRetData> varList = frItemWiseGrnGvnRepo.getVariation(fromDate, toDate, catIdList,
+					frId);
+			List<FrItemwiseVarAndRetData> retList = frItemWiseGrnGvnRepo.getReturn(fromDate, toDate, catIdList, frId);
 
-				System.err.println("SOLD -- " + soldList);
-				System.err.println("VAR -- " + varList);
-				System.err.println("RET -- " + retList);
+			System.err.println("SOLD -- " + soldList);
+			System.err.println("VAR -- " + varList);
+			System.err.println("RET -- " + retList);
 
-				ArrayList<Integer> subCatIds = new ArrayList<>();
-				ArrayList<String> subCatNames = new ArrayList<>();
+			ArrayList<Integer> subCatIds = new ArrayList<>();
+			ArrayList<String> subCatNames = new ArrayList<>();
+
+			if (soldList != null) {
+				for (int i = 0; i < soldList.size(); i++) {
+					if (!subCatIds.contains(soldList.get(i).getSubCatId())) {
+						subCatIds.add(soldList.get(i).getSubCatId());
+						subCatNames.add(soldList.get(i).getSubCatName());
+					}
+				}
+			}
+
+			if (varList != null) {
+				for (int i = 0; i < varList.size(); i++) {
+					if (!subCatIds.contains(varList.get(i).getSubCatId())) {
+						subCatIds.add(varList.get(i).getSubCatId());
+						subCatNames.add(varList.get(i).getSubCatName());
+					}
+				}
+			}
+
+			if (retList != null) {
+				for (int i = 0; i < retList.size(); i++) {
+					if (!subCatIds.contains(retList.get(i).getSubCatId())) {
+						subCatIds.add(retList.get(i).getSubCatId());
+						subCatNames.add(retList.get(i).getSubCatName());
+					}
+				}
+			}
+
+			System.err.println("SUB CAT IDS ----------------------------------- " + subCatIds);
+			System.err.println("SUB CAT NAMES ----------------------------------- " + subCatNames);
+
+			for (int i = 0; i < subCatIds.size(); i++) {
+
+				SubCatWiseItems subCatWiseItemList = new SubCatWiseItems();
+
+				subCatWiseItemList.setSubCatId(subCatIds.get(i));
+				subCatWiseItemList.setSubCatName(subCatNames.get(i));
+
+				ArrayList<ItemList> itemList = new ArrayList<>();
+				ArrayList<Integer> tempItemIdList = new ArrayList<>();
+
+				for (int j = 0; j < soldList.size(); j++) {
+
+					if (subCatIds.get(i) == soldList.get(j).getSubCatId()) {
+
+						if (!tempItemIdList.contains(soldList.get(j).getItemId())) {
+
+							tempItemIdList.add(soldList.get(j).getItemId());
+
+							ItemList bill = new ItemList();
+
+							bill.setItemId(soldList.get(j).getItemId());
+							bill.setItemName(soldList.get(j).getItemName());
+
+							itemList.add(bill);
+						}
+
+					}
+
+				}
+
+				for (int j = 0; j < varList.size(); j++) {
+
+					if (subCatIds.get(i) == varList.get(j).getSubCatId()) {
+
+						if (!tempItemIdList.contains(varList.get(j).getItemId())) {
+
+							tempItemIdList.add(varList.get(j).getItemId());
+
+							ItemList bill = new ItemList();
+
+							bill.setItemId(varList.get(j).getItemId());
+							bill.setItemName(varList.get(j).getItemName());
+
+							itemList.add(bill);
+						}
+
+					}
+
+				}
+
+				for (int j = 0; j < retList.size(); j++) {
+
+					if (subCatIds.get(i) == retList.get(j).getFrId()) {
+
+						if (!tempItemIdList.contains(retList.get(j).getSubCatId())) {
+
+							tempItemIdList.add(retList.get(j).getSubCatId());
+
+							ItemList bill = new ItemList();
+
+							bill.setItemId(retList.get(j).getItemId());
+							bill.setItemName(retList.get(j).getItemName());
+
+							itemList.add(bill);
+						}
+
+					}
+
+				}
+
+				subCatWiseItemList.setItemList(itemList);
+
+				frWiseSubCatList.add(subCatWiseItemList);
+			}
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			Calendar calFrom = Calendar.getInstance();
+			Calendar calTo = Calendar.getInstance();
+
+			Date d1 = sdf.parse(fromDate);
+			Date d2 = sdf.parse(toDate);
+
+			calFrom.setTime(d1);
+			calTo.setTime(d2);
+
+			while (calFrom.before(calTo)) {
+
+				System.err.println(
+						"--------------------------------------------NEW-----------------------------------------------");
+
+				SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMM-yyyy");
+
+				int month = calFrom.get(Calendar.MONTH) + 1;
+				int year = calFrom.get(Calendar.YEAR);
+
+				FrItemWiseYearlyData data = new FrItemWiseYearlyData();
+				data.setMonthId(month);
+				data.setYearId("" + year);
+				data.setDateStr(sdfMonthYear.format(calFrom.getTime()));
+
+				List<TempSubCatWiseItems> tempFrWiseSubCatList = new ArrayList<>();
+				// tempFrWiseSubCatList.clear();
+				// tempFrWiseSubCatList.addAll(frWiseSubCatList);
+
+				if (frWiseSubCatList != null) {
+					for (int i = 0; i < frWiseSubCatList.size(); i++) {
+						TempSubCatWiseItems sc = new TempSubCatWiseItems();
+						sc.setSubCatId(frWiseSubCatList.get(i).getSubCatId());
+						sc.setSubCatName(frWiseSubCatList.get(i).getSubCatName());
+
+						List<TempItemList> tempItemList = new ArrayList<>();
+						if (frWiseSubCatList.get(i).getItemList() != null) {
+
+							for (int j = 0; j < frWiseSubCatList.get(i).getItemList().size(); j++) {
+								TempItemList scData = new TempItemList();
+								scData.setItemId(frWiseSubCatList.get(i).getItemList().get(j).getItemId());
+								scData.setItemName(frWiseSubCatList.get(i).getItemList().get(j).getItemName());
+								tempItemList.add(scData);
+							}
+						}
+						sc.setItemList(tempItemList);
+						tempFrWiseSubCatList.add(sc);
+					}
+				}
+
+				data.setDataList(tempFrWiseSubCatList);
+
+				System.err.println("MONTH - " + month);
+				System.err.println("NEW DATA - " + tempFrWiseSubCatList);
+
+				// List<FrSubCatBillData> billList = new ArrayList<>();
 
 				if (soldList != null) {
 					for (int i = 0; i < soldList.size(); i++) {
-						if (!subCatIds.contains(soldList.get(i).getSubCatId())) {
-							subCatIds.add(soldList.get(i).getSubCatId());
-							subCatNames.add(soldList.get(i).getSubCatName());
+
+						if (soldList.get(i).getMonth() == month
+								&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
+
+							System.err.println("---MATCHED ---------- " + soldList.get(i).getMonth() + " - "
+									+ soldList.get(i).getYear());
+
+							if (tempFrWiseSubCatList != null) {
+
+								for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
+
+									TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
+
+									if (scData.getSubCatId() == soldList.get(i).getSubCatId()) {
+
+										System.err.println("---SC MATCHED ---------- " + soldList.get(i).getSubCatId());
+
+										for (int k = 0; k < scData.getItemList().size(); k++) {
+
+											TempItemList billData = scData.getItemList().get(k);
+
+											if (soldList.get(i).getItemId() == billData.getItemId()) {
+
+												System.err.println(
+														"---ITEM MATCHED ---------- " + soldList.get(i).getItemId());
+
+												billData.setSoldQty(soldList.get(i).getSoldQty());
+												billData.setSoldAmt(soldList.get(i).getSoldAmt());
+												billData.setTaxableAmt(soldList.get(i).getTaxableAmt());
+												billData.setTaxAmt(soldList.get(i).getTaxAmt());
+
+												break;
+											}
+										}
+									}
+
+								}
+
+							}
+
+							// billList.add(bill);
+
 						}
+
 					}
 				}
 
 				if (varList != null) {
 					for (int i = 0; i < varList.size(); i++) {
-						if (!subCatIds.contains(varList.get(i).getSubCatId())) {
-							subCatIds.add(varList.get(i).getSubCatId());
-							subCatNames.add(varList.get(i).getSubCatName());
+
+						if (varList.get(i).getMonth() == month
+								&& varList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
+
+							if (tempFrWiseSubCatList != null) {
+
+								for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
+
+									TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
+
+									if (scData.getSubCatId() == varList.get(i).getSubCatId()) {
+
+										System.err.println("---SC MATCHED ---------- " + varList.get(i).getFrId());
+
+										for (int k = 0; k < scData.getItemList().size(); k++) {
+
+											TempItemList billData = scData.getItemList().get(k);
+
+											if (varList.get(i).getItemId() == billData.getItemId()) {
+
+												System.err.println(
+														"---ITEM MATCHED ---------- " + varList.get(i).getItemId());
+
+												billData.setVarQty(varList.get(i).getQty());
+												billData.setVarAmt(varList.get(i).getAmt());
+												billData.setVarTaxableAmt(varList.get(i).getTaxableAmt());
+												billData.setVarTaxAmt(varList.get(i).getTaxAmt());
+
+												break;
+											}
+										}
+									}
+
+								}
+
+							}
+
 						}
+
 					}
 				}
 
 				if (retList != null) {
+
 					for (int i = 0; i < retList.size(); i++) {
-						if (!subCatIds.contains(retList.get(i).getSubCatId())) {
-							subCatIds.add(retList.get(i).getSubCatId());
-							subCatNames.add(retList.get(i).getSubCatName());
-						}
-					}
-				}
 
-				System.err.println("SUB CAT IDS ----------------------------------- " + subCatIds);
-				System.err.println("SUB CAT NAMES ----------------------------------- " + subCatNames);
+						if (retList.get(i).getMonth() == month
+								&& retList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
 
-				for (int i = 0; i < subCatIds.size(); i++) {
+							if (tempFrWiseSubCatList != null) {
 
-					SubCatWiseItems subCatWiseItemList = new SubCatWiseItems();
+								for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
 
-					subCatWiseItemList.setSubCatId(subCatIds.get(i));
-					subCatWiseItemList.setSubCatName(subCatNames.get(i));
+									TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
 
-					ArrayList<ItemList> itemList = new ArrayList<>();
-					ArrayList<Integer> tempItemIdList = new ArrayList<>();
+									if (scData.getSubCatId() == retList.get(i).getSubCatId()) {
 
-					for (int j = 0; j < soldList.size(); j++) {
+										System.err.println("---SC MATCHED ---------- " + retList.get(i).getFrId());
 
-						if (subCatIds.get(i) == soldList.get(j).getSubCatId()) {
+										for (int k = 0; k < scData.getItemList().size(); k++) {
 
-							if (!tempItemIdList.contains(soldList.get(j).getItemId())) {
+											TempItemList billData = scData.getItemList().get(k);
 
-								tempItemIdList.add(soldList.get(j).getItemId());
+											if (retList.get(i).getItemId() == billData.getItemId()) {
 
-								ItemList bill = new ItemList();
+												System.err.println(
+														"---ITEM MATCHED ---------- " + retList.get(i).getItemId());
 
-								bill.setItemId(soldList.get(j).getItemId());
-								bill.setItemName(soldList.get(j).getItemName());
+												billData.setRetQty(retList.get(i).getQty());
+												billData.setRetAmt(retList.get(i).getAmt());
+												billData.setRetTaxableAmt(retList.get(i).getTaxableAmt());
+												billData.setRetTaxAmt(retList.get(i).getTaxAmt());
 
-								itemList.add(bill);
-							}
-
-						}
-
-					}
-
-					for (int j = 0; j < varList.size(); j++) {
-
-						if (subCatIds.get(i) == varList.get(j).getSubCatId()) {
-
-							if (!tempItemIdList.contains(varList.get(j).getItemId())) {
-
-								tempItemIdList.add(varList.get(j).getItemId());
-
-								ItemList bill = new ItemList();
-
-								bill.setItemId(varList.get(j).getItemId());
-								bill.setItemName(varList.get(j).getItemName());
-
-								itemList.add(bill);
-							}
-
-						}
-
-					}
-
-					for (int j = 0; j < retList.size(); j++) {
-
-						if (subCatIds.get(i) == retList.get(j).getFrId()) {
-
-							if (!tempItemIdList.contains(retList.get(j).getSubCatId())) {
-
-								tempItemIdList.add(retList.get(j).getSubCatId());
-
-								ItemList bill = new ItemList();
-
-								bill.setItemId(retList.get(j).getItemId());
-								bill.setItemName(retList.get(j).getItemName());
-
-								itemList.add(bill);
-							}
-
-						}
-
-					}
-
-					subCatWiseItemList.setItemList(itemList);
-
-					frWiseSubCatList.add(subCatWiseItemList);
-				}
-
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-				Calendar calFrom = Calendar.getInstance();
-				Calendar calTo = Calendar.getInstance();
-
-				Date d1 = sdf.parse(fromDate);
-				Date d2 = sdf.parse(toDate);
-
-				calFrom.setTime(d1);
-				calTo.setTime(d2);
-
-				while (calFrom.before(calTo)) {
-
-					System.err.println(
-							"--------------------------------------------NEW-----------------------------------------------");
-
-					SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMM-yyyy");
-
-					int month = calFrom.get(Calendar.MONTH) + 1;
-					int year = calFrom.get(Calendar.YEAR);
-
-					FrItemWiseYearlyData data = new FrItemWiseYearlyData();
-					data.setMonthId(month);
-					data.setYearId("" + year);
-					data.setDateStr(sdfMonthYear.format(calFrom.getTime()));
-
-					List<TempSubCatWiseItems> tempFrWiseSubCatList = new ArrayList<>();
-					// tempFrWiseSubCatList.clear();
-					// tempFrWiseSubCatList.addAll(frWiseSubCatList);
-
-					if (frWiseSubCatList != null) {
-						for (int i = 0; i < frWiseSubCatList.size(); i++) {
-							TempSubCatWiseItems sc = new TempSubCatWiseItems();
-							sc.setSubCatId(frWiseSubCatList.get(i).getSubCatId());
-							sc.setSubCatName(frWiseSubCatList.get(i).getSubCatName());
-
-							List<TempItemList> tempItemList = new ArrayList<>();
-							if (frWiseSubCatList.get(i).getItemList() != null) {
-
-								for (int j = 0; j < frWiseSubCatList.get(i).getItemList().size(); j++) {
-									TempItemList scData = new TempItemList();
-									scData.setItemId(frWiseSubCatList.get(i).getItemList().get(j).getItemId());
-									scData.setItemName(frWiseSubCatList.get(i).getItemList().get(j).getItemName());
-									tempItemList.add(scData);
-								}
-							}
-							sc.setItemList(tempItemList);
-							tempFrWiseSubCatList.add(sc);
-						}
-					}
-
-					data.setDataList(tempFrWiseSubCatList);
-
-					System.err.println("MONTH - " + month);
-					System.err.println("NEW DATA - " + tempFrWiseSubCatList);
-
-					// List<FrSubCatBillData> billList = new ArrayList<>();
-
-					if (soldList != null) {
-						for (int i = 0; i < soldList.size(); i++) {
-
-							if (soldList.get(i).getMonth() == month
-									&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
-
-								System.err.println("---MATCHED ---------- " + soldList.get(i).getMonth() + " - "
-										+ soldList.get(i).getYear());
-
-								if (tempFrWiseSubCatList != null) {
-
-									for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
-
-										TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
-
-										if (scData.getSubCatId() == soldList.get(i).getSubCatId()) {
-
-											System.err.println("---SC MATCHED ---------- " + soldList.get(i).getSubCatId());
-
-											for (int k = 0; k < scData.getItemList().size(); k++) {
-
-												TempItemList billData = scData.getItemList().get(k);
-
-												if (soldList.get(i).getItemId() == billData.getItemId()) {
-
-													System.err.println("---ITEM MATCHED ---------- "
-															+ soldList.get(i).getItemId());
-
-													billData.setSoldQty(soldList.get(i).getSoldQty());
-													billData.setSoldAmt(soldList.get(i).getSoldAmt());
-													billData.setTaxableAmt(soldList.get(i).getTaxableAmt());
-													billData.setTaxAmt(soldList.get(i).getTaxAmt());
-
-													break;
-												}
+												break;
 											}
 										}
-
-									}
-
-								}
-
-								// billList.add(bill);
-
-							}
-
-						}
-					}
-
-					if (varList != null) {
-						for (int i = 0; i < varList.size(); i++) {
-
-							if (varList.get(i).getMonth() == month
-									&& varList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
-
-								
-
-								if (tempFrWiseSubCatList != null) {
-
-									for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
-
-										TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
-
-										if (scData.getSubCatId() == varList.get(i).getSubCatId()) {
-
-											System.err.println("---SC MATCHED ---------- " + varList.get(i).getFrId());
-
-											for (int k = 0; k < scData.getItemList().size(); k++) {
-
-												TempItemList billData = scData.getItemList().get(k);
-
-												if (varList.get(i).getItemId() == billData.getItemId()) {
-
-													System.err.println("---ITEM MATCHED ---------- "
-															+ varList.get(i).getItemId());
-
-													billData.setVarQty(varList.get(i).getQty());
-													billData.setVarAmt(varList.get(i).getAmt());
-													billData.setVarTaxableAmt(varList.get(i).getTaxableAmt());
-													billData.setVarTaxAmt(varList.get(i).getTaxAmt());
-
-													break;
-												}
-											}
-										}
-
 									}
 
 								}
@@ -1125,264 +1161,257 @@ public class SalesReportApiController3 {
 							}
 
 						}
+
 					}
-
-					if (retList != null) {
-
-
-						for (int i = 0; i < retList.size(); i++) {
-
-							if (retList.get(i).getMonth() == month
-									&& retList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
-
-								
-
-								if (tempFrWiseSubCatList != null) {
-
-									for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
-
-										TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
-
-										if (scData.getSubCatId() == retList.get(i).getSubCatId()) {
-
-											System.err.println("---SC MATCHED ---------- " + retList.get(i).getFrId());
-
-											for (int k = 0; k < scData.getItemList().size(); k++) {
-
-												TempItemList billData = scData.getItemList().get(k);
-
-												if (retList.get(i).getItemId() == billData.getItemId()) {
-
-													System.err.println("---ITEM MATCHED ---------- "
-															+ retList.get(i).getItemId());
-
-													billData.setRetQty(retList.get(i).getQty());
-													billData.setRetAmt(retList.get(i).getAmt());
-													billData.setRetTaxableAmt(retList.get(i).getTaxableAmt());
-													billData.setRetTaxAmt(retList.get(i).getTaxAmt());
-
-													break;
-												}
-											}
-										}
-
-									}
-
-								}
-
-							}
-
-						}
-					}
-
-					// data.setDataList(billList);
-
-					// data.setDataList(tempFrWiseSubCatList);
-
-					reportList.add(data);
-
-					calFrom.add(Calendar.MONTH, 1);
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
+				// data.setDataList(billList);
+
+				// data.setDataList(tempFrWiseSubCatList);
+
+				reportList.add(data);
+
+				calFrom.add(Calendar.MONTH, 1);
 			}
 
-			return reportList;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		
-		
-		
-		//---------------------OPS ITEM WISE SELL YEARLY REPORT-------------------------------
-		
+		return reportList;
+	}
 
-		@RequestMapping(value = { "/getOpsItemwiseYearlySellReport" }, method = RequestMethod.POST)
-		public @ResponseBody List<FrItemWiseYearlyData> getOpsItemwiseYearlySellReport(@RequestParam("fromDate") String fromDate,
-				@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<Integer> catIdList,
-				@RequestParam("frId") int frId) {
+	// ---------------------OPS ITEM WISE SELL YEARLY
+	// REPORT-------------------------------
 
-			System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
-					+ "     CAT : " + catIdList + "          FRID : " + frId);
+	@RequestMapping(value = { "/getOpsItemwiseYearlySellReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<FrItemWiseYearlyData> getOpsItemwiseYearlySellReport(
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("catIdList") List<Integer> catIdList, @RequestParam("frId") int frId) {
 
-			List<FrItemWiseYearlyData> reportList = new ArrayList<>();
-			List<SubCatWiseItems> frWiseSubCatList = new ArrayList<>();
+		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
+				+ "     CAT : " + catIdList + "          FRID : " + frId);
 
-			try {
+		List<FrItemWiseYearlyData> reportList = new ArrayList<>();
+		List<SubCatWiseItems> frWiseSubCatList = new ArrayList<>();
 
-				List<FrItemWiseSellData> soldList = frItemWiseSellDataRepo.getItemwiseSellBillData(fromDate, toDate, catIdList, frId);
+		try {
 
-				System.err.println("SOLD -- " + soldList);
+			List<FrItemWiseSellData> soldList = frItemWiseSellDataRepo.getItemwiseSellBillData(fromDate, toDate,
+					catIdList, frId);
 
-				ArrayList<Integer> subCatIds = new ArrayList<>();
-				ArrayList<String> subCatNames = new ArrayList<>();
+			System.err.println("SOLD -- " + soldList);
+
+			ArrayList<Integer> subCatIds = new ArrayList<>();
+			ArrayList<String> subCatNames = new ArrayList<>();
+
+			if (soldList != null) {
+				for (int i = 0; i < soldList.size(); i++) {
+					if (!subCatIds.contains(soldList.get(i).getSubCatId())) {
+						subCatIds.add(soldList.get(i).getSubCatId());
+						subCatNames.add(soldList.get(i).getSubCatName());
+					}
+				}
+			}
+
+			System.err.println("SUB CAT IDS ----------------------------------- " + subCatIds);
+			System.err.println("SUB CAT NAMES ----------------------------------- " + subCatNames);
+
+			for (int i = 0; i < subCatIds.size(); i++) {
+
+				SubCatWiseItems subCatWiseItemList = new SubCatWiseItems();
+
+				subCatWiseItemList.setSubCatId(subCatIds.get(i));
+				subCatWiseItemList.setSubCatName(subCatNames.get(i));
+
+				ArrayList<ItemList> itemList = new ArrayList<>();
+				ArrayList<Integer> tempItemIdList = new ArrayList<>();
+
+				for (int j = 0; j < soldList.size(); j++) {
+
+					if (subCatIds.get(i) == soldList.get(j).getSubCatId()) {
+
+						if (!tempItemIdList.contains(soldList.get(j).getItemId())) {
+
+							tempItemIdList.add(soldList.get(j).getItemId());
+
+							ItemList bill = new ItemList();
+
+							bill.setItemId(soldList.get(j).getItemId());
+							bill.setItemName(soldList.get(j).getItemName());
+
+							itemList.add(bill);
+						}
+
+					}
+
+				}
+
+				subCatWiseItemList.setItemList(itemList);
+
+				frWiseSubCatList.add(subCatWiseItemList);
+			}
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			Calendar calFrom = Calendar.getInstance();
+			Calendar calTo = Calendar.getInstance();
+
+			Date d1 = sdf.parse(fromDate);
+			Date d2 = sdf.parse(toDate);
+
+			calFrom.setTime(d1);
+			calTo.setTime(d2);
+
+			while (calFrom.before(calTo)) {
+
+				System.err.println(
+						"--------------------------------------------NEW-----------------------------------------------");
+
+				SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMM-yyyy");
+
+				int month = calFrom.get(Calendar.MONTH) + 1;
+				int year = calFrom.get(Calendar.YEAR);
+
+				FrItemWiseYearlyData data = new FrItemWiseYearlyData();
+				data.setMonthId(month);
+				data.setYearId("" + year);
+				data.setDateStr(sdfMonthYear.format(calFrom.getTime()));
+
+				List<TempSubCatWiseItems> tempFrWiseSubCatList = new ArrayList<>();
+				// tempFrWiseSubCatList.clear();
+				// tempFrWiseSubCatList.addAll(frWiseSubCatList);
+
+				if (frWiseSubCatList != null) {
+					for (int i = 0; i < frWiseSubCatList.size(); i++) {
+						TempSubCatWiseItems sc = new TempSubCatWiseItems();
+						sc.setSubCatId(frWiseSubCatList.get(i).getSubCatId());
+						sc.setSubCatName(frWiseSubCatList.get(i).getSubCatName());
+
+						List<TempItemList> tempItemList = new ArrayList<>();
+						if (frWiseSubCatList.get(i).getItemList() != null) {
+
+							for (int j = 0; j < frWiseSubCatList.get(i).getItemList().size(); j++) {
+								TempItemList scData = new TempItemList();
+								scData.setItemId(frWiseSubCatList.get(i).getItemList().get(j).getItemId());
+								scData.setItemName(frWiseSubCatList.get(i).getItemList().get(j).getItemName());
+								tempItemList.add(scData);
+							}
+						}
+						sc.setItemList(tempItemList);
+						tempFrWiseSubCatList.add(sc);
+					}
+				}
+
+				data.setDataList(tempFrWiseSubCatList);
+
+				System.err.println("MONTH - " + month);
+				System.err.println("NEW DATA - " + tempFrWiseSubCatList);
+
+				// List<FrSubCatBillData> billList = new ArrayList<>();
 
 				if (soldList != null) {
 					for (int i = 0; i < soldList.size(); i++) {
-						if (!subCatIds.contains(soldList.get(i).getSubCatId())) {
-							subCatIds.add(soldList.get(i).getSubCatId());
-							subCatNames.add(soldList.get(i).getSubCatName());
-						}
-					}
-				}
 
-				System.err.println("SUB CAT IDS ----------------------------------- " + subCatIds);
-				System.err.println("SUB CAT NAMES ----------------------------------- " + subCatNames);
+						if (soldList.get(i).getMonth() == month
+								&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
 
-				for (int i = 0; i < subCatIds.size(); i++) {
+							System.err.println("---MATCHED ---------- " + soldList.get(i).getMonth() + " - "
+									+ soldList.get(i).getYear());
 
-					SubCatWiseItems subCatWiseItemList = new SubCatWiseItems();
+							if (tempFrWiseSubCatList != null) {
 
-					subCatWiseItemList.setSubCatId(subCatIds.get(i));
-					subCatWiseItemList.setSubCatName(subCatNames.get(i));
+								for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
 
-					ArrayList<ItemList> itemList = new ArrayList<>();
-					ArrayList<Integer> tempItemIdList = new ArrayList<>();
+									TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
 
-					for (int j = 0; j < soldList.size(); j++) {
+									if (scData.getSubCatId() == soldList.get(i).getSubCatId()) {
 
-						if (subCatIds.get(i) == soldList.get(j).getSubCatId()) {
+										System.err.println("---SC MATCHED ---------- " + soldList.get(i).getSubCatId());
 
-							if (!tempItemIdList.contains(soldList.get(j).getItemId())) {
+										for (int k = 0; k < scData.getItemList().size(); k++) {
 
-								tempItemIdList.add(soldList.get(j).getItemId());
+											TempItemList billData = scData.getItemList().get(k);
 
-								ItemList bill = new ItemList();
+											if (soldList.get(i).getItemId() == billData.getItemId()) {
 
-								bill.setItemId(soldList.get(j).getItemId());
-								bill.setItemName(soldList.get(j).getItemName());
+												System.err.println(
+														"---ITEM MATCHED ---------- " + soldList.get(i).getItemId());
 
-								itemList.add(bill);
-							}
+												billData.setSoldQty(soldList.get(i).getSoldQty());
+												billData.setSoldAmt(soldList.get(i).getSoldAmt());
 
-						}
-
-					}
-
-
-
-					subCatWiseItemList.setItemList(itemList);
-
-					frWiseSubCatList.add(subCatWiseItemList);
-				}
-
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-				Calendar calFrom = Calendar.getInstance();
-				Calendar calTo = Calendar.getInstance();
-
-				Date d1 = sdf.parse(fromDate);
-				Date d2 = sdf.parse(toDate);
-
-				calFrom.setTime(d1);
-				calTo.setTime(d2);
-
-				while (calFrom.before(calTo)) {
-
-					System.err.println(
-							"--------------------------------------------NEW-----------------------------------------------");
-
-					SimpleDateFormat sdfMonthYear = new SimpleDateFormat("MMM-yyyy");
-
-					int month = calFrom.get(Calendar.MONTH) + 1;
-					int year = calFrom.get(Calendar.YEAR);
-
-					FrItemWiseYearlyData data = new FrItemWiseYearlyData();
-					data.setMonthId(month);
-					data.setYearId("" + year);
-					data.setDateStr(sdfMonthYear.format(calFrom.getTime()));
-
-					List<TempSubCatWiseItems> tempFrWiseSubCatList = new ArrayList<>();
-					// tempFrWiseSubCatList.clear();
-					// tempFrWiseSubCatList.addAll(frWiseSubCatList);
-
-					if (frWiseSubCatList != null) {
-						for (int i = 0; i < frWiseSubCatList.size(); i++) {
-							TempSubCatWiseItems sc = new TempSubCatWiseItems();
-							sc.setSubCatId(frWiseSubCatList.get(i).getSubCatId());
-							sc.setSubCatName(frWiseSubCatList.get(i).getSubCatName());
-
-							List<TempItemList> tempItemList = new ArrayList<>();
-							if (frWiseSubCatList.get(i).getItemList() != null) {
-
-								for (int j = 0; j < frWiseSubCatList.get(i).getItemList().size(); j++) {
-									TempItemList scData = new TempItemList();
-									scData.setItemId(frWiseSubCatList.get(i).getItemList().get(j).getItemId());
-									scData.setItemName(frWiseSubCatList.get(i).getItemList().get(j).getItemName());
-									tempItemList.add(scData);
-								}
-							}
-							sc.setItemList(tempItemList);
-							tempFrWiseSubCatList.add(sc);
-						}
-					}
-
-					data.setDataList(tempFrWiseSubCatList);
-
-					System.err.println("MONTH - " + month);
-					System.err.println("NEW DATA - " + tempFrWiseSubCatList);
-
-					// List<FrSubCatBillData> billList = new ArrayList<>();
-
-					if (soldList != null) {
-						for (int i = 0; i < soldList.size(); i++) {
-
-							if (soldList.get(i).getMonth() == month
-									&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
-
-								System.err.println("---MATCHED ---------- " + soldList.get(i).getMonth() + " - "
-										+ soldList.get(i).getYear());
-
-								if (tempFrWiseSubCatList != null) {
-
-									for (int j = 0; j < tempFrWiseSubCatList.size(); j++) {
-
-										TempSubCatWiseItems scData = tempFrWiseSubCatList.get(j);
-
-										if (scData.getSubCatId() == soldList.get(i).getSubCatId()) {
-
-											System.err.println("---SC MATCHED ---------- " + soldList.get(i).getSubCatId());
-
-											for (int k = 0; k < scData.getItemList().size(); k++) {
-
-												TempItemList billData = scData.getItemList().get(k);
-
-												if (soldList.get(i).getItemId() == billData.getItemId()) {
-
-													System.err.println("---ITEM MATCHED ---------- "
-															+ soldList.get(i).getItemId());
-
-													billData.setSoldQty(soldList.get(i).getSoldQty());
-													billData.setSoldAmt(soldList.get(i).getSoldAmt());
-
-													break;
-												}
+												break;
 											}
 										}
-
 									}
 
 								}
 
-
 							}
 
 						}
+
 					}
-
-
-					reportList.add(data);
-
-					calFrom.add(Calendar.MONTH, 1);
 				}
 
-			} catch (Exception e) {
-				e.printStackTrace();
+				reportList.add(data);
+
+				calFrom.add(Calendar.MONTH, 1);
 			}
 
-			return reportList;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		
-		
+		return reportList;
+	}
+
+	// --------SUBCAT DATE WISE SELL REPORT----------------------------
+
+	@RequestMapping(value = { "/getSubCatDateWiseSellReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<SubCatDateWiseData> getSubCatDateWiseSellReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("catIdList") List<Integer> catIdList,
+			@RequestParam("frId") int frId) {
+
+		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
+				+ "     CAT : " + catIdList + "          FR : " + frId);
+
+		List<SubCatDateWiseData> reportList = new ArrayList<>();
+
+		try {
+
+			reportList = subCatDateWiseDataRepo.getSellBillData(fromDate, toDate, frId, catIdList);
+			System.err.println("SOLD -- " + reportList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return reportList;
+	}
+
+	// --------HSN DATE WISE SELL REPORT----------------------------
+
+	@RequestMapping(value = { "/getHsnDateWiseSellReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<HsnDateWiseSellReport> getHsnDateWiseSellReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
+
+		System.err.println("PARAMETER ---------------- FROM DATE : " + fromDate + "        TO DATE : " + toDate
+				+ "          FR : " + frId);
+
+		List<HsnDateWiseSellReport> reportList = new ArrayList<>();
+
+		try {
+
+			reportList = hsnDateWiseSellReportRepo.getSellBillData(fromDate, toDate, frId);
+			System.err.println("SOLD -- " + reportList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return reportList;
+	}
+
 }
