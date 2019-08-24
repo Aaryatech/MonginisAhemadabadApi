@@ -1029,6 +1029,9 @@ public class SalesReportApiController3 {
 
 				if (soldList != null) {
 					for (int i = 0; i < soldList.size(); i++) {
+						
+						System.err.println("*************************** SOLD LIST MONTH : "+soldList.get(i).getMonth()+"    ------   MONTH : "+month);
+						System.err.println("*************************** SOLD LIST YEAR : "+soldList.get(i).getYear()+"    ------   YEAR : "+year);
 
 						if (soldList.get(i).getMonth() == month
 								&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {

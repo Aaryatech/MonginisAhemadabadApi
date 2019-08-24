@@ -81,7 +81,7 @@ public interface FrItemWiseSoldDataRepo extends JpaRepository<FrItemwiseData, In
 			"        YEAR(bh.bill_date)\r\n" + 
 			")\r\n" + 
 			"    ) AS i\r\n" + 
-			"GROUP BY\r\n" + 
+			"ORDER BY\r\n" + 
 			"    cat_id,\r\n" + 
 			"    sub_cat_id,\r\n" + 
 			"    item_name" + 
