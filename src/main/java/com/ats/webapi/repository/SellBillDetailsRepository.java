@@ -15,7 +15,7 @@ public interface SellBillDetailsRepository extends JpaRepository<SellBillDetails
 
     @Query(value="Select s.sell_bill_detail_no,s.sell_bill_no,s.cat_id,s.item_id,i.item_name,\n" + 
     		"	    		s.mrp,s.qty,s.mrp_base_rate,s.taxable_amt,s.sgst_per,s.sgst_rs,s.cgst_per,s.cgst_rs,\n" + 
-    		"	    		s.igst_per,s.igst_rs,s.total_tax,s.grand_total,coalesce((select m_item_sup.item_hsncd from m_item_sup where m_item_sup.item_id=i.id),0) as  remark,s.del_status \n" + 
+    		"	    		s.igst_per,s.igst_rs,s.total_tax,s.grand_total,s.remark,s.del_status \n" + 
     		"	    		from t_sell_bill_detail s,m_item i \n" + 
     		"	    		WHERE s.sell_bill_no=:billNo AND s.item_id=i.id AND s.del_status=0 ORDER BY s.sell_bill_detail_no DESC ",nativeQuery=true)
 	List<SellBillDetails> findByBillNo(@Param("billNo")int billNo);

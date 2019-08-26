@@ -1081,7 +1081,7 @@ public class MasterController {
 						                .collect(Collectors.toList());
 								List<PostFrItemStockHeader> prevStockHeader=postFrOpStockHeaderRepository.findByFrIdAndIsMonthClosedAndCatId(Integer.parseInt(frIdList.get(i)),0,configureFranchisee.getCatId());
 								System.err.println("9 prevStockHeader"+prevStockHeader);
-								if (!catIdForStock.contains(configureFranchisee.getCatId())) {
+								if (catIdForStock.contains(configureFranchisee.getCatId())) {
 
 								if(prevStockHeader.size()==0)
 								{

@@ -32,7 +32,14 @@ public class GetItemByCatIdServiceImpl implements GetItemByCatIdService {
 
 		GetItemByCatIdList itemList = new GetItemByCatIdList();
 
-		List<GetItemByCatId> itemByCatId = getItemByCatIdRepository.getItemByCategoryBySubCatId(subCatId);
+		List<GetItemByCatId> itemByCatId =null;
+		if(subCatId==4)
+		{
+			itemByCatId=getItemByCatIdRepository.getSpByCategoryBySubCatId();
+
+		}else {				
+			itemByCatId=getItemByCatIdRepository.getItemByCategoryBySubCatId(subCatId);
+		}
 
 		itemList.setGetItemByCatId(itemByCatId);
 

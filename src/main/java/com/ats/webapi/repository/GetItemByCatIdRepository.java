@@ -20,4 +20,9 @@ public interface GetItemByCatIdRepository extends JpaRepository<GetItemByCatId, 
 
 	List<GetItemByCatId> getItemByCategoryBySubCatId(@Param("subCatId") int subCatId);
 
+
+	@Query(value = " SELECT  s.sp_name as item_name,s.sp_id as id,s.sp_code as item_id,5 as item_grp1,4 as cat_id"
+			+ " from m_sp_cake s WHERE" + "  s.del_status=0 " + "", nativeQuery = true)
+	List<GetItemByCatId> getSpByCategoryBySubCatId();
+
 }
