@@ -26,6 +26,7 @@ import com.ats.webapi.model.salesvaluereport.SalesReturnQtyReportList;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueDao;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueDaoList;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueItemDao;
+import com.ats.webapi.model.taxreport.NonRegFrTaxDao;
 import com.ats.webapi.model.taxreport.Tax1Report;
 import com.ats.webapi.model.taxreport.Tax2Report;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
@@ -37,6 +38,7 @@ import com.ats.webapi.repository.frpurchasereport.SalesReportRoyaltyRepo;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnQtyDaoRepository;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnValueDaoRepository;
 import com.ats.webapi.repository.salesreturnreport.SalesReturnValueItemDaoRepo;
+import com.ats.webapi.repository.taxreport.NonRegFrTaxDaoRepository;
 import com.ats.webapi.repository.taxreport.Tax1ReportRepository;
 import com.ats.webapi.repository.taxreport.Tax2ReportRepository;
 
@@ -73,6 +75,9 @@ public class SalesReportController {
 
 	@Autowired
 	SalesReportFranchiseeRepo salesReportFranchiseeRepo;
+	
+	@Autowired
+	NonRegFrTaxDaoRepository nonRegFrTaxDaoRepository;
 
 	@RequestMapping(value = { "/getSaleReportFrwiseSummery" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportFranchisee> getSaleReportFrwiseSummery(
@@ -160,6 +165,22 @@ public class SalesReportController {
 			e.printStackTrace();
 		}
 		return tax1ReportList;
+	}
+	@RequestMapping(value = { "/getNonRegFrTaxReport" }, method = RequestMethod.POST)
+	public @ResponseBody List<NonRegFrTaxDao> getNonRegFrTaxReport(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<NonRegFrTaxDao> taxReportList = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			taxReportList = nonRegFrTaxDaoRepository.getNonRegFrTaxReport(fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println(" Exce in getNonRegFrTaxReport Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return taxReportList;
 	}
 
 	// Report 1 sales report bill wise order by date

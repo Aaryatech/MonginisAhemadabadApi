@@ -13,10 +13,12 @@ import com.ats.webapi.model.grngvnreport.GGReportByDate;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByFrId;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByItemId;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByMonthDate;
+import com.ats.webapi.model.grngvnreport.GrnGvnReportByGrnType;
 import com.ats.webapi.repository.ggreport.GGReportByDateRepo;
 import com.ats.webapi.repository.ggreport.GGReportGrpByFrIdRepo;
 import com.ats.webapi.repository.ggreport.GGReportGrpByItemIdRepo;
 import com.ats.webapi.repository.ggreport.GGreportGrpByDateMonthRepo;
+import com.ats.webapi.repository.ggreport.GrnGvnReportByGrnTypeRepo;
 
 @RestController
 public class GrnGvnReportController {
@@ -33,8 +35,40 @@ public class GrnGvnReportController {
 	
 	@Autowired
 	GGReportGrpByItemIdRepo gGReportGrpByItemIdRepo;
+	@Autowired
+	GrnGvnReportByGrnTypeRepo getGrnGvnReportByGrnTypeRepo; // 25-05-2018
 
-	
+	@RequestMapping(value = { "/getGrnGvnReportByGrnType" }, method = RequestMethod.POST)
+	public @ResponseBody List<GrnGvnReportByGrnType> getGrnGvnReportByGrnType(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList) {
+
+		System.err.println(
+				"Parameter received fromDate:  " + fromDate + "toDate : " + toDate + "frIdList  : " + frIdList);
+
+		List<GrnGvnReportByGrnType> gGvnReportByGrnTypeList = new ArrayList<GrnGvnReportByGrnType>();
+		try {
+
+			if (!frIdList.contains("0")) {
+				System.err.println(" frIdList: It is Not zero ");
+				gGvnReportByGrnTypeList = getGrnGvnReportByGrnTypeRepo.getGrnGvnReportByGrnType(fromDate, toDate,
+						frIdList);
+
+			} else {
+				System.err.println(" frIdList: It is  zero ");
+
+				gGvnReportByGrnTypeList = getGrnGvnReportByGrnTypeRepo.getGrnGvnReportByGrnTypeAllFr(fromDate, toDate);
+
+			}
+		} catch (Exception e) {
+
+			System.err.println("Exce in /GrnGvnReportController : /getGrnGvnReportByGrnType msg-" + e.getMessage()
+					+ " trace-" + e.getStackTrace().toString());
+			e.printStackTrace();
+			e.getCause();
+		}
+
+		return gGvnReportByGrnTypeList;
+	}
 	//r1
 	//report 1
 	@RequestMapping(value = { "/getgGReportByDate" }, method = RequestMethod.POST)
