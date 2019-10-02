@@ -32,7 +32,7 @@ public interface SubCatFrRepBillRepo extends JpaRepository<SubCatFrRepBill, Inte
 			"			        AND f.fr_id=tb.fr_id            \n" + 
 			"			        AND m_item.id=td.item_id            \n" + 
 			"			        AND m_item.item_grp2=sc.sub_cat_id  and  sc.sub_cat_id IN(:subCatIdList)   \n" + 
-			"			          AND m_item.item_grp1!=5 \n" + 
+			"			          AND td.cat_id!=5 \n" + 
 			"			    GROUP BY  \n" + 
 			"			        tb.fr_id,m_item.item_grp2     \n" + 
 			"			          \n" + 

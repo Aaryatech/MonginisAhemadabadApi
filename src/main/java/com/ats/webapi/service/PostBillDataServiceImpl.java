@@ -97,8 +97,9 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 
 			int length = String.valueOf(settingValue).length();
 			
+			invoiceNo =invoiceNo+""+String.format("%06d" , settingValue);
 
-			if (length == 1)
+			/*if (length == 1)
 			{
 				invoiceNo =invoiceNo+"/0000"+settingValue;
 			}
@@ -121,7 +122,7 @@ public class PostBillDataServiceImpl implements PostBillDataService {
 
 				invoiceNo =invoiceNo+"/"+settingValue;
 			}
-
+*/
 			System.out.println(invoiceNo+"*** settingValue= " + settingValue);
 			
 			

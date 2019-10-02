@@ -17,7 +17,7 @@ public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderFor
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
 			+ " m_franchisee.fr_name,m_franchisee.fr_address,m_franchisee.is_same_state FROM t_bill_header,m_franchisee WHERE "
 			+ " t_bill_header.bill_date BETWEEN :fromDate AND :toDate "
-			+ " AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.del_status=0 " + 
+			+ " AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.del_status=0 order by t_bill_header.ex_varchar1,t_bill_header.invoice_no" + 
 			"",nativeQuery=true)
 	
 	List<FrBillHeaderForPrint> getFrBillHeaderForPrint(@Param("fromDate")String fromDate, @Param("toDate")String toDate);
@@ -28,7 +28,7 @@ public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderFor
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
 			+ " m_franchisee.fr_name,m_franchisee.fr_address,m_franchisee.is_same_state FROM t_bill_header,m_franchisee WHERE "
 			+ " t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.fr_id IN (:frIdList) "
-			+ " AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.del_status=0 " + 
+			+ " AND t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.del_status=0 order by t_bill_header.ex_varchar1,t_bill_header.invoice_no" + 
 			"",nativeQuery=true)
 	
 	List<FrBillHeaderForPrint> getFrBillHeaderForPrintByFrIds(@Param("fromDate")String fromDate, @Param("toDate")String toDate,
@@ -45,7 +45,7 @@ public interface GetBillHeaderForPrintRepo extends JpaRepository<FrBillHeaderFor
 			+ " t_bill_header.total_tax,t_bill_header.status,t_bill_header.remark,t_bill_header.del_status,t_bill_header.party_name,t_bill_header.party_gstin,t_bill_header.party_address, "
 			+ " CONCAT(m_franchisee.fr_name, ' [GSTIN-' ,m_franchisee.fr_gst_no,']') as fr_name,m_franchisee.fr_address,m_franchisee.is_same_state FROM t_bill_header,m_franchisee WHERE "
 			+ "  "
-			+ " t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.bill_no IN (:billNoList) AND  t_bill_header.del_status=0 " + 
+			+ " t_bill_header.fr_id=m_franchisee.fr_id AND t_bill_header.bill_no IN (:billNoList) AND  t_bill_header.del_status=0 order by t_bill_header.ex_varchar1,t_bill_header.invoice_no" + 
 			"",nativeQuery=true)
 	
 	List<FrBillHeaderForPrint> getFrBillHeaderForPrintSelectedBill(@Param("billNoList") List<String> billNoList);
