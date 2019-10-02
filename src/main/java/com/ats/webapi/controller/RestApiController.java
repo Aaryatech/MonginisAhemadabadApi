@@ -3097,13 +3097,13 @@ public class RestApiController {
 		List<Item> items = new ArrayList<Item>();
 		try {
 
-			if (Integer.parseInt(subCatId) < 11) {
+			/*if (Integer.parseInt(subCatId) < 11) {
 				items = itemRepository.findByItemGrp1AndDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(subCatId, 0);
 
-			} else {
+			} else {*/
 				items = itemRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
 
-			}
+			//}
 			System.err.println("Items by subcat id  and delStatus  " + items.toString());
 
 		} catch (Exception e) {
