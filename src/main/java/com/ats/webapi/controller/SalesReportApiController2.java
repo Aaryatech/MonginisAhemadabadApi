@@ -47,8 +47,8 @@ public class SalesReportApiController2 {
 		List<SubCatReport> catReportList = new ArrayList<>();
 		List<SubCatBillRep> catReportBill = null;
 
-		List<SubCatCreditGrnRep> subCatCreditGrnRep = null;
-		List<SubCatCreditGrnRep> subCatCreditGvnRep = null;
+		List<SubCatCreditGrnRep> subCatCreditGrnRep = new ArrayList<>();
+		List<SubCatCreditGrnRep> subCatCreditGvnRep = new ArrayList<>();
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate);
@@ -57,9 +57,13 @@ public class SalesReportApiController2 {
 
 			catReportBill = subCatBillRepRepo.getData(fromDate, toDate);
 
+			
 			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
+			
+			System.err.println("Matched -------------------- " + subCatCreditGrnRep);
 
 			subCatCreditGvnRep = subCatCreditGrnRepRepo.getDataGVN(fromDate, toDate);
+			System.err.println("Matched -------------------- " + subCatCreditGvnRep);
 
 			for (int i = 0; i < catReportBill.size(); i++) {
 
@@ -85,6 +89,9 @@ public class SalesReportApiController2 {
 
 						catReportList.get(i).setRetQty(subCatCreditGrnRep.get(j).getVarQty());
 						catReportList.get(i).setRetAmt(subCatCreditGrnRep.get(j).getVarAmt());
+						
+						System.err.println("GRN " + subCatCreditGrnRep.get(j).getVarQty());
+						System.err.println("GRN AMT  " + subCatCreditGrnRep.get(j).getVarAmt());
 
 						break;
 
@@ -100,10 +107,13 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getSubCatId() == subCatCreditGvnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
+						System.err.println("GVN " + subCatCreditGvnRep.get(j).getVarQty());
+						System.err.println("GVN AMT  " + subCatCreditGvnRep.get(j).getVarAmt());
+						
 						break;
 
 					} else {
