@@ -1,5 +1,6 @@
 package com.ats.webapi.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.model.CreditNoteReport;
 import com.ats.webapi.model.grngvnreport.GGReportByDate;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByFrId;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByItemId;
 import com.ats.webapi.model.grngvnreport.GGReportGrpByMonthDate;
 import com.ats.webapi.model.grngvnreport.GrnGvnReportByGrnType;
+import com.ats.webapi.repo.CreditNoteReportRepo;
 import com.ats.webapi.repository.ggreport.GGReportByDateRepo;
 import com.ats.webapi.repository.ggreport.GGReportGrpByFrIdRepo;
 import com.ats.webapi.repository.ggreport.GGReportGrpByItemIdRepo;
@@ -38,6 +41,9 @@ public class GrnGvnReportController {
 	@Autowired
 	GrnGvnReportByGrnTypeRepo getGrnGvnReportByGrnTypeRepo; // 25-05-2018
 
+	@Autowired
+	CreditNoteReportRepo creditNoteReportRepo;
+	
 	@RequestMapping(value = { "/getGrnGvnReportByGrnType" }, method = RequestMethod.POST)
 	public @ResponseBody List<GrnGvnReportByGrnType> getGrnGvnReportByGrnType(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frIdList") List<String> frIdList) {
@@ -223,8 +229,48 @@ public class GrnGvnReportController {
 
 		return grpByFrIdList;
 	}
-
-
 	
+	@RequestMapping(value = { "/creditNoteReportBetweenDate" }, method = RequestMethod.POST)
+	public @ResponseBody List<CreditNoteReport> creditNoteReportBetweenDate(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate, @RequestParam("frId") int frId) {
+
+		 
+
+		List<CreditNoteReport> list = new ArrayList<>();
+		DecimalFormat df = new DecimalFormat("#.00");
+		try {
+			if (frId!=0) {
+				 
+				list = creditNoteReportRepo.creditNoteReportBetweenDate(fromDate, toDate,frId);
+				
+			} 
+			else {
+				
+				list = creditNoteReportRepo.creditNoteReportBetweenDate(fromDate, toDate);
+			}
+			
+			for(int i =0 ; i<list.size() ; i++)
+			{
+				
+				float rate = ((list.get(i).getIgstPer()/100)*list.get(i).getBaseRate())+list.get(i).getBaseRate();
+				float totalAmt = list.get(i).getGrnGvnQty()*rate;
+				
+				if(totalAmt<=0) {
+					list.get(i).setPeneltyAmt(Float.parseFloat(df.format(0)));
+				}else {
+					list.get(i).setPeneltyAmt(Float.parseFloat(df.format(totalAmt-list.get(i).getGrnGvnAmt())));
+				}
+				
+				
+			}
+		} catch (Exception e) {
+
+			 
+			e.printStackTrace();
+		}
+
+		return list;
+	}
+
 
 }
