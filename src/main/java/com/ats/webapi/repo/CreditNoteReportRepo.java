@@ -10,14 +10,57 @@ import com.ats.webapi.model.CreditNoteReport;
 
 public interface CreditNoteReportRepo extends JpaRepository<CreditNoteReport, Integer>{
 
-	@Query(value="select cd.*,ch.crn_date,ch.crn_no,i.item_name,f.fr_name, ch.fr_id from t_credit_note_details cd, t_credit_note_header ch, t_grn_gvn g,m_item i,"
-			+ "m_franchisee f where ch.crn_date between :fromDate and :toDate and cd.crn_id=ch.crn_id and cd.grn_gvn_id=g.grn_gvn_id and cd.item_id=i.id "
-			+ "and f.fr_id = ch.fr_id  order by ch.fr_id,ch.crn_id",nativeQuery=true)
+	@Query(value="select\n" + 
+			"        cd.*,\n" + 
+			"        ch.crn_date,\n" + 
+			"        ch.crn_no,\n" + 
+			"        i.item_name,\n" + 
+			"        f.fr_name,\n" + 
+			"        ch.fr_id,\n" + 
+			"        coalesce((select item_uom from m_item_sup where  m_item_sup.item_id=i.id ),'-') as item_uom\n" + 
+			"    from\n" + 
+			"        t_credit_note_details cd,\n" + 
+			"        t_credit_note_header ch,\n" + 
+			"        t_grn_gvn g,\n" + 
+			"        m_item i,\n" + 
+			"        m_franchisee f \n" + 
+			"    where\n" + 
+			"        ch.crn_date between :fromDate and :toDate \n" + 
+			"        and cd.crn_id=ch.crn_id \n" + 
+			"        and cd.grn_gvn_id=g.grn_gvn_id \n" + 
+			"        and cd.item_id=i.id \n" + 
+			"        and f.fr_id = ch.fr_id\n" + 
+			"    order by\n" + 
+			"        ch.fr_id,\n" + 
+			"        ch.crn_id\n" + 
+			"",nativeQuery=true)
 	List<CreditNoteReport> creditNoteReportBetweenDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
-	@Query(value="select cd.*,ch.crn_date,ch.crn_no,i.item_name,f.fr_name, ch.fr_id from t_credit_note_details cd, t_credit_note_header ch, t_grn_gvn g,m_item i,"
-			+ "m_franchisee f where ch.crn_date between :fromDate and :toDate and cd.crn_id=ch.crn_id and cd.grn_gvn_id=g.grn_gvn_id and cd.item_id=i.id "
-			+ "and f.fr_id = ch.fr_id  and ch.fr_id =:frId order by ch.fr_id,ch.crn_id",nativeQuery=true)
+	@Query(value="select\n" + 
+			"        cd.*,\n" + 
+			"        ch.crn_date,\n" + 
+			"        ch.crn_no,\n" + 
+			"        i.item_name,\n" + 
+			"        f.fr_name,\n" + 
+			"        ch.fr_id,\n" + 
+			"        coalesce((select item_uom from m_item_sup where  m_item_sup.item_id=i.id ),'-') as item_uom\n" + 
+			"    from\n" + 
+			"        t_credit_note_details cd,\n" + 
+			"        t_credit_note_header ch,\n" + 
+			"        t_grn_gvn g,\n" + 
+			"        m_item i,\n" + 
+			"        m_franchisee f \n" + 
+			"    where\n" + 
+			"        ch.crn_date between :fromDate and :toDate \n" + 
+			"        and cd.crn_id=ch.crn_id \n" + 
+			"        and cd.grn_gvn_id=g.grn_gvn_id \n" + 
+			"        and cd.item_id=i.id \n" + 
+			"        and f.fr_id = ch.fr_id\n" + 
+			"        and ch.fr_id=:frId\n" + 
+			"    order by\n" + 
+			"        ch.fr_id,\n" + 
+			"        ch.crn_id\n" + 
+			"",nativeQuery=true)
 	List<CreditNoteReport> creditNoteReportBetweenDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frId") int frId);
 
