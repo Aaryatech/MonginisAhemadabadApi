@@ -31,7 +31,7 @@ public interface CreditNoteReportRepo extends JpaRepository<CreditNoteReport, In
 			"        and cd.item_id=i.id \n" + 
 			"        and f.fr_id = ch.fr_id\n" + 
 			"    order by\n" + 
-			"        ch.fr_id,\n" + 
+			"        f.fr_name,\n" + 
 			"        ch.crn_id\n" + 
 			"",nativeQuery=true)
 	List<CreditNoteReport> creditNoteReportBetweenDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
@@ -58,7 +58,7 @@ public interface CreditNoteReportRepo extends JpaRepository<CreditNoteReport, In
 			"        and f.fr_id = ch.fr_id\n" + 
 			"        and ch.fr_id=:frId\n" + 
 			"    order by\n" + 
-			"        ch.fr_id,\n" + 
+			"        f.fr_name,\n" + 
 			"        ch.crn_id\n" + 
 			"",nativeQuery=true)
 	List<CreditNoteReport> creditNoteReportBetweenDate(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
