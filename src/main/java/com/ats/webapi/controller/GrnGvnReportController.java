@@ -254,7 +254,7 @@ public class GrnGvnReportController {
 				
 				float rate = ((list.get(i).getIgstPer()/100)*list.get(i).getBaseRate())+list.get(i).getBaseRate();
 				float totalAmt = list.get(i).getGrnGvnQty()*rate;
-				
+				list.get(i).setBaseRate(Float.parseFloat(df.format(rate)));
 				if((totalAmt-list.get(i).getGrnGvnAmt())<=0) {
 					list.get(i).setPeneltyAmt(Float.parseFloat(df.format(0)));
 				}else {
