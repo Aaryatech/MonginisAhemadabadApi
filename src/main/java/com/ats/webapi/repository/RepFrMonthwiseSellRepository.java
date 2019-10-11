@@ -32,7 +32,7 @@ public interface RepFrMonthwiseSellRepository extends JpaRepository<GetRepMonthw
 					"        YEAR(t_sp_cake.sp_delivery_date)) as  month " + 
 					"       from t_sp_cake,m_franchisee" + 
 					"        WHERE" + 
-					"        t_sp_cake.sp_delivery_date BETWEEN :fromDate AND :toDate " + 
+					"        t_sp_cake.sp_delivery_date BETWEEN :fromDate AND :toDate and t_sp_cake.sp_book_for_mob_no != '0' " + 
 					"        AND t_sp_cake.fr_id IN(" + 
 					"           :frId) " + 
 					"        AND m_franchisee.fr_id=t_sp_cake.fr_id " + 
