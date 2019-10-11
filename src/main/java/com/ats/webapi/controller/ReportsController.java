@@ -235,11 +235,14 @@ public class ReportsController {
 	@RequestMapping(value = "/getRepDatewiseSell", method = RequestMethod.POST)
 	public @ResponseBody List<GetRepFrDatewiseSell> getRepDatewiseSell(@RequestParam("fromDate") String fromDate,
 			@RequestParam("toDate") String toDate, @RequestParam("frId") List<String> frId) {
-		List<GetRepFrDatewiseSell> tempList = null;
+		List<GetRepFrDatewiseSell> tempList = new ArrayList<>();
 
 		fromDate = Common.convertToYMD(fromDate);
 		toDate = Common.convertToYMD(toDate);
-		List<GetRepFrDatewiseSell> repFrDatewiseSellList = repFrSellServise.getDatewiseSellReport(fromDate, toDate,
+		
+		tempList = repFrSellServise.getDatewiseSellReport(fromDate, toDate, frId);
+		
+		/*List<GetRepFrDatewiseSell> repFrDatewiseSellList = repFrSellServise.getDatewiseSellReport(fromDate, toDate,
 				frId);
 
 		LinkedHashMap<Date, GetRepFrDatewiseSell> hashList = new LinkedHashMap<Date, GetRepFrDatewiseSell>();
@@ -268,9 +271,9 @@ public class ReportsController {
 
 			}
 		}
-
 		tempList = new ArrayList<GetRepFrDatewiseSell>(hashList.values());
-
+		*/
+ 
 		return tempList;
 
 	}
