@@ -31,7 +31,7 @@ public interface SubCatBillRepRepo extends JpaRepository<SubCatBillRep, Integer>
 			"        sc.sub_cat_name,\n" + 
 			"        c.cat_id \n" + 
 			"        FROM t_bill_header tb, t_bill_detail  td  ,m_cat_sub sc ,m_category c,m_sp_cake s  \n" + 
-			"        WHERE tb.del_status=0  AND tb.bill_no=td.bill_no And tb.fr_id=:frId AND tb.bill_date BETWEEN  :fromDate  AND :toDate  AND td.cat_id=c.cat_id AND s.sp_id=td.item_id AND 5=sc.cat_id and c.cat_id=5 GROUP BY sc.cat_id  ORDER BY  c.cat_id,sc.sub_cat_id", nativeQuery = true)
+			"        WHERE tb.del_status=0  AND tb.bill_no=td.bill_no And tb.fr_id=:frId AND tb.bill_date BETWEEN  :fromDate  AND :toDate  AND td.cat_id=c.cat_id AND s.sp_id=td.item_id AND 5=sc.cat_id and c.cat_id=5 GROUP BY sc.cat_id ", nativeQuery = true)
 	List<SubCatBillRep> getDataByFrId(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frId") int frId);
 

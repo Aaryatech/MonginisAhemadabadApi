@@ -193,7 +193,7 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportList.size(); i++) {
 				for (int j = 0; j < subCatCreditGvnRep.size(); j++) {
 
-					if (catReportList.get(i).getSubCatId() == subCatCreditGrnRep.get(j).getSubCatId()) {
+					if (catReportList.get(i).getSubCatId() == subCatCreditGvnRep.get(j).getSubCatId()) {
 
 						catReportList.get(i).setVarAmt(subCatCreditGvnRep.get(j).getVarAmt());
 						catReportList.get(i).setVarQty(subCatCreditGvnRep.get(j).getVarQty());
