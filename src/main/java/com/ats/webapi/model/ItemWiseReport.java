@@ -24,7 +24,7 @@ public class ItemWiseReport {
 		private float total;
 		
 		private String itemName;
-
+		private String grnType;
 		public int getItemId() {
 			return itemId;
 		}
@@ -73,10 +73,18 @@ public class ItemWiseReport {
 			this.itemName = itemName;
 		}
 
+		public String getGrnType() {
+			return grnType;
+		}
+
+		public void setGrnType(String grnType) {
+			this.grnType = grnType;
+		}
+
 		@Override
 		public String toString() {
 			return "ItemWiseReport [itemId=" + itemId + ", billDetailNo=" + billDetailNo + ", rate=" + rate + ", qty="
-					+ qty + ", total=" + total + ", itemName=" + itemName + "]";
+					+ qty + ", total=" + total + ", itemName=" + itemName + ", grnType=" + grnType + "]";
 		}
 
 		
