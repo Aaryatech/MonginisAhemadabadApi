@@ -83,11 +83,17 @@ public interface SalesReportFranchiseeRepo extends JpaRepository<SalesReportFran
 			"        bill_date,\n" + 
 			"        invoice_no,\n" + 
 			"        fr_id,\n" + 
-			"         round(coalesce(taxable_amt,0),2) as taxable_amt,\n" + 
-			"         round(coalesce(total_tax,0),2) as total_tax,\n" + 
-			"         round(coalesce(grand_total,0),2) as grand_total,\n" + 
+			"        round(coalesce(taxable_amt,\n" + 
+			"        0),\n" + 
+			"        2) as taxable_amt,\n" + 
+			"        round(coalesce(total_tax,\n" + 
+			"        0),\n" + 
+			"        2) as total_tax,\n" + 
+			"        round(coalesce(grand_total,\n" + 
+			"        0),\n" + 
+			"        2) as grand_total,\n" + 
 			"        fr_name,\n" + 
-			"        order_ref \n" + 
+			"        order_ref      \n" + 
 			"    from\n" + 
 			"        (SELECT\n" + 
 			"            UUID() as id,\n" + 
@@ -100,15 +106,17 @@ public interface SalesReportFranchiseeRepo extends JpaRepository<SalesReportFran
 			"            ch.crn_total_tax as total_tax,\n" + 
 			"            ch.crn_grand_total as grand_total,\n" + 
 			"            fr.fr_name as fr_name,\n" + 
-			"            '--' as order_ref          \n" + 
+			"            concat(ch.grn_gvn_sr_no_list,'(',ch.ex_varchar1,')') as order_ref                   \n" + 
 			"        FROM\n" + 
 			"            m_franchisee fr,\n" + 
-			"            t_credit_note_header ch          \n" + 
+			"            t_credit_note_header ch                   \n" + 
 			"        WHERE\n" + 
-			"            ch.crn_date    BETWEEN :fromDate and :toDate \n" + 
-			"            and  ch.is_grn in(1) and\n" + 
-			"            ch.fr_id IN(:frIdList)                 \n" + 
-			"            AND fr.fr_id=ch.fr_id                  \n" + 
+			"            ch.crn_date    BETWEEN :fromDate  AND :toDate              \n" + 
+			"            and  ch.is_grn in(\n" + 
+			"                1\n" + 
+			"            ) \n" + 
+			"            and             ch.fr_id IN(:frIdList)                              \n" + 
+			"            AND fr.fr_id=ch.fr_id                           \n" + 
 			"        UNION\n" + 
 			"        ALL      SELECT\n" + 
 			"            UUID() as id,\n" + 
@@ -121,15 +129,17 @@ public interface SalesReportFranchiseeRepo extends JpaRepository<SalesReportFran
 			"            ch.crn_total_tax as total_tax,\n" + 
 			"            ch.crn_grand_total as grand_total,\n" + 
 			"            fr.fr_name as fr_name,\n" + 
-			"            '--' as order_ref          \n" + 
+			"            concat(ch.grn_gvn_sr_no_list,'(',ch.ex_varchar1,')') as order_ref                   \n" + 
 			"        FROM\n" + 
 			"            m_franchisee fr,\n" + 
-			"            t_credit_note_header ch          \n" + 
+			"            t_credit_note_header ch                   \n" + 
 			"        WHERE\n" + 
-			"            ch.crn_date    BETWEEN :fromDate and :toDate   \n" + 
-			"            and  ch.is_grn in(0,2)  \n" + 
-			"            and  ch.fr_id IN(:frIdList)     \n" + 
-			"            AND fr.fr_id=ch.fr_id      \n" + 
+			"            ch.crn_date    BETWEEN :fromDate  AND :toDate                  \n" + 
+			"            and  ch.is_grn in(\n" + 
+			"                0,2\n" + 
+			"            )               \n" + 
+			"            and  ch.fr_id IN(:frIdList)                  \n" + 
+			"            AND fr.fr_id=ch.fr_id               \n" + 
 			"        UNION\n" + 
 			"        ALL      SELECT\n" + 
 			"            UUID() as id,\n" + 
@@ -142,23 +152,23 @@ public interface SalesReportFranchiseeRepo extends JpaRepository<SalesReportFran
 			"            sum(t_bill_detail.total_tax) as total_tax,\n" + 
 			"            SUM(t_bill_detail.grand_total) AS grand_total,\n" + 
 			"            t_bill_header.party_name as fr_name,\n" + 
-			"            '--' as order_ref          \n" + 
+			"            '--' as order_ref                   \n" + 
 			"        FROM\n" + 
 			"            t_bill_header ,\n" + 
-			"            t_bill_detail              \n" + 
+			"            t_bill_detail                       \n" + 
 			"        WHERE\n" + 
-			"            t_bill_header.fr_id IN(\n" + 
-			"              :frIdList      \n" + 
-			"            )                    \n" + 
-			"            AND t_bill_header.bill_date BETWEEN :fromDate and :toDate             \n" + 
-			"            AND t_bill_detail.bill_no=t_bill_header.bill_no                                  \n" + 
-			"            AND t_bill_header.del_status=0                  \n" + 
-			"            AND t_bill_detail.del_status=0              \n" + 
+			"            t_bill_header.fr_id IN(:frIdList)                                 \n" + 
+			"            AND t_bill_header.bill_date BETWEEN :fromDate  AND :toDate                            \n" + 
+			"            AND t_bill_detail.bill_no=t_bill_header.bill_no                                               \n" + 
+			"            AND t_bill_header.del_status=0                               \n" + 
+			"            AND t_bill_detail.del_status=0                       \n" + 
 			"        GROUP BY\n" + 
-			"            t_bill_header.bill_no\n" + 
-			"    ) a \n" + 
+			"            t_bill_header.bill_no     \n" + 
+			"    ) a  \n" + 
 			"order by\n" + 
-			"    a.fr_name,a.type,a.bill_date", nativeQuery = true)
+			"    a.fr_name,\n" + 
+			"    a.type,\n" + 
+			"    a.bill_date ", nativeQuery = true)
 	List<SalesReportFranchisee> getSaleReportBillwise(@Param("frIdList") List<String> frIdList,
 			@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
