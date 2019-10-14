@@ -22,7 +22,7 @@ public class CustList {
 	private String userName;
 
 	@Column(name = "user_gst_no")
-	private Date userGstNo;
+	private String userGstNo;
 
 	public String getUserPhone() {
 		return userPhone;
@@ -40,11 +40,11 @@ public class CustList {
 		this.userName = userName;
 	}
 
-	public Date getUserGstNo() {
+	public String getUserGstNo() {
 		return userGstNo;
 	}
 
-	public void setUserGstNo(Date userGstNo) {
+	public void setUserGstNo(String userGstNo) {
 		this.userGstNo = userGstNo;
 	}
 
