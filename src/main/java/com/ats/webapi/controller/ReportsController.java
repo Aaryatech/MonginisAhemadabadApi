@@ -150,17 +150,26 @@ public class ReportsController {
 	@RequestMapping(value = { "/showItemWiseDetailsReportByCatId" }, method = RequestMethod.POST)
 	public @ResponseBody ItemWiseDetailList showItemWiseDetailsReportByCatId(@RequestParam("frId") int frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
-			@RequestParam("catId") int catId,@RequestParam("itemIds") List<Integer> itemIds) {
+			@RequestParam("subCat") int subCat,@RequestParam("catId") int catId,@RequestParam("itemIds") List<Integer> itemIds) {
 
 		ItemWiseDetailList ItemWiseDetailList = new ItemWiseDetailList();
 		
 		try {
 			
-			if(itemIds.contains(0)) {
+			/*if(itemIds.contains(0)) {
 				ItemWiseDetailList = reportsService.getItemWiseDetailReport(frId, catId, fromDate, toDate);
 			}else {
 				
 				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId,catId, itemIds, fromDate, toDate);
+				
+			}*/
+			
+			
+			if(itemIds.contains(0)) {
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportsubCat(frId,catId, subCat, fromDate, toDate);
+			}else {
+				
+				ItemWiseDetailList = reportsService.getItemWiseDetailReportByItemIds(frId,catId,subCat, itemIds, fromDate, toDate);
 				
 			}
 			

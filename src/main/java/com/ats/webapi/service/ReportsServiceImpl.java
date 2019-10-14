@@ -112,9 +112,56 @@ public class ReportsServiceImpl implements ReportsService {
 		}
 		return itemWiseDetailList;
 	}
+	
+	
+	@Override
+	public ItemWiseDetailList getItemWiseDetailReportsubCat(int frId, int catId,int subCat, String fromDate, String toDate) {
+
+		System.out.println("Date: " + fromDate + "To" + toDate);
+		ItemWiseDetailList itemWiseDetailList = new ItemWiseDetailList();
+		
+		if (catId == 5) {
+			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findSpecialCakeWiseDetailReport(frId, catId,
+					fromDate, toDate);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
+
+		} else {
+			List<ItemWiseDetail> itemWiseDetail = itemWiseDetailRepository.findItemWiseDetailReportsubCatwise(frId, subCat,
+					fromDate, toDate);
+
+			ErrorMessage errorMessage = new ErrorMessage();
+
+			if (itemWiseDetail == null) {
+				errorMessage.setError(true);
+				errorMessage.setMessage("Records Not Found.");
+			} else {
+				errorMessage.setError(false);
+				errorMessage.setMessage("Records Found Successfully.");
+
+				itemWiseDetailList.setErrorMessage(errorMessage);
+				itemWiseDetailList.setItemWiseDetailList(itemWiseDetail);
+			}
+
+		}
+		return itemWiseDetailList;
+	}
+	
+	 
 
 	@Override
-	public ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId,int catId, List<Integer> itemIds, String fromDate,
+	public ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId,int catId,int subCat, List<Integer> itemIds, String fromDate,
 			String toDate) {
 
 		System.out.println("Date: " + fromDate + "To" + toDate);
@@ -131,8 +178,7 @@ public class ReportsServiceImpl implements ReportsService {
 
 			} else {
 				
-				 itemWiseDetail = itemWiseDetailRepository.getItemWiseDetailReportByItemIds(frId,catId,
-						itemIds, fromDate, toDate); 
+				 itemWiseDetail = itemWiseDetailRepository.getItemWiseDetailReportByItemIds(frId,itemIds, fromDate, toDate); 
 
 			}
 			

@@ -29,9 +29,13 @@ public interface ReportsService {
 
 	BillWiseTaxReportList getBillWiseTaxReport(int frId, String fromDate, String toDate, int typeId);
 
-	ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId, int catId, List<Integer> itemIds, String fromDate,
+	ItemWiseDetailList getItemWiseDetailReportByItemIds(int frId, int catId, int subCat, List<Integer> itemIds, String fromDate,
 			String toDate);
 
 	ItemWiseReportList showItemWiseReportByTypeId(int frId, int catId, String fromDate, String toDate, int typeId);
+
+	ItemWiseDetailList getItemWiseDetailReportsubCat(int frId, int subCat, int subCat2, String fromDate, String toDate);
+
+	 
 
 }

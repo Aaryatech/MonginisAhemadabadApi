@@ -45,14 +45,14 @@ public interface ItemWiseDetailRepository extends JpaRepository<ItemWiseDetail, 
 			"                bill_date BETWEEN :fromDate AND :toDate\n" + 
 			"                AND fr_id=:frId\n" + 
 			"        ) \n" + 
-			"        AND t_bill_detail.bill_no=t_bill_header.bill_no and t_bill_detail.cat_id=:catId \n" + 
+			"        AND t_bill_detail.bill_no=t_bill_header.bill_no  \n" + 
 			"        AND t_bill_detail.item_id in (:itemIds) \n" + 
 			"        and t_bill_header.del_status=0 \n" + 
 			"        and t_bill_detail.del_status=0 \n" + 
 			"    GROUP BY\n" + 
 			"        t_bill_detail.item_id,\n" + 
 			"        t_bill_detail.bill_no",nativeQuery=true)
-	List<ItemWiseDetail> getItemWiseDetailReportByItemIds(@Param("frId")int frId,@Param("catId")int catId,@Param("itemIds") List<Integer> itemIds,@Param("fromDate") String fromDate,
+	List<ItemWiseDetail> getItemWiseDetailReportByItemIds(@Param("frId")int frId,@Param("itemIds") List<Integer> itemIds,@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate);
 
 	@Query(value=" SELECT\n" + 
@@ -93,5 +93,42 @@ public interface ItemWiseDetailRepository extends JpaRepository<ItemWiseDetail, 
 			"        t_bill_detail.bill_no",nativeQuery=true)
 	List<ItemWiseDetail> findSpecialCakeWiseDetailReportByItemIds(@Param("frId")int frId,@Param("catId")int catId,@Param("itemIds") List<Integer> itemIds,@Param("fromDate") String fromDate,
 			@Param("toDate") String toDate);
+
+	@Query(value="SELECT\n" + 
+			"        t_bill_detail.bill_detail_no,\n" + 
+			"        t_bill_header.invoice_no as bill_no ,\n" + 
+			"        t_bill_header.bill_date,\n" + 
+			"        t_bill_detail.item_id ,\n" + 
+			"        m_item.item_name ,\n" + 
+			"        t_bill_detail.rate,\n" + 
+			"        COALESCE(SUM(bill_qty),\n" + 
+			"        0) AS qty,\n" + 
+			"        COALESCE(SUM(t_bill_detail.grand_total),\n" + 
+			"        0) AS total ,\n" + 
+			"        t_bill_detail.grn_type,\n" + 
+			"        t_bill_detail.expiry_date \n" + 
+			"    FROM\n" + 
+			"        t_bill_detail ,\n" + 
+			"        m_item,\n" + 
+			"        t_bill_header \n" + 
+			"    WHERE\n" + 
+			"        m_item.id= t_bill_detail.item_id \n" + 
+			"        AND t_bill_detail.bill_no IN(\n" + 
+			"            SELECT\n" + 
+			"                bill_no \n" + 
+			"            FROM\n" + 
+			"                t_bill_header \n" + 
+			"            WHERE\n" + 
+			"                bill_date BETWEEN :fromDate AND :toDate \n" + 
+			"                AND fr_id=:frId\n" + 
+			"        ) \n" + 
+			"        AND t_bill_detail.bill_no=t_bill_header.bill_no \n" + 
+			"        AND m_item.item_grp2=:catId \n" + 
+			"        and t_bill_header.del_status=0 \n" + 
+			"        and t_bill_detail.del_status=0 \n" + 
+			"    GROUP BY\n" + 
+			"        t_bill_detail.item_id,\n" + 
+			"        t_bill_detail.bill_no",nativeQuery=true)
+	List<ItemWiseDetail> findItemWiseDetailReportsubCatwise(@Param("frId")int frId,@Param("catId") int catId,@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 	
 }
