@@ -87,10 +87,10 @@ public interface RepTaxSellRepository extends JpaRepository<GetRepTaxSell, Integ
 			"			  " + 
 			"			            from m_franchisee,t_sp_cake  " + 
 			"			            WHERE t_sp_cake.fr_id IN(:frId) AND m_franchisee.fr_id=t_sp_cake.fr_id  " + 
-			"			            AND      t_sp_cake.sp_delivery_date BETWEEN :fromDate AND :toDate   " + 
+			"			            AND      t_sp_cake.sp_delivery_date BETWEEN :fromDate AND :toDate   and t_sp_cake.sp_book_for_mob_no != '0'" + 
 			"			" + 
 			"			            GROUP BY (t_sp_cake.tax_1+t_sp_cake.tax_2),t_sp_cake.sp_order_no,  " + 
-			"			            t_sp_cake.fr_id"
+			"			            t_sp_cake.fr_id order By tax_per"
 			+ "",nativeQuery=true)
 	List<GetRepTaxSell> getRepFrBillwiseTaxSell(@Param("fromDate") String fromDate,@Param("toDate") String toDate, @Param("frId") List<String> frId);
 
