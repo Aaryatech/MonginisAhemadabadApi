@@ -79,10 +79,9 @@ public class SalesReportApiController3 {
 
 	@Autowired
 	SubCatDateWiseDataRepo subCatDateWiseDataRepo;
-	
+
 	@Autowired
 	HsnDateWiseSellReportRepo hsnDateWiseSellReportRepo;
-	
 
 	@RequestMapping(value = { "/getFrWiseItemSoldReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<SubCatWiseItemWiseFrSold> getFrWiseItemSoldReport(
@@ -1029,9 +1028,11 @@ public class SalesReportApiController3 {
 
 				if (soldList != null) {
 					for (int i = 0; i < soldList.size(); i++) {
-						
-						System.err.println("*************************** SOLD LIST MONTH : "+soldList.get(i).getMonth()+"    ------   MONTH : "+month);
-						System.err.println("*************************** SOLD LIST YEAR : "+soldList.get(i).getYear()+"    ------   YEAR : "+year);
+
+						System.err.println("*************************** SOLD LIST MONTH : " + soldList.get(i).getMonth()
+								+ "    ------   MONTH : " + month);
+						System.err.println("*************************** SOLD LIST YEAR : " + soldList.get(i).getYear()
+								+ "    ------   YEAR : " + year);
 
 						if (soldList.get(i).getMonth() == month
 								&& soldList.get(i).getYear().equalsIgnoreCase(String.valueOf(year))) {
@@ -1384,7 +1385,14 @@ public class SalesReportApiController3 {
 
 		try {
 
-			reportList = subCatDateWiseDataRepo.getSellBillData(fromDate, toDate, frId, catIdList);
+			if (catIdList.get(0) == 5) {
+
+				reportList = subCatDateWiseDataRepo.getSellBillDataspcake(fromDate, toDate, frId, catIdList);
+				
+			} else {
+				reportList = subCatDateWiseDataRepo.getSellBillData(fromDate, toDate, frId, catIdList);
+			}
+
 			System.err.println("SOLD -- " + reportList);
 
 		} catch (Exception e) {
