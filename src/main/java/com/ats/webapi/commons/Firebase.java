@@ -17,7 +17,7 @@ import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
 public class Firebase {
-
+ 
 	
 	// Method to send Notifications from server to client end.
 	public final static String AUTH_KEY_FCM = "AAAAvgBdT8Y:APA91bEQg2VdTdB7GfMksze2J5sWVNsOHa6cGBjRJkMqBK05Zx1N0hW9tRhrE1dJ13CuUaKvtefSusRX1sOhDiiLpyrQuqpXobMx80U-FdqM4UWd_sCmhGLIdGAvpBS3v1IX5676xmUz";
