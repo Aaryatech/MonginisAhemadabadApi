@@ -18,9 +18,9 @@ public interface SalesReportDMCreditRepo extends JpaRepository<SalesReportDMCred
 			"        m_franchisee.fr_id,\n" + 
 			"       \n" + 
 			"        SUM(t_credit_note_header.crn_taxable_amt) as taxable_amt ,\n" + 
-			"        t_credit_note_header.crn_total_tax,\n" + 
+			"        SUM(t_credit_note_header.crn_total_tax) as crn_total_tax,\n" + 
 			"        SUM(t_credit_note_header.crn_grand_total) AS grand_total ,\n" + 
-			"        t_credit_note_header.round_off \n" + 
+			"        SUM(t_credit_note_header.round_off) as round_off\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_credit_note_header \n" + 
@@ -47,9 +47,9 @@ public interface SalesReportDMCreditRepo extends JpaRepository<SalesReportDMCred
 			"        m_franchisee.fr_id,\n" + 
 			"       \n" + 
 			"        SUM(t_credit_note_header.crn_taxable_amt) as taxable_amt ,\n" + 
-			"        t_credit_note_header.crn_total_tax,\n" + 
+			"        SUM(t_credit_note_header.crn_total_tax) as crn_total_tax,\n" + 
 			"        SUM(t_credit_note_header.crn_grand_total) AS grand_total ,\n" + 
-			"        t_credit_note_header.round_off \n" + 
+			"        SUM(t_credit_note_header.round_off) as round_off \n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_credit_note_header \n" + 
@@ -78,15 +78,15 @@ public interface SalesReportDMCreditRepo extends JpaRepository<SalesReportDMCred
 			"        m_franchisee.fr_id,\n" + 
 			"       \n" + 
 			"        SUM(t_credit_note_header.crn_taxable_amt) as taxable_amt ,\n" + 
-			"        t_credit_note_header.crn_total_tax,\n" + 
+			"        SUM(t_credit_note_header.crn_total_tax) as crn_total_tax,\n" + 
 			"        SUM(t_credit_note_header.crn_grand_total) AS grand_total ,\n" + 
-			"        t_credit_note_header.round_off \n" + 
+			"        SUM(t_credit_note_header.round_off) as  round_off\n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_credit_note_header \n" + 
 			"    WHERE\n" + 
 			"    \n" + 
-			"    t_credit_note_header.is_grn=1 AND\n" + 
+			"    t_credit_note_header.is_grn=0 AND\n" + 
 			"        t_credit_note_header.fr_id=m_franchisee.fr_id \n" + 
 			"        AND t_credit_note_header.fr_id IN(\n" + 
 			"     :frIdList\n" + 
@@ -107,15 +107,15 @@ public interface SalesReportDMCreditRepo extends JpaRepository<SalesReportDMCred
 			"        m_franchisee.fr_id,\n" + 
 			"       \n" + 
 			"        SUM(t_credit_note_header.crn_taxable_amt) as taxable_amt ,\n" + 
-			"        t_credit_note_header.crn_total_tax,\n" + 
+			"        SUM(t_credit_note_header.crn_total_tax) as crn_total_tax,\n" + 
 			"        SUM(t_credit_note_header.crn_grand_total) AS grand_total ,\n" + 
-			"        t_credit_note_header.round_off \n" + 
+			"        SUM(t_credit_note_header.round_off) as round_off \n" + 
 			"    FROM\n" + 
 			"        m_franchisee,\n" + 
 			"        t_credit_note_header \n" + 
 			"    WHERE\n" + 
 			"    \n" + 
-			"    t_credit_note_header.is_grn=1 AND\n" + 
+			"    t_credit_note_header.is_grn=0 AND\n" + 
 			"        t_credit_note_header.fr_id=m_franchisee.fr_id \n" + 
 			"        AND t_credit_note_header.fr_id IN(\n" + 
 			"     :frIdList\n" + 

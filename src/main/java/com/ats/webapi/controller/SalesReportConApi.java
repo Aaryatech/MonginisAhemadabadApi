@@ -1,7 +1,9 @@
 package com.ats.webapi.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +63,7 @@ public class SalesReportConApi {
 			for (int i = 0; i < salesReportDateMonthList.size(); i++) {
 				for (int j = 0; j < grnList.size(); j++) {
 
-					if (salesReportDateMonthList.get(i).getBillDate() == grnList.get(j).getCrnDate()) {
+					if (salesReportDateMonthList.get(i).getBillDate().compareTo(grnList.get(j).getCrnDate()) == 0) {
 
 						salesReportDateMonthList.get(i).setCrnDate(grnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGrnTaxableAmt(grnList.get(j).getTaxableAmt());
@@ -82,7 +84,7 @@ public class SalesReportConApi {
 			for (int i = 0; i < salesReportDateMonthList.size(); i++) {
 				for (int j = 0; j < gvnList.size(); j++) {
 
-					if (salesReportDateMonthList.get(i).getBillDate() == grnList.get(j).getCrnDate()) {
+					if (salesReportDateMonthList.get(i).getBillDate().compareTo(grnList.get(j).getCrnDate()) == 0) {
 
 						salesReportDateMonthList.get(i).setCrnDate(gvnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGvnTaxableAmt(gvnList.get(j).getTaxableAmt());
@@ -143,7 +145,16 @@ public class SalesReportConApi {
 			for (int i = 0; i < salesReportDateMonthList.size(); i++) {
 				for (int j = 0; j < grnList.size(); j++) {
 
-					if (salesReportDateMonthList.get(i).getBillDate() == grnList.get(j).getCrnDate()) {
+					Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+					cal.setTime(salesReportDateMonthList.get(i).getBillDate()); 
+					int month = cal.get(Calendar.MONTH); 
+					
+					Calendar cal1 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+					cal1.setTime(grnList.get(j).getCrnDate()); 
+					int month1 = cal1.get(Calendar.MONTH); 
+					
+					//System.out.println(month + " " + month1);
+					if (month==month1) {
 
 						salesReportDateMonthList.get(i).setCrnDate(grnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGrnTaxableAmt(grnList.get(j).getTaxableAmt());
@@ -164,7 +175,16 @@ public class SalesReportConApi {
 			for (int i = 0; i < salesReportDateMonthList.size(); i++) {
 				for (int j = 0; j < gvnList.size(); j++) {
 
-					if (salesReportDateMonthList.get(i).getBillDate() == grnList.get(j).getCrnDate()) {
+					Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+					cal.setTime(salesReportDateMonthList.get(i).getBillDate()); 
+					int month = cal.get(Calendar.MONTH); 
+					
+					Calendar cal1 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Paris"));
+					cal1.setTime(gvnList.get(j).getCrnDate()); 
+					int month1 = cal1.get(Calendar.MONTH); 
+					
+					System.out.println(month + " " + month1);
+					if (month==month1) { 
 
 						salesReportDateMonthList.get(i).setCrnDate(gvnList.get(j).getCrnDate());
 						salesReportDateMonthList.get(i).setGvnTaxableAmt(gvnList.get(j).getTaxableAmt());
