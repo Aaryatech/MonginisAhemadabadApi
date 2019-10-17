@@ -79,7 +79,7 @@ public interface SubCatFrItemRepBillRepo extends JpaRepository<SubCatFrItemRepBi
 			"        )       \n" + 
 			"    GROUP BY\n" + 
 			"        tb.fr_id,\n" + 
-			"        m_sp_cake.sp_id   ", nativeQuery = true)
+			"        m_sp_cake.sp_id   order by fr_name,sub_cat_id,item_name ", nativeQuery = true)
 	List<SubCatFrItemRepBill> getData(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 

@@ -82,7 +82,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"        AND t_credit_note_details.is_grn=0              \n" + 
 			"    GROUP BY\n" + 
 			"        t_credit_note_header.fr_id,\n" + 
-			"        m_sp_cake.sp_id", nativeQuery = true)
+			"        m_sp_cake.sp_id  order by fr_name,sub_cat_id,item_name ", nativeQuery = true)
 	List<SubCatCreditGrnFrItemRep> getDataGVN(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 
@@ -158,7 +158,7 @@ public interface SubCatCreditGrnFrItemRepRepo extends JpaRepository<SubCatCredit
 			"        AND t_credit_note_details.is_grn=1              \n" + 
 			"    GROUP BY\n" + 
 			"        t_credit_note_header.fr_id,\n" + 
-			"        m_sp_cake.sp_id", nativeQuery = true)
+			"        m_sp_cake.sp_id  order by fr_name,sub_cat_id,item_name ", nativeQuery = true)
 	List<SubCatCreditGrnFrItemRep> getDataGRN(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			@Param("frIdList") List<Integer> frIdList, @Param("subCatIdList") List<Integer> subCatIdList);
 
