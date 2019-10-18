@@ -8,6 +8,7 @@ public class OtherBillDetailAdv {
 
 	@Id
 	private String id;
+	
 	private float billDetailItemMrp;
 
 	
