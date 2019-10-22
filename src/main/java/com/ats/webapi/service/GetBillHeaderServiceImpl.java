@@ -89,6 +89,5 @@ GetBillHeaderList getBillHeaderList=new GetBillHeaderList();
 		return updateBillStatusRes;
 	}
 
-	 
 
 }

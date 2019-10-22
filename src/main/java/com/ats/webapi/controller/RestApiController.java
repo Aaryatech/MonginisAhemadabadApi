@@ -65,6 +65,7 @@ import com.ats.webapi.repository.SpCakeOrderUpdateRepository;
 import com.ats.webapi.repository.SpCakeOrdersRepository;
 import com.ats.webapi.repository.SpMessageRepository;
 import com.ats.webapi.repository.SpecialCakeRepository;
+import com.ats.webapi.repository.UpdateBillStatusRepository;
 import com.ats.webapi.repository.UpdatePBTimeRepo;
 import com.ats.webapi.repository.UpdateSeetingForPBRepo;
 import com.ats.webapi.repository.UserRepository;
@@ -4595,6 +4596,38 @@ public class RestApiController {
 			info.setMessage("update Unsuccessfull : RestApi");
 
 		}
+
+		return info;
+
+	}
+	
+	@Autowired UpdateBillStatusRepository admUpdtbil;
+	@RequestMapping(value = { "/updateBillStatusAdm" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateBillStatusAdm(@RequestParam int billNo, @RequestParam int status)	
+	{
+
+		System.out.println("Data  " + billNo+" "+status);
+		
+		
+		
+		Info info = new Info();
+		try
+		{
+			int res = admUpdtbil.updateBillStatusAdmin(billNo, status);
+
+			if (res > 0) {
+				info.setError(false);
+				info.setMessage("Update Successfully");
+
+			} else {
+				info.setError(true);
+				info.setMessage("update Unsuccessfull : RestApi");
+
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 
 		return info;
 

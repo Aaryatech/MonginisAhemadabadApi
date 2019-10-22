@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.ats.webapi.model.GetBillHeader;
 import com.ats.webapi.model.GetBillHeaderList;
+import com.ats.webapi.model.Info;
 import com.ats.webapi.model.UpdateBillStatus;
 
 
@@ -17,4 +18,8 @@ public interface GetBillHeaderService {
 	 
 
 	UpdateBillStatus updateBillStatus(UpdateBillStatus updateBillStatus);
+
+	
+	
+	
 }
