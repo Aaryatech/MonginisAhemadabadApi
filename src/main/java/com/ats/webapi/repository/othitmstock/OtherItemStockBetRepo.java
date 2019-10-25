@@ -40,7 +40,7 @@ public interface OtherItemStockBetRepo  extends JpaRepository<OtherItemStockBet,
 			+ " AND t_sell_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_sell_bill_detail.item_id=m_item.id),0) "
 			+ " AS sell_qty " + 
 			"       FROM m_item,m_franchisee " + 
-			"       WHERE m_item.item_grp1=:catId AND m_franchisee.fr_id=:frId  and m_item.item_rate2=:frId GROUP by m_item.id",nativeQuery=true)
+			"       WHERE m_item.item_grp1=:catId AND m_franchisee.fr_id=:frId  and m_item.item_rate2=:frId and m_item.del_status=0 GROUP by m_item.id",nativeQuery=true)
 	List<OtherItemStockBet> getOtherItemStockBet(@Param("catId") int catId,@Param("month") int month, @Param("frId") int frId, 
 			@Param("fromDate")String fromDate,@Param("toDate")String toDate,@Param("prevFromDate")String prevFromDate,@Param("prevToDate")String prevToDate);
 
