@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.commons.Common;
+import com.ats.webapi.model.GrandTotalBillWise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwise;
 import com.ats.webapi.model.report.frpurchase.SalesReportBillwiseAllFr;
 import com.ats.webapi.model.report.frpurchase.SalesReportFranchisee;
@@ -29,6 +30,7 @@ import com.ats.webapi.model.salesvaluereport.SalesReturnValueItemDao;
 import com.ats.webapi.model.taxreport.NonRegFrTaxDao;
 import com.ats.webapi.model.taxreport.Tax1Report;
 import com.ats.webapi.model.taxreport.Tax2Report;
+import com.ats.webapi.repo.GrandTotalBillWiseRepository;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseRepo;
 import com.ats.webapi.repository.frpurchasereport.SaleReportItemwiseRepo;
@@ -78,6 +80,9 @@ public class SalesReportController {
 	
 	@Autowired
 	NonRegFrTaxDaoRepository nonRegFrTaxDaoRepository;
+	
+	@Autowired
+	GrandTotalBillWiseRepository grandTotalBillWiseRepository;
 
 	@RequestMapping(value = { "/getSaleReportFrwiseSummery" }, method = RequestMethod.POST)
 	public @ResponseBody List<SalesReportFranchisee> getSaleReportFrwiseSummery(
@@ -109,6 +114,23 @@ public class SalesReportController {
 			toDate = Common.convertToYMD(toDate);
 
 			tax1ReportList = tax1ReportRepository.getTax1Report(fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
+	}
+	
+	@RequestMapping(value = { "/getGrandTotalBillWise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GrandTotalBillWise> getGrandTotalBillWise(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<GrandTotalBillWise> tax1ReportList = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			tax1ReportList = grandTotalBillWiseRepository.getGrandTotalBillWise(fromDate, toDate);
 		} catch (Exception e) {
 			System.out.println(" Exce in Tax1 Report " + e.getMessage());
 			e.printStackTrace();

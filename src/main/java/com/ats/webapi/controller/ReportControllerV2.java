@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ats.webapi.commons.Common;
+import com.ats.webapi.model.GrandTotalBillWise;
+import com.ats.webapi.model.GrandTotalCreditnoteWise;
 import com.ats.webapi.model.reportv2.CrNoteRegItem;
 import com.ats.webapi.model.reportv2.CrNoteRegSp;
 import com.ats.webapi.model.reportv2.CrNoteRegisterList;
@@ -18,6 +21,7 @@ import com.ats.webapi.model.reportv2.GstRegisterList;
 import com.ats.webapi.model.reportv2.GstRegisterSp;
 import com.ats.webapi.model.reportv2.HSNWiseReport;
 import com.ats.webapi.model.reportv2.SalesReport;
+import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
 import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
@@ -43,6 +47,9 @@ public class ReportControllerV2 {
 
 	@Autowired
 	HSNWiseReportRepo hSNWiseReportRepo;
+	
+	@Autowired
+	GrandTotalCreditnoteWiseRepository grandTotalCreditnoteWiseRepository;
 
 	@RequestMapping(value = { "/getHsnBillReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnBillReport(@RequestParam("fromDate") String fromDate,
@@ -219,6 +226,23 @@ public class ReportControllerV2 {
 		System.err.println("size Sp  crNoteList " + crNoteList.getCrNoteRegSpList());
 
 		return crNoteList;
+	}
+	
+	@RequestMapping(value = { "/getGrandTotalCreditnotewise" }, method = RequestMethod.POST)
+	public @ResponseBody List<GrandTotalCreditnoteWise> getGrandTotalCreditnotewise(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<GrandTotalCreditnoteWise> tax1ReportList = new ArrayList<>();
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate); 
+			tax1ReportList = grandTotalCreditnoteWiseRepository.getGrandTotalCreditnotewise(fromDate, toDate);
+			
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
 	}
 
 	// neha
