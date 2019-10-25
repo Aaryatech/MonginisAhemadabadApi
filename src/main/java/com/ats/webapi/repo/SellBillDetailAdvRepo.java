@@ -33,6 +33,6 @@ public interface SellBillDetailAdvRepo extends JpaRepository<SellBillDetailAdv, 
 			"    where\n" + 
 			"        m_category.del_status=0 \n" + 
 			"        and m_category.cat_id!=5 \n" + 
-			"        and m_category.cat_id!=7",nativeQuery=true)
+			"       ",nativeQuery=true)
 	public SellBillDetailAdv getSellBillDetailAdv(@Param("frId") int frId, @Param("date") String date);
 }

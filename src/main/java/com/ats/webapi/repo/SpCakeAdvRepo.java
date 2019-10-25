@@ -45,7 +45,7 @@ public interface SpCakeAdvRepo extends JpaRepository<SpCakeAdv, Integer> {
 			"        where\n" + 
 			"            fr_id=:frId \n" + 
 			"            and sp_delivery_date=:date\n" + 
-			"            and del_status=0),\n" + 
+			"            and del_status=0 and sp_book_for_mob_no!=0 ),\n" + 
 			"        0) as mrp,\n" + 
 			"        coalesce((select\n" + 
 			"            SUM(sp_advance) \n" + 
@@ -54,7 +54,7 @@ public interface SpCakeAdvRepo extends JpaRepository<SpCakeAdv, Integer> {
 			"        where\n" + 
 			"            fr_id=:frId\n" + 
 			"            and sp_delivery_date=:date\n" + 
-			"            and del_status=0),\n" + 
+			"            and del_status=0 and sp_book_for_mob_no!=0 ),\n" + 
 			"        0) as advance \n" + 
 			"    from\n" + 
 			"        dual",nativeQuery=true)
