@@ -1265,7 +1265,11 @@ public class MasterController {
 							System.err.println("itemGrp1"+itemGrp1+"frId"+menuId+"ordertype"+ordertype+"prodDate"+prodDate);
 					    	itemList = itemRepositoryForMOrderRepository.getItemListForMOrder(itemGrp1,frId,menuId,prodDate);
 						}
-						else
+						else if(ordertype==2)
+						{
+							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderMul(itemGrp1);
+
+						}else
 						{
 							itemList = itemRepositoryForMOrderRepository.getItemListForMOrderPrev(itemGrp1,frId);
 
