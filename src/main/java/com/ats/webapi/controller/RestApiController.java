@@ -44,6 +44,7 @@ import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GenerateBillRepository;
 import com.ats.webapi.repository.GetBillDetailsRepository;
+import com.ats.webapi.repository.GetBillHeaderRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
 import com.ats.webapi.repository.GetReorderByStockTypeRepository;
 import com.ats.webapi.repository.ItemDiscConfiguredRepository;
@@ -54,6 +55,7 @@ import com.ats.webapi.repository.MainMenuConfigurationRepository;
 import com.ats.webapi.repository.MessageRepository;
 import com.ats.webapi.repository.OrderLogRespository;
 import com.ats.webapi.repository.OrderRepository;
+import com.ats.webapi.repository.PostBillHeaderRepository;
 import com.ats.webapi.repository.PostFrOpStockDetailRepository;
 import com.ats.webapi.repository.PostFrOpStockHeaderRepository;
 import com.ats.webapi.repository.RouteMasterRepository;
@@ -412,6 +414,8 @@ public class RestApiController {
 	RouteMasterRepository routeMasterRepository;
 	@Autowired
 	SellBillDetailRepository sellBillDetailRepository;
+	
+	
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
 	public @ResponseBody Info changeAdminUserPass(@RequestBody User user) {
@@ -1284,6 +1288,9 @@ public class RestApiController {
 		return sellBillDetailRes;
 	}
 
+	@Autowired
+	GetBillHeaderRepository getBillHeaderRepository;
+	
 	@RequestMapping(value = "/getBillHeader", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("frId") List<String> frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
@@ -1299,6 +1306,22 @@ public class RestApiController {
 		}
 
 		return billHeaderList;
+
+	}
+
+	@RequestMapping(value = "/getBillHeaderByBillNo", method = RequestMethod.POST)
+	public @ResponseBody GetBillHeader getBillHeaderByBillNo(@RequestParam("billNo") int billNo) {
+		GetBillHeader getBillHeader = null;
+		try {
+
+			 
+			getBillHeader = getBillHeaderRepository.getBillHeaderByBillNo(billNo);
+		} catch (Exception e) {
+			 
+			e.printStackTrace();
+		}
+
+		return getBillHeader;
 
 	}
 
@@ -2052,6 +2075,32 @@ public class RestApiController {
 
 		return frResponse;
 	}
+	
+	@Autowired
+	PostBillHeaderRepository postBillHeaderRepository;
+	
+	@RequestMapping(value = { "/updateFrInformationinbillheader" }, method = RequestMethod.POST)
+	@ResponseBody
+	public Info updateFrInformationinbillheader(@RequestParam("frId") int frId,@RequestParam("billNo") int billNo) {
+
+		Info info = new Info();
+		
+		try {
+			Franchisee franchisee=franchiseeRepository.findOne(frId);
+			System.out.println(franchisee);
+			int update = postBillHeaderRepository.updatefrinfo(billNo,franchisee.getFrId(),franchisee.getFrCode(),franchisee.getFrName(),franchisee.getFrGstNo(),franchisee.getFrAddress());
+			System.out.println(update);
+			info.setError(false);
+			info.setMessage("success");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			info.setError(true);
+			info.setMessage("failed");
+		}
+
+		return info;
+	}
 
 	// Configure Franchisee
 	@RequestMapping(value = { "/configureFranchisee" }, method = RequestMethod.POST)
@@ -2252,19 +2301,19 @@ public class RestApiController {
 			FrSetting frSetting = new FrSetting();
 
 			frSetting = frSettingRepo.findByFrId(frResponse.getFrId());
-			
-			if (frSetting==null) { 
-			FrSetting frSettingSave = new FrSetting();
-			frSettingSave.setFrCode(frResponse.getFrCode());
-			frSettingSave.setFrId(frResponse.getFrId());
-			frSettingSave.setGrnGvnNo(1);
-			frSettingSave.setSellBillNo(1);
-			frSettingSave.setSpNo(1);
 
-			System.out.println("***************" + frSettingSave.toString());
-			FrSetting frSettingSaveResponse = frSettingRepo.save(frSettingSave);
-			System.out.println(frSettingSaveResponse.toString());
-		 }
+			if (frSetting == null) {
+				FrSetting frSettingSave = new FrSetting();
+				frSettingSave.setFrCode(frResponse.getFrCode());
+				frSettingSave.setFrId(frResponse.getFrId());
+				frSettingSave.setGrnGvnNo(1);
+				frSettingSave.setSellBillNo(1);
+				frSettingSave.setSpNo(1);
+
+				System.out.println("***************" + frSettingSave.toString());
+				FrSetting frSettingSaveResponse = frSettingRepo.save(frSettingSave);
+				System.out.println(frSettingSaveResponse.toString());
+			}
 		}
 
 		return frResponse;
@@ -2604,6 +2653,7 @@ public class RestApiController {
 
 		return flavourList;
 	}
+
 	@RequestMapping(value = { "/showFlavourListBySpId" }, method = RequestMethod.POST)
 	@ResponseBody
 	public FlavourList showFlavourListBySpId(@RequestParam("spId") int spId) {
@@ -2618,6 +2668,7 @@ public class RestApiController {
 
 		return flavourList;
 	}
+
 	// Show Scheduler List
 	@RequestMapping(value = { "/showSchedulerList" }, method = RequestMethod.GET)
 	@ResponseBody
@@ -2787,7 +2838,7 @@ public class RestApiController {
 
 	// Delete Flavor
 	@RequestMapping(value = "/updateFlavourStatus", method = RequestMethod.POST)
-	public @ResponseBody String updateFlavourStatus(@RequestParam List<Integer> spfId,@RequestParam int status) {
+	public @ResponseBody String updateFlavourStatus(@RequestParam List<Integer> spfId, @RequestParam int status) {
 
 		ErrorMessage errorMessage = null;
 		List<Flavour> flavour = flavourRepository.findBySpfIdIn(spfId);
@@ -3054,14 +3105,18 @@ public class RestApiController {
 		return items;
 
 	}
-	/*@RequestMapping(value = "/getItemsByCatIdAndFrId", method = RequestMethod.POST)
-	public @ResponseBody List<Item> getItems(@RequestParam int itemGrp1,@RequestParam int frId) {
 
-		List<Item> items = itemRepository.findByItemGrp1AndItemRate2AndDelStatus(itemGrp1,frId);
-		return items;
-
-	}
-*/
+	/*
+	 * @RequestMapping(value = "/getItemsByCatIdAndFrId", method =
+	 * RequestMethod.POST) public @ResponseBody List<Item> getItems(@RequestParam
+	 * int itemGrp1,@RequestParam int frId) {
+	 * 
+	 * List<Item> items =
+	 * itemRepository.findByItemGrp1AndItemRate2AndDelStatus(itemGrp1,frId); return
+	 * items;
+	 * 
+	 * }
+	 */
 	@RequestMapping(value = "/getDiscById", method = RequestMethod.POST)
 	public @ResponseBody float findByIdAndFrId(@RequestParam int id, @RequestParam int frId) {
 		float discPer = 0.0f;
@@ -3098,13 +3153,16 @@ public class RestApiController {
 		List<Item> items = new ArrayList<Item>();
 		try {
 
-			/*if (Integer.parseInt(subCatId) < 11) {
-				items = itemRepository.findByItemGrp1AndDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(subCatId, 0);
+			/*
+			 * if (Integer.parseInt(subCatId) < 11) { items = itemRepository.
+			 * findByItemGrp1AndDelStatusOrderByItemGrp1AscItemGrp2AscItemNameAsc(subCatId,
+			 * 0);
+			 * 
+			 * } else {
+			 */
+			items = itemRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
 
-			} else {*/
-				items = itemRepository.findByItemGrp2AndDelStatusOrderByItemGrp2AscItemNameAsc(subCatId, 0);
-
-			//}
+			// }
 			System.err.println("Items by subcat id  and delStatus  " + items.toString());
 
 		} catch (Exception e) {
@@ -3196,12 +3254,14 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+
 	@RequestMapping(value = "/getItemsNameByIdWithOtherItem", method = RequestMethod.POST)
-	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItem(@RequestParam List<Integer> itemList,@RequestParam int frId) {
+	public @ResponseBody ItemResponse getItemsNameByIdWithOtherItem(@RequestParam List<Integer> itemList,
+			@RequestParam int frId) {
 
 		ItemResponse itemResponse = new ItemResponse();
 		ErrorMessage errorMessage = new ErrorMessage();
-		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList,7,frId);
+		List<Item> items = itemRepository.getItemsNameByIdWithOtherItem(itemList, 7, frId);
 		if (items != null) {
 			itemResponse.setItemList(items);
 			errorMessage.setError(false);
@@ -3213,6 +3273,7 @@ public class RestApiController {
 		return itemResponse;
 
 	}
+
 	//
 	@RequestMapping(value = "/getFrMenus11", method = RequestMethod.POST)
 	public @ResponseBody FrMenusList getFrMenus(@RequestParam int frId) {
@@ -4600,19 +4661,17 @@ public class RestApiController {
 		return info;
 
 	}
-	
-	@Autowired UpdateBillStatusRepository admUpdtbil;
-	@RequestMapping(value = { "/updateBillStatusAdm" }, method = RequestMethod.POST)
-	public @ResponseBody Info updateBillStatusAdm(@RequestParam int billNo, @RequestParam int status)	
-	{
 
-		System.out.println("Data  " + billNo+" "+status);
-		
-		
-		
+	@Autowired
+	UpdateBillStatusRepository admUpdtbil;
+
+	@RequestMapping(value = { "/updateBillStatusAdm" }, method = RequestMethod.POST)
+	public @ResponseBody Info updateBillStatusAdm(@RequestParam int billNo, @RequestParam int status) {
+
+		System.out.println("Data  " + billNo + " " + status);
+
 		Info info = new Info();
-		try
-		{
+		try {
 			int res = admUpdtbil.updateBillStatusAdmin(billNo, status);
 
 			if (res > 0) {
@@ -4624,10 +4683,9 @@ public class RestApiController {
 				info.setMessage("update Unsuccessfull : RestApi");
 
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 
 		return info;
 

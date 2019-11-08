@@ -1,11 +1,21 @@
 package com.ats.webapi.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ats.webapi.model.PostBillHeader;
 
 public interface PostBillHeaderRepository extends JpaRepository<PostBillHeader, Integer> {
 
 	PostBillHeader save(PostBillHeader postBillHeader);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE PostBillHeader i SET i.frId=:frId,i.frCode=:frCode,i.partyName=:frName,i.partyGstin=:frGstNo,i.partyAddress=:frAddress  WHERE i.billNo=:billNo ")
+	int updatefrinfo(@Param("billNo")int billNo,@Param("frId") int frId, @Param("frCode") String frCode,@Param("frName") String frName,@Param("frGstNo") String frGstNo,@Param("frAddress") String frAddress);
 
 	// sum(CASE WHEN payment_mode = 1 THEN payable_amt ELSE 0 END) as cash,
 
@@ -27,5 +37,7 @@ public interface PostBillHeaderRepository extends JpaRepository<PostBillHeader, 
 	 * m_fr_opening_stock_header WHERE m_fr_opening_stock_header.fr_id=17 AND
 	 * m_fr_opening_stock_header.month=10)
 	 */
+	
+	
 
 }
