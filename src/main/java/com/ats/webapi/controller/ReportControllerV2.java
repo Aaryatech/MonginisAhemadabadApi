@@ -130,7 +130,7 @@ public class ReportControllerV2 {
 	}
 
 	@RequestMapping(value = { "/getGstRegister" }, method = RequestMethod.POST)
-	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") String frIdList,
+	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") List<Integer> frIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
 		GstRegisterList gstList = new GstRegisterList();

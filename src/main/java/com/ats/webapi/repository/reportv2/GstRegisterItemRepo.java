@@ -25,7 +25,7 @@ public interface GstRegisterItemRepo extends JpaRepository<GstRegisterItem, Inte
 			+ "	  hsn_code from t_bill_detail, t_bill_header, m_franchisee,m_item"
 			+ "	  where t_bill_header.bill_no=t_bill_detail.bill_no AND " + "	  m_item.id=t_bill_detail.item_id AND "
 			+ "	  t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_detail.cat_id!=5 and "
-			+ "	  m_franchisee.fr_id=t_bill_header.fr_id GROUP BY t_bill_detail.bill_no,hsn_code   order by t_bill_header.invoice_no", nativeQuery = true)
+			+ "	  m_franchisee.fr_id=t_bill_header.fr_id and t_bill_header.del_status=0 and t_bill_detail.del_status=0 GROUP BY t_bill_detail.bill_no,hsn_code   order by t_bill_header.invoice_no", nativeQuery = true)
 
 	List<GstRegisterItem> getGstRegisterAllFrItem(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
@@ -43,10 +43,10 @@ public interface GstRegisterItemRepo extends JpaRepository<GstRegisterItem, Inte
 			+ "	  where t_bill_header.bill_no=t_bill_detail.bill_no AND "
 			+ "	  m_item.id=t_bill_detail.item_id AND t_bill_detail.cat_id!=5 and "
 			+ "	  t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND "
-			+ "	  m_franchisee.fr_id=t_bill_header.fr_id AND m_franchisee.fr_id IN (:frIdList)  "
+			+ "	  m_franchisee.fr_id=t_bill_header.fr_id AND m_franchisee.fr_id IN (:frIdList)  and t_bill_header.del_status=0 and t_bill_detail.del_status=0 "
 			+ "   GROUP BY t_bill_detail.bill_no,hsn_code  order by t_bill_header.invoice_no", nativeQuery = true)
 
 	List<GstRegisterItem> getGstRegisterSpecFrItem(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-			@Param("frIdList") String frIdList);
+			@Param("frIdList") List<Integer> frIdList);
 
 }

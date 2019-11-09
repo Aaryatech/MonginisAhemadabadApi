@@ -21,7 +21,7 @@ public interface CrNoteRegItemRepo extends JpaRepository<CrNoteRegItem, Integer>
 			+ "	FROM t_credit_note_header,t_credit_note_details,t_bill_header,m_franchisee"
 			+ "	WHERE t_credit_note_header.crn_id=t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate "
 			+ "	AND t_credit_note_header.fr_id=m_franchisee.fr_id "
-			+ "	AND t_bill_header.bill_no=t_credit_note_header.ex_int1 "
+			+ "	AND t_bill_header.bill_no=t_credit_note_header.ex_int1 and t_credit_note_details.del_status=0 and t_bill_header.del_status=0 "
 			+ "	GROUP by t_credit_note_details.hsn_code,t_credit_note_details.crn_id  order by t_credit_note_header.crn_no", nativeQuery = true)
 
 	List<CrNoteRegItem> getCrNoteRegItem(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
@@ -54,7 +54,7 @@ public interface CrNoteRegItemRepo extends JpaRepository<CrNoteRegItem, Integer>
 			+ "	FROM t_credit_note_header,t_credit_note_details,t_bill_header,m_franchisee"
 			+ "	WHERE t_credit_note_header.crn_id=t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate "
 			+ "	AND t_credit_note_header.fr_id=m_franchisee.fr_id"
-			+ "	AND t_bill_header.bill_no=t_credit_note_header.ex_int1 "
+			+ "	AND t_bill_header.bill_no=t_credit_note_header.ex_int1 and t_credit_note_details.del_status=0 and t_bill_header.del_status=0 "
 			+ "	GROUP BY (t_credit_note_details.cgst_per+t_credit_note_details.sgst_per),t_credit_note_details.crn_id  order by t_credit_note_header.crn_no", nativeQuery = true)
 
 	List<CrNoteRegItem> getCrNoteRegItemDone(@Param("fromDate") String fromDate, @Param("toDate") String toDate);

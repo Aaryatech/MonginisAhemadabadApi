@@ -27,7 +27,7 @@ public interface GstRegisterSpRepo extends JpaRepository<GstRegisterSp, Integer>
 				"	  t_bill_header.bill_no=t_bill_detail.bill_no AND t_bill_detail.cat_id=5 and " + 
 				"	  m_sp_cake.sp_id=t_bill_detail.item_id " + 
 				"	  AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND " + 
-				"	  m_franchisee.fr_id=t_bill_header.fr_id GROUP BY  t_bill_detail.bill_no,t_bill_detail.hsn_code  order by t_bill_header.invoice_no", nativeQuery = true)
+				"	  m_franchisee.fr_id=t_bill_header.fr_id and t_bill_header.del_status=0 and t_bill_detail.del_status=0 GROUP BY  t_bill_detail.bill_no,t_bill_detail.hsn_code  order by t_bill_header.invoice_no", nativeQuery = true)
 
 		List<GstRegisterSp> getGstRegisterAllFrSp(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
@@ -44,13 +44,13 @@ public interface GstRegisterSpRepo extends JpaRepository<GstRegisterSp, Integer>
 				"	  ROUND(SUM(t_bill_detail.bill_qty), 2) as bill_qty, t_bill_detail.hsn_code from t_bill_detail, t_bill_header," + 
 				"	  m_franchisee,m_sp_cake where " + 
 				"	  t_bill_header.bill_no=t_bill_detail.bill_no AND t_bill_detail.cat_id=5 and  " + 
-				"	  m_sp_cake.sp_id=t_bill_detail.item_id AND m_sp_cake.sp_id=m_spcake_sup.sp_id " + 
+				"	  m_sp_cake.sp_id=t_bill_detail.item_id   " + 
 				"	  AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND " + 
-				"	  m_franchisee.fr_id=t_bill_header.fr_id AND m_franchisee.fr_id IN (:frIdList) "
+				"	  m_franchisee.fr_id=t_bill_header.fr_id AND m_franchisee.fr_id IN (:frIdList) and t_bill_header.del_status=0 and t_bill_detail.del_status=0 "
 				+ "   GROUP BY   t_bill_detail.bill_no,t_bill_detail.hsn_code  order by t_bill_header.invoice_no", nativeQuery = true)
 
 		List<GstRegisterSp> getGstRegisterSpecFrSp(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
-				 @Param("frIdList") String frIdList);
+				 @Param("frIdList") List<Integer> frIdList);
 
 	
 

@@ -26,7 +26,7 @@ public interface GrandTotalBillWiseRepository extends JpaRepository<GrandTotalBi
 			"    where\n" + 
 			"        t_bill_header.bill_no=t_bill_detail.bill_no \n" + 
 			"        AND t_bill_header.bill_date BETWEEN :fromDate AND :toDate \n" + 
-			"        AND m_franchisee.fr_id=t_bill_header.fr_id  \n" + 
+			"        AND m_franchisee.fr_id=t_bill_header.fr_id  and t_bill_detail.del_status=0 and t_bill_header.del_status=0 \n" + 
 			"    group by \n" + 
 			"        bill_no \n" + 
 			"    order by\n" + 
