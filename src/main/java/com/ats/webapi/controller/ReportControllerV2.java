@@ -172,9 +172,11 @@ public class ReportControllerV2 {
 
 		List<CrNoteRegItem> crNoteRegItemList;
 		List<CrNoteRegSp> crNoteRegSpList=new ArrayList<CrNoteRegSp>();
+		
 
 		crNoteRegItemList = getCrNoteRegItemRepo.getCrNoteRegItem(fromDate, toDate);
 		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
+		
 
 		//crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSp(fromDate, toDate);
 		crNoteList.setCrNoteRegSpList(crNoteRegSpList);
@@ -209,14 +211,14 @@ public class ReportControllerV2 {
 
 	@RequestMapping(value = { "/getCrNoteRegisterDone" }, method = RequestMethod.POST)
 	public @ResponseBody CrNoteRegisterList getCrNoteRegisterDone(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+			@RequestParam("toDate") String toDate,@RequestParam("CreditNoteType") String CreditNoteType) {
 
 		CrNoteRegisterList crNoteList = new CrNoteRegisterList();
 
 		List<CrNoteRegItem> crNoteRegItemList;
 		List<CrNoteRegSp> crNoteRegSpList=new ArrayList<>();
 
-		crNoteRegItemList = getCrNoteRegItemRepo.getCrNoteRegItemDone(fromDate, toDate);
+		crNoteRegItemList = getCrNoteRegItemRepo.getCrNoteRegItemDone(fromDate, toDate,CreditNoteType);
 		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
 
 		//crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSpDone(fromDate, toDate);
