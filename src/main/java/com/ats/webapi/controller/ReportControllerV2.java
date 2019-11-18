@@ -232,13 +232,13 @@ public class ReportControllerV2 {
 	
 	@RequestMapping(value = { "/getGrandTotalCreditnotewise" }, method = RequestMethod.POST)
 	public @ResponseBody List<GrandTotalCreditnoteWise> getGrandTotalCreditnotewise(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate) {
+			@RequestParam("toDate") String toDate,@RequestParam("creditNoteType") int creditNoteType) {
 
 		List<GrandTotalCreditnoteWise> tax1ReportList = new ArrayList<>();
 		try {
 			fromDate = Common.convertToYMD(fromDate);
 			toDate = Common.convertToYMD(toDate); 
-			tax1ReportList = grandTotalCreditnoteWiseRepository.getGrandTotalCreditnotewise(fromDate, toDate);
+			tax1ReportList = grandTotalCreditnoteWiseRepository.getGrandTotalCreditnotewise(fromDate, toDate,creditNoteType);
 			
 		} catch (Exception e) {
 			System.out.println(" Exce in Tax1 Report " + e.getMessage());

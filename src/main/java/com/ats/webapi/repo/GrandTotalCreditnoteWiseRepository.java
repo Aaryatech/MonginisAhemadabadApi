@@ -29,11 +29,11 @@ public interface GrandTotalCreditnoteWiseRepository extends JpaRepository<GrandT
 			"        t_credit_note_header.crn_id=t_credit_note_details.crn_id \n" + 
 			"        AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate   \n" + 
 			"        AND t_credit_note_header.fr_id=m_franchisee.fr_id \n" + 
-			"        AND t_bill_header.bill_no=t_credit_note_header.ex_int1 and t_credit_note_details.del_status=0 and t_bill_header.del_status=0  \n" + 
+			"        AND t_bill_header.bill_no=t_credit_note_header.ex_int1 and t_credit_note_details.del_status=0 and t_bill_header.del_status=0  and t_credit_note_header.is_grn = :creditNoteType \n" + 
 			"    GROUP BY \n" + 
 			"        t_credit_note_details.crn_id  \n" + 
 			"    order by\n" + 
 			"        t_credit_note_header.crn_no", nativeQuery = true)
-	List<GrandTotalCreditnoteWise> getGrandTotalCreditnotewise(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
+	List<GrandTotalCreditnoteWise> getGrandTotalCreditnotewise(@Param("fromDate") String fromDate, @Param("toDate") String toDate,@Param("creditNoteType") int creditNoteType);
 
 }
