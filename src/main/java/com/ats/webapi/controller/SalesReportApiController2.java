@@ -150,9 +150,9 @@ public class SalesReportApiController2 {
 
 			catReportBill = subCatBillRepRepo.getDataByFrId(fromDate, toDate,frId);
 
-			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRN(fromDate, toDate);
+			subCatCreditGrnRep = subCatCreditGrnRepRepo.getDataGRNByFrId(fromDate, toDate, frId);
 
-			subCatCreditGvnRep = subCatCreditGrnRepRepo.getDataGVN(fromDate, toDate);
+			subCatCreditGvnRep = subCatCreditGrnRepRepo.getDataGVNByFrId(fromDate, toDate, frId);
 
 			for (int i = 0; i < catReportBill.size(); i++) {
 
