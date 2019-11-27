@@ -35,11 +35,13 @@ import com.ats.webapi.model.report.GetRepMenuwiseSell;
 import com.ats.webapi.model.report.GetRepMonthwiseSell;
 import com.ats.webapi.model.report.GetRepTaxSell;
 import com.ats.webapi.model.report.PDispatchReport;
+import com.ats.webapi.model.report.SpFlavourWiseSummaryDao;
 import com.ats.webapi.model.report.SpKgSummaryDao;
 import com.ats.webapi.repository.DispatchOrderRepository;
 import com.ats.webapi.repository.ItemReportDetailRepo;
 import com.ats.webapi.repository.ItemReportRepo;
 import com.ats.webapi.repository.PDispatchReportRepository;
+import com.ats.webapi.repository.SpFlavourWiseSummaryRepo;
 import com.ats.webapi.repository.SpKgSummaryRepository;
 import com.ats.webapi.service.RepFrSellServise;
 import com.ats.webapi.service.ReportsService;
@@ -69,6 +71,9 @@ public class ReportsController {
 	
 	@Autowired
 	SpKgSummaryRepository spKgSummaryRepository;
+	
+	@Autowired
+	SpFlavourWiseSummaryRepo spFlavourWiseSummaryRepo;
 
 	@RequestMapping(value = { "/getItemDetailReport" }, method = RequestMethod.POST)
 	public @ResponseBody List<ItemReportDetail> getItemDetailReport(@RequestParam("fromDate") String fromDate,
@@ -623,4 +628,19 @@ public class ReportsController {
 	}
 	// ------------------------------------------------------------------------------------------------
 
+	
+	// ------------------------------------------------------------------------------------------------
+	//Anmol-->26-11-2019--->SP_FLAVOUR_WISE_REPORT
+		@RequestMapping(value = "/getSpFlavourSummaryReport", method = RequestMethod.POST)
+		public @ResponseBody List<SpFlavourWiseSummaryDao> getSpFlavourSummaryReport(
+				@RequestParam("fromDate") String fromDate,@RequestParam("toDate") String toDate, @RequestParam("frId") List<Integer> frId) {
+
+			List<SpFlavourWiseSummaryDao> spFlavourSummaryDaoList = spFlavourWiseSummaryRepo.getFlavourSummaryReport(fromDate, toDate, frId);
+		
+			return spFlavourSummaryDaoList;
+
+		}
+		// ------------------------------------------------------------------------------------------------
+
+		
 }
