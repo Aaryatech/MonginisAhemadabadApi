@@ -65,5 +65,32 @@ public interface HSNWiseReportRepo extends JpaRepository<HSNWiseReport, Integer>
 
 	List<HSNWiseReport> getReportHsnByFrId(@Param("frId") int frId, @Param("fromDate") String fromDate,
 			@Param("toDate") String toDate);
+	
+	
+	
+	
+	//Anmol----->5/12/2019------------->filter by grn or gvn
+	@Query(value = "SELECT\r\n" + 
+			"    t_credit_note_details.hsn_code AS id,\r\n" + 
+			"    t_credit_note_details.hsn_code AS item_hsncd,\r\n" + 
+			"    t_credit_note_details.sgst_per AS item_tax1,\r\n" + 
+			"    t_credit_note_details.cgst_per AS item_tax2,\r\n" + 
+			"    SUM(\r\n" + 
+			"        t_credit_note_details.grn_gvn_qty\r\n" + 
+			"    ) AS bill_qty,\r\n" + 
+			"    SUM(\r\n" + 
+			"        t_credit_note_details.taxable_amt\r\n" + 
+			"    ) AS taxable_amt,\r\n" + 
+			"    SUM(t_credit_note_details.cgst_rs) AS cgst_rs,\r\n" + 
+			"    SUM(t_credit_note_details.sgst_rs) AS sgst_rs\r\n" + 
+			"FROM\r\n" + 
+			"    t_credit_note_details,\r\n" + 
+			"    t_credit_note_header\r\n" + 
+			"WHERE\r\n" + 
+			"    t_credit_note_header.crn_id = t_credit_note_details.crn_id AND t_credit_note_header.crn_date BETWEEN :fromDate AND :toDate AND t_credit_note_details.del_status = 0 AND t_credit_note_details.is_grn IN(:grngvnType)\r\n" + 
+			"GROUP BY\r\n" + 
+			"    item_hsncd", nativeQuery = true)
+
+	List<HSNWiseReport> getReportHsnIn(@Param("fromDate") String fromDate, @Param("toDate") String toDate, @Param("grngvnType") List<Integer> grngvnType);
 
 }

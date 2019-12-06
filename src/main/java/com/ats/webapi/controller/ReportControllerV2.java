@@ -93,6 +93,24 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
+	
+	//Anmol---->5/12/2019--------------->
+	@RequestMapping(value = { "/getHsnReportFilterGrnGvn" }, method = RequestMethod.POST)
+	public @ResponseBody List<HSNWiseReport> getHsnReportFilterGrnGvn(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate,@RequestParam("grngvnType") List<Integer> grngvnType) {
+
+		List<HSNWiseReport> saleList = new ArrayList<>();
+		try {
+
+			saleList = hSNWiseReportRepo.getReportHsnIn(fromDate, toDate,grngvnType);
+			System.out.println(saleList.toString());
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return saleList;
+	}
 
 	@RequestMapping(value = { "/getHsnReportByFrId" }, method = RequestMethod.POST)
 	public @ResponseBody List<HSNWiseReport> getHsnReportByFrId(@RequestParam("frId") int frId,
