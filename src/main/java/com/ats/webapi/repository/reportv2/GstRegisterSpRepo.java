@@ -31,7 +31,7 @@ public interface GstRegisterSpRepo extends JpaRepository<GstRegisterSp, Integer>
 
 		List<GstRegisterSp> getGstRegisterAllFrSp(@Param("fromDate") String fromDate, @Param("toDate") String toDate);
 
-		@Query(value = " select  t_bill_header.invoice_no ," + 
+		@Query(value = " select  t_bill_header.invoice_no ,t_bill_detail.bill_detail_no," + 
 				"	  t_bill_header.bill_date,  t_bill_header.party_name as fr_name,  t_bill_header.party_gstin as fr_gst_no," + 
 				"	  t_bill_detail.bill_no, t_bill_detail.cgst_per, t_bill_detail.sgst_per," + 
 				"	  t_bill_detail.cgst_per+sgst_per as tax_per," + 

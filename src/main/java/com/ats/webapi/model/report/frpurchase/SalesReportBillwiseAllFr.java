@@ -14,8 +14,18 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 //bean for sales report no 7//13 Jan 2018
 public class SalesReportBillwiseAllFr implements Serializable {
 	
+/*	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="bill_no")
+	private int billNo;*/
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
+	private String id;
+	
+	
 	@Column(name="bill_no")
 	private int billNo;
 		
@@ -173,10 +183,20 @@ public class SalesReportBillwiseAllFr implements Serializable {
 	public void setIgstRsSum(float igstRsSum) {
 		this.igstRsSum = igstRsSum;
 	}
+	
+	
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	
 	@Override
 	public String toString() {
-		return "SalesReportBillwiseAllFr [billNo=" + billNo + ", invoiceNo=" + invoiceNo + ", frName=" + frName
-				+ ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode + ", frCity=" + frCity
+		return "SalesReportBillwiseAllFr [id=" + id + ", billNo=" + billNo + ", invoiceNo=" + invoiceNo + ", frName="
+				+ frName + ", billDate=" + billDate + ", frId=" + frId + ", frCode=" + frCode + ", frCity=" + frCity
 				+ ", frGstNo=" + frGstNo + ", isSameState=" + isSameState + ", itemHsncd=" + itemHsncd + ", itemTax1="
 				+ itemTax1 + ", itemTax2=" + itemTax2 + ", itemTax3=" + itemTax3 + ", itemName=" + itemName
 				+ ", taxableAmtSum=" + taxableAmtSum + ", sgstRsSum=" + sgstRsSum + ", cgstRsSum=" + cgstRsSum

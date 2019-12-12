@@ -150,6 +150,8 @@ public class ReportControllerV2 {
 	@RequestMapping(value = { "/getGstRegister" }, method = RequestMethod.POST)
 	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") List<Integer> frIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+		
+		System.err.println("-------------------- IN getGstRegister-----------------------------");
 
 		GstRegisterList gstList = new GstRegisterList();
 
