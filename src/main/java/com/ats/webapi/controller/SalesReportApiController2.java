@@ -250,7 +250,6 @@ public class SalesReportApiController2 {
 			for (int i = 0; i < catReportBill.size(); i++) {
 
 				SubCatFrReport subCatReport = new SubCatFrReport();
-
 				subCatReport.setSubCatId(catReportBill.get(i).getSubCatId());
 				subCatReport.setSubCatName(catReportBill.get(i).getSubCatName());
 				subCatReport.setFrId(catReportBill.get(i).getFrId());

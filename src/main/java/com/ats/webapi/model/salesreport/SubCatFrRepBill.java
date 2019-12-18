@@ -18,6 +18,8 @@ public class SubCatFrRepBill {
 
 	private float soldQty;
 	private float soldAmt;
+	
+	private int catId;
 
 	
 	
@@ -84,12 +86,22 @@ public class SubCatFrRepBill {
 	public void setSoldAmt(float soldAmt) {
 		this.soldAmt = soldAmt;
 	}
+	
+	
+
+	public int getCatId() {
+		return catId;
+	}
+
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
 
 	@Override
 	public String toString() {
 		return "SubCatFrRepBill [id=" + id + ", billDetailNo=" + billDetailNo + ", subCatId=" + subCatId + ", frId="
 				+ frId + ", frName=" + frName + ", subCatName=" + subCatName + ", soldQty=" + soldQty + ", soldAmt="
-				+ soldAmt + "]";
+				+ soldAmt + ", catId=" + catId + "]";
 	}
 
 	
