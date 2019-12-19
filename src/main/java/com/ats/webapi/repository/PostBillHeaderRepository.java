@@ -18,6 +18,9 @@ public interface PostBillHeaderRepository extends JpaRepository<PostBillHeader, 
 	int updatefrinfo(@Param("billNo")int billNo,@Param("frId") int frId, @Param("frCode") String frCode,@Param("frName") String frName,@Param("frGstNo") String frGstNo,@Param("frAddress") String frAddress);
 
 	// sum(CASE WHEN payment_mode = 1 THEN payable_amt ELSE 0 END) as cash,
+	
+	@Query(value="SELECT SUM(t_bill_header.grand_total) FROM t_bill_header WHERE t_bill_header.bill_date BETWEEN :fromDate AND :toDate and t_bill_header.del_status=0 GROUP by t_bill_header.bill_date",nativeQuery=true)
+    int getTotalSellBetFdTd(@Param("fromDate") String fromDate,@Param("toDate") String toDate);
 
 	
 
