@@ -97,6 +97,7 @@ public class OwnerAppController {
 						Integer.class);
 				System.err.println("total " + total);
 				String msg="Total sell between "+fromDate + "-"+toDate+": "+total +"Inwards";
+				
 
 			}
 
