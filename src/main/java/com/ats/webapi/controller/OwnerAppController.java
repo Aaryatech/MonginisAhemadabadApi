@@ -21,7 +21,8 @@ import com.ats.webapi.model.ownapp.OwnerAppUser;
 import com.ats.webapi.model.ownapp.ResponseCode;
 import com.ats.webapi.repo.ownapp.OwnerAppUserRepo;
 import com.ats.webapi.repository.PostBillHeaderRepository;
-
+import com.ats.webapi.repository.PostCreditNoteHeaderRepository;
+import com.ats.webapi.commons.Firebase;
 @RestController
 public class OwnerAppController {
 
@@ -78,7 +79,7 @@ public class OwnerAppController {
 
 	@RequestMapping(value = { "/sendPushNotifApi" }, method = RequestMethod.POST)
 	public @ResponseBody Object sendPushNotifApi(@RequestParam("fromDate") String fromDate,
-			@RequestParam("toDate") String toDate, @RequestParam("compId") int compId) {
+			@RequestParam("toDate") String toDate, @RequestParam("compId") int compId, @RequestParam("notType") int notType) {
 		Integer total = 0;
 		List<OwnerAppUser> appUserList = new ArrayList<OwnerAppUser>();
 		try {
@@ -92,12 +93,24 @@ public class OwnerAppController {
 
 				map.add("fromDate", fromDate);
 				map.add("toDate", toDate);
-
+				String msg=new String();
+				String tag="1";
+				if(notType==1) {
 				total = restTemplate.postForObject(appUserList.get(i).getUrlLink() + "getBillTotal", map,
 						Integer.class);
+				tag="1";
+				msg="Total sell between "+fromDate + "-"+toDate+": "+total;
+				}else {
+					
+					total = restTemplate.postForObject(appUserList.get(i).getUrlLink() + "getCrnTotal", map,
+							Integer.class);
+					msg="Total Credit Note between "+fromDate + "-"+toDate+": "+total;
+					tag="2";
+				}
 				System.err.println("total " + total);
-				String msg="Total sell between "+fromDate + "-"+toDate+": "+total +"Inwards";
+				Firebase fb=new Firebase();
 				
+			String notifRes=fb.sendPushNotifForCommunication(appUserList.get(i).getDevToken(), "Owner App Notification", msg, tag);
 
 			}
 
@@ -138,5 +151,34 @@ public class OwnerAppController {
 		return tot;
 
 	}
+	
+	@Autowired PostCreditNoteHeaderRepository creditNoteHeaderRepository;
+	
+	@RequestMapping(value = { "/getCrnTotal" }, method = RequestMethod.POST)
+	public @ResponseBody Object getCrnTotal(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) throws ParseException {
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("dd-MM-yyyy");
+		
+		Date d3 = sdf1.parse(fromDate);
+		Date d4 = sdf1.parse(toDate);
+
+		System.err.println("toDate " + toDate + "fromDate " + fromDate);
+		int tot = 0;
+		try {
+			String d1 = sdf.format(d3);
+			String d2 = sdf.format(d4);
+
+			tot = creditNoteHeaderRepository.getTotalCrnBetFdTd(d1, d2);
+			System.err.println(tot + "tot");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return tot;
+
+	}
+	
 
 }
