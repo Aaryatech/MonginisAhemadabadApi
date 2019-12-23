@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ats.webapi.model.ownapp.OwnerAppUser;
+import java.lang.String;
 
 public interface OwnerAppUserRepo extends JpaRepository<OwnerAppUser, Integer> {
 	
@@ -18,7 +19,7 @@ public interface OwnerAppUserRepo extends JpaRepository<OwnerAppUser, Integer> {
 
 	OwnerAppUser getLoginInfo(@Param("userName") String userName,@Param("password") String password);
 	
-	OwnerAppUser findByUsrNameIgnoreCase(String userName);
+	OwnerAppUser  findByMobNo(String mobno);
 
 	
 	@Transactional
