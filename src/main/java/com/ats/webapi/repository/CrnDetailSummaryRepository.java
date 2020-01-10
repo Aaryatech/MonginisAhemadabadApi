@@ -29,7 +29,9 @@ public interface CrnDetailSummaryRepository extends JpaRepository<CrnDetailsSumm
 			"         detail.sgst_per as sgst_per,\n" + 
 			"         SUM(detail.sgst_rs) as sgst_rs,\n" + 
 			"         detail.igst_per as igst_per,\n" + 
-			"         SUM(detail.igst_rs) as igst_rs\n" + 
+			"         SUM(detail.igst_rs) as igst_rs,\n" + 
+			"          detail.cess_per as cess_per,\n" + 
+			"         SUM(detail.cess_rs) as cess_rs\n" + 
 			"        \n" + 
 			"    FROM\n" + 
 			"        t_credit_note_details detail \n" + 

@@ -545,7 +545,7 @@ public class RestApiController {
 	public @ResponseBody Info postCreditNoteForUpdate(@RequestBody PostCreditNoteHeaderList postCreditNoteHeader) {
 
 		Info info = new Info();
-
+        System.err.println("postCreditNoteHeader"+postCreditNoteHeader.toString());
 		List<PostCreditNoteHeader> creditNoteHeaderList = postCreditNoteService
 				.postCreditNoteForUpdate(postCreditNoteHeader.getPostCreditNoteHeader());
 

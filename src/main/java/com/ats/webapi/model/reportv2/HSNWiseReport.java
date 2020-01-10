@@ -18,11 +18,12 @@ public class HSNWiseReport {
 
 	private float itemTax2;
  
+	private float cessPer;
 	private float billQty;
 	private float taxableAmt;
-
 	private float cgstRs;
 	private float sgstRs;
+	private float cessRs;
 
 	@Transient
 	private float grnGvnQty;
@@ -101,12 +102,28 @@ public class HSNWiseReport {
 	public void setGrnGvnQty(float grnGvnQty) {
 		this.grnGvnQty = grnGvnQty;
 	}
+    
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
+
+	public float getCessRs() {
+		return cessRs;
+	}
+
+	public void setCessRs(float cessRs) {
+		this.cessRs = cessRs;
+	}
 
 	@Override
 	public String toString() {
 		return "HSNWiseReport [id=" + id + ", itemHsncd=" + itemHsncd + ", itemTax1=" + itemTax1 + ", itemTax2="
-				+ itemTax2 + ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstRs=" + cgstRs + ", sgstRs="
-				+ sgstRs + ", grnGvnQty=" + grnGvnQty + "]";
+				+ itemTax2 + ", cessPer=" + cessPer + ", billQty=" + billQty + ", taxableAmt=" + taxableAmt
+				+ ", cgstRs=" + cgstRs + ", sgstRs=" + sgstRs + ", cessRs=" + cessRs + ", grnGvnQty=" + grnGvnQty + "]";
 	}
 
 	

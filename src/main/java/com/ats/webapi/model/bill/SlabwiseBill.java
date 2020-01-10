@@ -23,12 +23,22 @@ public class SlabwiseBill implements Serializable{
 	
 	private float sgstAmt;
 	
+	private float cessAmt;//new1
+
 	private float totalTax;
 	
 	private float grandTotal;
 
 	
 	
+	public float getCessAmt() {
+		return cessAmt;
+	}
+
+	public void setCessAmt(float cessAmt) {
+		this.cessAmt = cessAmt;
+	}
+
 	public float getBillQty() {
 		return billQty;
 	}
@@ -105,8 +115,9 @@ public class SlabwiseBill implements Serializable{
 	public String toString() {
 		return "SlabwiseBill [billDetailNo=" + billDetailNo + ", itemHsncd=" + itemHsncd + ", taxPer=" + taxPer
 				+ ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstAmt=" + cgstAmt + ", sgstAmt="
-				+ sgstAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + "]";
+				+ sgstAmt + ", cessAmt=" + cessAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + "]";
 	}
-    
+
+	
 	
 }

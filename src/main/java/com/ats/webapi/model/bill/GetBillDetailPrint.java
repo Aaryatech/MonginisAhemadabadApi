@@ -65,6 +65,12 @@ public class GetBillDetailPrint {
 	@Column(name="cgst_rs")
 	private float cgstRs;
 	
+	@Column(name="cess_per")
+	private float cessPer;//new1
+	
+	@Column(name="cess_rs")
+	private float cessRs;//new1
+	
 	@Column(name="igst_per")
 	private float igstPer;
 	
@@ -124,6 +130,22 @@ public class GetBillDetailPrint {
 	
 	
 	
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
+
+	public float getCessRs() {
+		return cessRs;
+	}
+
+	public void setCessRs(float cessRs) {
+		this.cessRs = cessRs;
+	}
+
 	public float getDiscPer() {
 		return discPer;
 	}
@@ -402,13 +424,14 @@ public class GetBillDetailPrint {
 				+ ", catId=" + catId + ", billDate=" + billDate + ", itemId=" + itemId + ", orderQty=" + orderQty
 				+ ", billQty=" + billQty + ", orderId=" + orderId + ", rateType=" + rateType + ", rate=" + rate
 				+ ", mrp=" + mrp + ", grandTotal=" + grandTotal + ", sgstPer=" + sgstPer + ", sgstRs=" + sgstRs
-				+ ", cgstPer=" + cgstPer + ", cgstRs=" + cgstRs + ", igstPer=" + igstPer + ", igstRs=" + igstRs
-				+ ", taxableAmt=" + taxableAmt + ", remark=" + remark + ", delStatus=" + delStatus + ", itemName="
-				+ itemName + ", catName=" + catName + ", totalTax=" + totalTax + ", baseRate=" + baseRate + ", grnType="
-				+ grnType + ", expiryDate=" + expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + ", itemHsncd="
-				+ itemHsncd + ", itemUom=" + itemUom + ", subCatId=" + subCatId + ", discPer=" + discPer + ", discAmt="
-				+ discAmt + "]";
+				+ ", cgstPer=" + cgstPer + ", cgstRs=" + cgstRs + ", cessPer=" + cessPer + ", cessRs=" + cessRs
+				+ ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", taxableAmt=" + taxableAmt + ", remark=" + remark
+				+ ", delStatus=" + delStatus + ", itemName=" + itemName + ", catName=" + catName + ", totalTax="
+				+ totalTax + ", baseRate=" + baseRate + ", grnType=" + grnType + ", expiryDate=" + expiryDate
+				+ ", isGrngvnApplied=" + isGrngvnApplied + ", itemHsncd=" + itemHsncd + ", itemUom=" + itemUom
+				+ ", subCatId=" + subCatId + ", discPer=" + discPer + ", discAmt=" + discAmt + "]";
 	}
-    
+
+	
 	
 }

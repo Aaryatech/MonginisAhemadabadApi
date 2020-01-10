@@ -637,7 +637,7 @@ public class FrStockApiController {
 					System.out.println("fr stock response " + postFrItemStockDetail.toString());
 
 					GetCurrentStockDetails getCurrentStockDetails = new GetCurrentStockDetails();
-
+ 
 					getCurrentStockDetails.setStockHeaderId(postFrItemStockDetail.getOpeningStockHeaderId());
 					getCurrentStockDetails.setStockDetailId(postFrItemStockDetail.getOpeningStockDetailId());
 					getCurrentStockDetails.setRegOpeningStock(postFrItemStockDetail.getRegOpeningStock());

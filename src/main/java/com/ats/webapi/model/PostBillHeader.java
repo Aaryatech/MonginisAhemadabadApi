@@ -95,7 +95,7 @@ public class PostBillHeader implements Serializable {
 	
 	private String exVarchar1;
 	
-	private String exVarchar2;
+	private String exVarchar2;//for cessAmt
 	
 	@Transient
 	List<PostBillDetail> postBillDetailsList;

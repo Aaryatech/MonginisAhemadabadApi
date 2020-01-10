@@ -77,6 +77,12 @@ public class PostBillDetail {
 	@Column(name="disc_per")//new
 	private float discPer;
 	
+	@Column(name="cess_per")//new1 
+	private float cessPer;
+	
+	@Column(name="cess_rs")//new1
+	private float cessRs;
+	
 	@Column(name="taxable_amt")
 	private float taxableAmt;
 	
@@ -101,6 +107,24 @@ public class PostBillDetail {
 	@Column(name="hsn_code")//new added
 	private String hsnCode;
 	
+	
+	
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
+
+	public float getCessRs() {
+		return cessRs;
+	}
+
+	public void setCessRs(float cessRs) {
+		this.cessRs = cessRs;
+	}
+
 	public String getHsnCode() {
 		return hsnCode;
 	}
@@ -337,10 +361,10 @@ public class PostBillDetail {
 				+ orderId + ", rateType=" + rateType + ", rate=" + rate + ", mrp=" + mrp + ", grandTotal=" + grandTotal
 				+ ", sgstPer=" + sgstPer + ", sgstRs=" + sgstRs + ", cgstPer=" + cgstPer + ", cgstRs=" + cgstRs
 				+ ", igstPer=" + igstPer + ", igstRs=" + igstRs + ", baseRate=" + baseRate + ", discPer=" + discPer
-				+ ", taxableAmt=" + taxableAmt + ", remark=" + remark + ", totalTax=" + totalTax + ", delStatus="
-				+ delStatus + ", grnType=" + grnType + ", expiryDate=" + expiryDate + ", isGrngvnApplied="
-				+ isGrngvnApplied + ", hsnCode=" + hsnCode + "]";
+				+ ", cessPer=" + cessPer + ", cessRs=" + cessRs + ", taxableAmt=" + taxableAmt + ", remark=" + remark
+				+ ", totalTax=" + totalTax + ", delStatus=" + delStatus + ", grnType=" + grnType + ", expiryDate="
+				+ expiryDate + ", isGrngvnApplied=" + isGrngvnApplied + ", hsnCode=" + hsnCode + "]";
 	}
 
-	
+    
 }
