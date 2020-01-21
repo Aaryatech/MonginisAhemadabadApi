@@ -62,6 +62,9 @@ public class GetGrnItemConfig implements Serializable {
 	@Column(name="cgst_per")
 	private float cgstPer;
 	
+	@Column(name="cess_per")
+	private float cessPer;//new1
+	
 	@Column(name="igst_per")
 	private float igstPer;
 	
@@ -246,15 +249,24 @@ public class GetGrnItemConfig implements Serializable {
 	public void setBillDateTime(String billDateTime) {
 		this.billDateTime = billDateTime;
 	}
+    
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
 
 	@Override
 	public String toString() {
 		return "GetGrnItemConfig [billDetailNo=" + billDetailNo + ", itemId=" + itemId + ", frId=" + frId
 				+ ", autoGrnQty=" + autoGrnQty + ", itemName=" + itemName + ", grnType=" + grnType + ", billNo="
 				+ billNo + ", billDateTime=" + billDateTime + ", rate=" + rate + ", billDate=" + billDate + ", mrp="
-				+ mrp + ", billQty=" + billQty + ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer="
-				+ igstPer + ", menuId=" + menuId + ", catId=" + catId + ", invoiceNo=" + invoiceNo + ", discPer="
-				+ discPer + ", hsnCode=" + hsnCode + "]";
+				+ mrp + ", billQty=" + billQty + ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", cessPer="
+				+ cessPer + ", igstPer=" + igstPer + ", menuId=" + menuId + ", catId=" + catId + ", invoiceNo="
+				+ invoiceNo + ", discPer=" + discPer + ", hsnCode=" + hsnCode + "]";
 	}
-     
+
+	
 }

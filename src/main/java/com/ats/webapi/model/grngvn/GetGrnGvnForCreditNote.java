@@ -96,6 +96,9 @@ public class GetGrnGvnForCreditNote implements Serializable {
 	@Column(name = "cgst_per")
 	private float cgstPer;
 	
+	@Column(name = "cess_per")//new1
+	private float cessPer;//new1
+	
 	@Column(name = "igst_per")
 	private float igstPer;
 	
@@ -430,6 +433,14 @@ public class GetGrnGvnForCreditNote implements Serializable {
 	public void setGrnGvnHeaderId(int grnGvnHeaderId) {
 		this.grnGvnHeaderId = grnGvnHeaderId;
 	}
+    
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
 
 	@Override
 	public String toString() {
@@ -439,11 +450,13 @@ public class GetGrnGvnForCreditNote implements Serializable {
 				+ isGrn + ", isGrnEdit=" + isGrnEdit + ", frGrnGvnRemark=" + frGrnGvnRemark + ", grnGvnStatus="
 				+ grnGvnStatus + ", grnApprovedDateTimeAcc=" + grnApprovedDateTimeAcc + ", delStatus=" + delStatus
 				+ ", grnGvnQtyAuto=" + grnGvnQtyAuto + ", isTallySync=" + isTallySync + ", baseRate=" + baseRate
-				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", aprTaxableAmt="
-				+ aprTaxableAmt + ", aprTotalTax=" + aprTotalTax + ", aprROff=" + aprROff + ", itemName=" + itemName
-				+ ", frName=" + frName + ", isCreditNote=" + isCreditNote + ", menuId=" + menuId + ", catId=" + catId
-				+ ", invoiceNo=" + invoiceNo + ", refInvoiceDate=" + refInvoiceDate + ", grngvnSrno=" + grngvnSrno
-				+ ", grnGvnHeaderId=" + grnGvnHeaderId + ", hsnCode=" + hsnCode + "]";
+				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", cessPer=" + cessPer + ", igstPer=" + igstPer
+				+ ", aprTaxableAmt=" + aprTaxableAmt + ", aprTotalTax=" + aprTotalTax + ", aprROff=" + aprROff
+				+ ", itemName=" + itemName + ", frName=" + frName + ", isCreditNote=" + isCreditNote + ", menuId="
+				+ menuId + ", catId=" + catId + ", invoiceNo=" + invoiceNo + ", refInvoiceDate=" + refInvoiceDate
+				+ ", grngvnSrno=" + grngvnSrno + ", grnGvnHeaderId=" + grnGvnHeaderId + ", hsnCode=" + hsnCode + "]";
 	}
+
+	
     
 }

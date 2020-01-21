@@ -43,8 +43,6 @@ public class GetCreditNoteReport implements Serializable {
 	@Column(name = "fr_address")
 	private String frAddress;
 	
-	
-	
 	@Column(name = "fr_gst_no")
 	private String frGstNo;
 	
@@ -57,6 +55,7 @@ public class GetCreditNoteReport implements Serializable {
 	float sgstSum;
 	float cgstSum;
 	float igstSum;
+	float cessSum;//new1
 	public int getCrnId() {
 		return crnId;
 	}
@@ -71,7 +70,6 @@ public class GetCreditNoteReport implements Serializable {
 	}
 	
 	@JsonFormat(locale = "hi",timezone = "Asia/Kolkata", pattern = "dd-MM-yyyy")
-
 	public Date getCrnDate() {
 		return crnDate;
 	}
@@ -150,16 +148,19 @@ public class GetCreditNoteReport implements Serializable {
 	public void setIgstSum(float igstSum) {
 		this.igstSum = igstSum;
 	}
+	
+	public float getCessSum() {
+		return cessSum;
+	}
+	public void setCessSum(float cessSum) {
+		this.cessSum = cessSum;
+	}
 	@Override
 	public String toString() {
 		return "GetCreditNoteReport [crnId=" + crnId + ", crnNo=" + crnNo + ", crnDate=" + crnDate + ", frId=" + frId
 				+ ", crnTaxableAmt=" + crnTaxableAmt + ", crnTotalTax=" + crnTotalTax + ", crnGrandTotal="
 				+ crnGrandTotal + ", frName=" + frName + ", frAddress=" + frAddress + ", frGstNo=" + frGstNo
 				+ ", isSameState=" + isSameState + ", isGrn=" + isGrn + ", sgstSum=" + sgstSum + ", cgstSum=" + cgstSum
-				+ ", igstSum=" + igstSum + "]";
+				+ ", igstSum=" + igstSum + ", cessSum=" + cessSum + "]";
 	}
-	
-	
-	
-
 }

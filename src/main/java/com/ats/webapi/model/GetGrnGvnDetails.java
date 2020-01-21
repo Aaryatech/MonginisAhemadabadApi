@@ -127,6 +127,9 @@ public class GetGrnGvnDetails {
 	@Column(name = "igst_per")
 	private float igstPer;
 	
+	@Column(name = "cess_per")
+	private float cessPer;//new1
+	
 	@Column(name = "taxable_amt")
 	private float taxableAmt;
 	
@@ -194,6 +197,9 @@ public class GetGrnGvnDetails {
 	@Column(name = "apr_grand_total")
 	float aprGrandTotal;
 	
+	@Column(name = "apr_cess_rs")
+	float aprCessRs;//new1
+	
 	@Column(name = "apr_r_off")
 	float aprROff;
 
@@ -201,14 +207,6 @@ public class GetGrnGvnDetails {
 	int isSameState;
 	//23 FEB new Fields to handle qty variation between entry(insert) and dispatch
 	
-	
-	
-	
-	
-	
-	
-	
-
 	public int getMenuId() {
 		return menuId;
 	}
@@ -669,6 +667,22 @@ public class GetGrnGvnDetails {
 		this.itemHsncd = itemHsncd;
 	}
 
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
+
+	public float getAprCessRs() {
+		return aprCessRs;
+	}
+
+	public void setAprCessRs(float aprCessRs) {
+		this.aprCessRs = aprCessRs;
+	}
+
 	@Override
 	public String toString() {
 		return "GetGrnGvnDetails [itemHsncd=" + itemHsncd + ", grnGvnId=" + grnGvnId + ", grnGvnDate=" + grnGvnDate
@@ -683,14 +697,15 @@ public class GetGrnGvnDetails {
 				+ approvedLoginAcc + ", grnApprovedDateTimeAcc=" + grnApprovedDateTimeAcc + ", approvedRemarkAcc="
 				+ approvedRemarkAcc + ", delStatus=" + delStatus + ", grnGvnQtyAuto=" + grnGvnQtyAuto + ", itemName="
 				+ itemName + ", frName=" + frName + ", isTallySync=" + isTallySync + ", baseRate=" + baseRate
-				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", taxableAmt="
-				+ taxableAmt + ", totalTax=" + totalTax + ", roundUpAmt=" + roundUpAmt + ", finalAmt=" + finalAmt
-				+ ", isCreditNote=" + isCreditNote + ", menuId=" + menuId + ", catId=" + catId + ", invoiceNo="
-				+ invoiceNo + ", refInvoiceDate=" + refInvoiceDate + ", grnGvnHeaderId=" + grnGvnHeaderId
-				+ ", aprQtyGate=" + aprQtyGate + ", aprQtyStore=" + aprQtyStore + ", aprQtyAcc=" + aprQtyAcc
-				+ ", aprTaxableAmt=" + aprTaxableAmt + ", aprTotalTax=" + aprTotalTax + ", aprSgstRs=" + aprSgstRs
-				+ ", aprCgstRs=" + aprCgstRs + ", aprIgstRs=" + aprIgstRs + ", aprGrandTotal=" + aprGrandTotal
-				+ ", aprROff=" + aprROff + ", isSameState=" + isSameState + "]";
+				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", cessPer=" + cessPer
+				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", roundUpAmt=" + roundUpAmt + ", finalAmt="
+				+ finalAmt + ", isCreditNote=" + isCreditNote + ", menuId=" + menuId + ", catId=" + catId
+				+ ", invoiceNo=" + invoiceNo + ", refInvoiceDate=" + refInvoiceDate + ", grnGvnHeaderId="
+				+ grnGvnHeaderId + ", aprQtyGate=" + aprQtyGate + ", aprQtyStore=" + aprQtyStore + ", aprQtyAcc="
+				+ aprQtyAcc + ", aprTaxableAmt=" + aprTaxableAmt + ", aprTotalTax=" + aprTotalTax + ", aprSgstRs="
+				+ aprSgstRs + ", aprCgstRs=" + aprCgstRs + ", aprIgstRs=" + aprIgstRs + ", aprGrandTotal="
+				+ aprGrandTotal + ", aprCessRs=" + aprCessRs + ", aprROff=" + aprROff + ", isSameState=" + isSameState
+				+ "]";
 	}
 
 

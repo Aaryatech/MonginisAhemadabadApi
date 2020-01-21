@@ -35,7 +35,7 @@ public interface GrnGvnForCreditNoteRepositoty extends JpaRepository<GetGrnGvnFo
 			"        t_grn_gvn.base_rate," + 
 			"        t_grn_gvn.sgst_per," + 
 			"        t_grn_gvn.cgst_per," + 
-			"        t_grn_gvn.igst_per," + 
+			"        t_grn_gvn.igst_per,t_grn_gvn.cess_per," + 
 			"       t_grn_gvn.apr_taxable_amt," + 
 			"       t_grn_gvn.apr_total_tax," + 
 			"       t_grn_gvn.apr_r_off," + 

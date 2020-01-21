@@ -73,6 +73,9 @@ public class GrnGvnHeader {
 	@Column(name = "apr_cgst_rs")
 	float aprCgstRs;
 	
+	@Column(name = "apr_cess_rs")
+	float aprCessRs;//new1
+	
 	@Column(name = "apr_igst_rs")
 	float aprIgstRs;
 	
@@ -101,6 +104,16 @@ public class GrnGvnHeader {
 		return frId;
 	}
 
+
+
+	public float getAprCessRs() {
+		return aprCessRs;
+	}
+
+
+	public void setAprCessRs(float aprCessRs) {
+		this.aprCessRs = aprCessRs;
+	}
 
 
 	public void setFrId(int frId) {
@@ -309,8 +322,8 @@ public class GrnGvnHeader {
 				+ taxAmt + ", totalAmt=" + totalAmt + ", grngvnStatus=" + grngvnStatus + ", apporvedAmt=" + apporvedAmt
 				+ ", isCreditNote=" + isCreditNote + ", creditNoteId=" + creditNoteId + ", approvedDatetime="
 				+ approvedDatetime + ", aprTaxableAmt=" + aprTaxableAmt + ", aprTotalTax=" + aprTotalTax
-				+ ", aprSgstRs=" + aprSgstRs + ", aprCgstRs=" + aprCgstRs + ", aprIgstRs=" + aprIgstRs
-				+ ", aprGrandTotal=" + aprGrandTotal + ", aprROff=" + aprROff + ", grnGvn=" + grnGvn + "]";
+				+ ", aprSgstRs=" + aprSgstRs + ", aprCgstRs=" + aprCgstRs + ", aprCessRs=" + aprCessRs + ", aprIgstRs="
+				+ aprIgstRs + ", aprGrandTotal=" + aprGrandTotal + ", aprROff=" + aprROff + ", grnGvn=" + grnGvn + "]";
 	}
-
-}
+	
+ }

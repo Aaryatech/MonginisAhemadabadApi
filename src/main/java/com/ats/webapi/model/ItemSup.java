@@ -45,6 +45,8 @@ public class ItemSup implements Serializable{
 	
 	private float inputPerQty;
 	
+	private float itemCess;//cess %
+	
 	private int isGateSale;
 	
 	private int isGateSaleDisc;
@@ -57,6 +59,16 @@ public class ItemSup implements Serializable{
 
 	private String shortName;
 	
+	
+	
+	public float getItemCess() {
+		return itemCess;
+	}
+
+	public void setItemCess(float itemCess) {
+		this.itemCess = itemCess;
+	}
+
 	public int getCutSection() {
 		return cutSection;
 	}
@@ -218,9 +230,10 @@ public class ItemSup implements Serializable{
 		return "ItemSup [error=" + error + ", message=" + message + ", id=" + id + ", itemId=" + itemId + ", itemHsncd="
 				+ itemHsncd + ", itemUom=" + itemUom + ", uomId=" + uomId + ", trayType=" + trayType
 				+ ", noOfItemPerTray=" + noOfItemPerTray + ", actualWeight=" + actualWeight + ", baseWeight="
-				+ baseWeight + ", inputPerQty=" + inputPerQty + ", isGateSale=" + isGateSale + ", isGateSaleDisc="
-				+ isGateSaleDisc + ", isAllowBday=" + isAllowBday + ", cutSection=" + cutSection + ", delStatus="
-				+ delStatus + ", shortName=" + shortName + ", isTallySync=" + isTallySync + "]";
+				+ baseWeight + ", inputPerQty=" + inputPerQty + ", itemCess=" + itemCess + ", isGateSale=" + isGateSale
+				+ ", isGateSaleDisc=" + isGateSaleDisc + ", isAllowBday=" + isAllowBday + ", cutSection=" + cutSection
+				+ ", delStatus=" + delStatus + ", shortName=" + shortName + ", isTallySync=" + isTallySync + "]";
 	}
 
+	
 }

@@ -39,6 +39,8 @@ public class CrnHsnwiseExcelReport implements Serializable{
 	
 	private float igstRs;
 	
+	private float cessRs;
+	
 	private float taxRate;
 	
 	private float documentAmount;
@@ -51,6 +53,14 @@ public class CrnHsnwiseExcelReport implements Serializable{
 
 	
 	
+	public float getCessRs() {
+		return cessRs;
+	}
+
+	public void setCessRs(float cessRs) {
+		this.cessRs = cessRs;
+	}
+
 	public int getCrnId() {
 		return crnId;
 	}
@@ -210,8 +220,8 @@ public class CrnHsnwiseExcelReport implements Serializable{
 				+ ", supplierInvoiceDate=" + supplierInvoiceDate + ", invoiceNo=" + invoiceNo + ", invoiceDate="
 				+ invoiceDate + ", frId=" + frId + ", frName=" + frName + ", itemHsncd=" + itemHsncd + ", qty=" + qty
 				+ ", taxableAmt=" + taxableAmt + ", cgstRs=" + cgstRs + ", sgstRs=" + sgstRs + ", igstRs=" + igstRs
-				+ ", taxRate=" + taxRate + ", documentAmount=" + documentAmount + ", frGstNo=" + frGstNo + ", country="
-				+ country + ", state=" + state + "]";
+				+ ", cessRs=" + cessRs + ", taxRate=" + taxRate + ", documentAmount=" + documentAmount + ", frGstNo="
+				+ frGstNo + ", country=" + country + ", state=" + state + "]";
 	}
 	
 	

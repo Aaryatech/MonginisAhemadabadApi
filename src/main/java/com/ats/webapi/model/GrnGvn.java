@@ -123,13 +123,14 @@ public class GrnGvn  {
 	@Column(name = "igst_per")
 	private float igstPer;
 	
+	@Column(name = "cess_per")
+	private float cessPer;//new1
+	
 	@Column(name = "taxable_amt")
 	private float taxableAmt;
 	
 	@Column(name = "total_tax")
 	private float totalTax;
-	
-	
 	
 	@Column(name = "round_up_amt")
 	private float roundUpAmt;
@@ -140,10 +141,7 @@ public class GrnGvn  {
 	
 	@Column(name = "is_credit_note")
 	private int isCreditNote;
-	
-	
 	//newly added
-	
 
 	@Column(name = "menu_id")
 	private int menuId;
@@ -192,6 +190,9 @@ public class GrnGvn  {
 	
 	@Column(name = "apr_igst_rs")
 	float aprIgstRs;
+	
+	@Column(name = "apr_cess_rs")
+	float aprCessRs;//new1
 	
 	@Column(name = "apr_grand_total")
 	float aprGrandTotal;
@@ -694,6 +695,22 @@ public class GrnGvn  {
 		this.isSameState = isSameState;
 	}
 
+	public float getCessPer() {
+		return cessPer;
+	}
+
+	public void setCessPer(float cessPer) {
+		this.cessPer = cessPer;
+	}
+
+	public float getAprCessRs() {
+		return aprCessRs;
+	}
+
+	public void setAprCessRs(float aprCessRs) {
+		this.aprCessRs = aprCessRs;
+	}
+
 	@Override
 	public String toString() {
 		return "GrnGvn [grnGvnId=" + grnGvnId + ", grnGvnDate=" + grnGvnDate + ", billNo=" + billNo + ", frId=" + frId
@@ -707,17 +724,18 @@ public class GrnGvn  {
 				+ approvedRemarkStore + ", approvedLoginAcc=" + approvedLoginAcc + ", grnApprovedDateTimeAcc="
 				+ grnApprovedDateTimeAcc + ", approvedRemarkAcc=" + approvedRemarkAcc + ", delStatus=" + delStatus
 				+ ", grnGvnQtyAuto=" + grnGvnQtyAuto + ", isTallySync=" + isTallySync + ", baseRate=" + baseRate
-				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", taxableAmt="
-				+ taxableAmt + ", totalTax=" + totalTax + ", roundUpAmt=" + roundUpAmt + ", finalAmt=" + finalAmt
-				+ ", isCreditNote=" + isCreditNote + ", menuId=" + menuId + ", catId=" + catId + ", invoiceNo="
-				+ invoiceNo + ", refInvoiceDate=" + refInvoiceDate + ", billDetailNo=" + billDetailNo
+				+ ", sgstPer=" + sgstPer + ", cgstPer=" + cgstPer + ", igstPer=" + igstPer + ", cessPer=" + cessPer
+				+ ", taxableAmt=" + taxableAmt + ", totalTax=" + totalTax + ", roundUpAmt=" + roundUpAmt + ", finalAmt="
+				+ finalAmt + ", isCreditNote=" + isCreditNote + ", menuId=" + menuId + ", catId=" + catId
+				+ ", invoiceNo=" + invoiceNo + ", refInvoiceDate=" + refInvoiceDate + ", billDetailNo=" + billDetailNo
 				+ ", grnGvnHeaderId=" + grnGvnHeaderId + ", aprQtyGate=" + aprQtyGate + ", aprQtyStore=" + aprQtyStore
 				+ ", aprQtyAcc=" + aprQtyAcc + ", aprTaxableAmt=" + aprTaxableAmt + ", aprTotalTax=" + aprTotalTax
-				+ ", aprSgstRs=" + aprSgstRs + ", aprCgstRs=" + aprCgstRs + ", aprIgstRs=" + aprIgstRs
-				+ ", aprGrandTotal=" + aprGrandTotal + ", aprROff=" + aprROff + ", isSameState=" + isSameState
-				+ ", hsnCode=" + hsnCode + "]";
+				+ ", aprSgstRs=" + aprSgstRs + ", aprCgstRs=" + aprCgstRs + ", aprIgstRs=" + aprIgstRs + ", aprCessRs="
+				+ aprCessRs + ", aprGrandTotal=" + aprGrandTotal + ", aprROff=" + aprROff + ", isSameState="
+				+ isSameState + ", hsnCode=" + hsnCode + "]";
 	}
 
+	
 	
 
 	/*public int getInt1() {

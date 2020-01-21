@@ -25,7 +25,7 @@ public interface GetCreditNoteReportRepo extends JpaRepository<GetCreditNoteRepo
 			"    fr.fr_gst_no," + 
 			"    fr.is_same_state," + 
 			"    ch.is_grn," + 
-			"sum(cnd.sgst_rs)as sgst_sum,sum(cnd.cgst_rs) as cgst_sum,sum(cnd.igst_rs) as igst_sum " + 
+			"sum(cnd.sgst_rs)as sgst_sum,sum(cnd.cgst_rs) as cgst_sum,sum(cnd.igst_rs) as igst_sum,sum(cnd.cess_rs) as cess_sum  " + 
 			 
 			"FROM " + 
 			"    m_franchisee fr," + 
@@ -53,7 +53,7 @@ public interface GetCreditNoteReportRepo extends JpaRepository<GetCreditNoteRepo
 			"    fr.fr_gst_no," + 
 			"    fr.is_same_state," + 
 			"    ch.is_grn," + 
-			"sum(cnd.sgst_rs)as sgst_sum,sum(cnd.cgst_rs) as cgst_sum,sum(cnd.igst_rs) as igst_sum " + 
+			"sum(cnd.sgst_rs)as sgst_sum,sum(cnd.cgst_rs) as cgst_sum,sum(cnd.igst_rs) as igst_sum,sum(cnd.cess_rs) as cess_sum " + 
 			 
 			"FROM " + 
 			"    m_franchisee fr," + 
