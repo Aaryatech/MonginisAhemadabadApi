@@ -45,5 +45,12 @@ public interface FranchiseeService {
 	public FranchiseSup getFrSupByFrId(int frId);
 
 	public FrLoginResponse getLogin(String fr_code, String fr_password);
+
+	//****************************************************************//
+	
+	public Franchisee getFranchiseeByFrCode(String frCode);
+
+	public Franchisee findByFrId(int frId);
+	
 	
 }
