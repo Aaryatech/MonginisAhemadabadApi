@@ -5243,4 +5243,26 @@ public class RestApiController {
 		return res;
 	}
 	 
+	
+	/****************************************************************************/
+	 
+	@RequestMapping(value = "/checkServerStatus", method = RequestMethod.POST)
+	public Info checkServerStatus(@RequestParam String serverStatus) {
+	Info info = new Info();
+	try {
+		int i = settingRepository.findBySettingValueByKey(serverStatus);
+		if(i==1) {
+			info.setError(false);
+			info.setMessage("Server is down");
+		}else {
+			info.setError(true);
+			info.setMessage("Everthing is fine.");
+		}
+	}catch (Exception e) {
+		e.printStackTrace();
+	}
+
+		return info;
+
+	}
 }

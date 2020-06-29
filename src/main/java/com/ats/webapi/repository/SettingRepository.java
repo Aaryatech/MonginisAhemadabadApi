@@ -20,4 +20,6 @@ public interface SettingRepository extends JpaRepository<Setting, Integer> {
 
 	List<Setting> findBySettingValue(int i);
 
+	@Query(value="SELECT setting_value FROM t_setting WHERE setting_key=:serverStatus",nativeQuery=true)
+	int findBySettingValueByKey(@Param("serverStatus") String serverStatus);
 }
