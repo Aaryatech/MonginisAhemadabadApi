@@ -27,5 +27,9 @@ public interface FlavourConfRepository extends JpaRepository<FlavourConf, Intege
 
 	@Transactional
 	int deleteByFlavId(@Param("flavId")int flavId);
+	
+	//Sachin 04-08-2020
+	@Transactional
+	int deleteByFlavIdIn(@Param("flavId")List<Integer> flavId);
 
 }

@@ -1430,4 +1430,21 @@ public class MasterController {
 					return info;
 					
 				}
+				
+				@RequestMapping(value="/deleteMultiFlavourConf", method=RequestMethod.POST)
+				public @ResponseBody Info deleteMultiFlavourConf(@RequestParam List<Integer> flavIds) {
+					
+					Info info =new Info();
+					int isDelete = flavourConfRepository.deleteByFlavIdIn(flavIds);
+					
+					if(isDelete!=0) {
+						info.setError(false);
+						info.setMessage("Success");
+					}else {
+						info.setError(true);
+						info.setMessage("Fail");
+					}
+					return info;
+					
+				}
 }
