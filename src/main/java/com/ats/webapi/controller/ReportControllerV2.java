@@ -266,6 +266,7 @@ public class ReportControllerV2 {
 		List<CrNoteRegSp> crNoteRegSpList=new ArrayList<>();
 
 		crNoteRegItemList = getCrNoteRegItemRepo.getCrNoteRegItemDone(fromDate, toDate,CreditNoteType);
+		System.err.println("List found----------->"+crNoteRegItemList);
 		crNoteList.setCrNoteRegItemList(crNoteRegItemList);
 
 		//crNoteRegSpList = getCrNoteRegSpRepo.getCrNoteRegSpDone(fromDate, toDate);
