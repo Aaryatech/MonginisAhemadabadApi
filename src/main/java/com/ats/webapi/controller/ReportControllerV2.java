@@ -16,6 +16,7 @@ import com.ats.webapi.model.GrandTotalCreditnoteWise;
 import com.ats.webapi.model.reportv2.CrNoteRegItem;
 import com.ats.webapi.model.reportv2.CrNoteRegSp;
 import com.ats.webapi.model.reportv2.CrNoteRegisterList;
+import com.ats.webapi.model.reportv2.FranchiseSalesReport;
 import com.ats.webapi.model.reportv2.GstRegisterItem;
 import com.ats.webapi.model.reportv2.GstRegisterList;
 import com.ats.webapi.model.reportv2.GstRegisterSp;
@@ -24,6 +25,7 @@ import com.ats.webapi.model.reportv2.SalesReport;
 import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
 import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
+import com.ats.webapi.repository.reportv2.FranchiseSalesReportRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterSpRepo;
 import com.ats.webapi.repository.reportv2.HSNWiseReportRepo;
@@ -42,6 +44,10 @@ public class ReportControllerV2 {
 
 	@Autowired
 	CrNoteRegSpRepo getCrNoteRegSpRepo;
+	
+	@Autowired
+	FranchiseSalesReportRepo frSalesRepo;
+	
 	@Autowired
 	CrNoteRegItemRepo getCrNoteRegItemRepo;
 
@@ -128,25 +134,46 @@ public class ReportControllerV2 {
 
 		return saleList;
 	}
+	
 
+	
+	/*------------------------------------------------------------------------------------------------*/
+	//Update By=>Mahendra
+	//ON=>28-09-2020
+	//Desc=> Add Columns, Change Query
+	
 	@RequestMapping(value = { "/getSalesReportV2" }, method = RequestMethod.POST)
-	public @ResponseBody List<SalesReport> getSalesReportV2(@RequestParam("frIdList") List<String> frIdList,
+	public @ResponseBody List<FranchiseSalesReport> getSalesReportV2(@RequestParam("frIdList") List<String> frIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 
-		List<SalesReport> saleList = new ArrayList<>();
+		List<FranchiseSalesReport> saleList = new ArrayList<>();
 
-		if (frIdList.contains("-1")) {
-
-			saleList = getSalesReportRepo.getSalesReportAllFr(fromDate, toDate);
-
-		} else {
-
-			saleList = getSalesReportRepo.getSalesReportSpecFr(fromDate, toDate, frIdList);
-		}
-
+		saleList = frSalesRepo.getFrSalesReport(fromDate, toDate, frIdList);
+		
 		return saleList;
 	}
+//	@RequestMapping(value = { "/getSalesReportV2" }, method = RequestMethod.POST)
+//	public @ResponseBody List<SalesReport> getSalesReportV2(@RequestParam("frIdList") List<String> frIdList,
+//			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+//
+//		List<SalesReport> saleList = new ArrayList<>();+
+//
+//		if (frIdList.contains("-1")) {
+//
+//			saleList = getSalesReportRepo.getSalesReportAllFr(fromDate, toDate);
+//
+//		} else {
+//
+//			saleList = getSalesReportRepo.getSalesReportSpecFr(fromDate, toDate, frIdList);
+//		}
+//
+//		return saleList;
+//	}
+	
+	
 
+	
+	/*--------------------------------------------------------------------------------------*/
 	@RequestMapping(value = { "/getGstRegister" }, method = RequestMethod.POST)
 	public @ResponseBody GstRegisterList getGstRegister(@RequestParam("frIdList") List<Integer> frIdList,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
