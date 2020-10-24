@@ -11,62 +11,92 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ats.webapi.model.GrnGvnReport;
+import com.ats.webapi.model.GrnGvnReportOps;
 import com.ats.webapi.model.TSellReport;
+import com.ats.webapi.repository.GrnGvnReportOpsRepo;
 import com.ats.webapi.repository.GrnGvnReportRepository;
-import com.ats.webapi.repository.TSellReportRepository; 
+import com.ats.webapi.repository.TSellReportRepository;
 
 @RestController
 public class FrontEndReport {
-	
+
 	@Autowired
 	TSellReportRepository tSellReportRepository;
-	
+
 	@Autowired
 	GrnGvnReportRepository grnGvnReportRepository;
-	
+
+	@Autowired
+	GrnGvnReportOpsRepo grnGvnReportOpsRepository;
+
 	@RequestMapping(value = { "/tSellReport" }, method = RequestMethod.POST)
-	public @ResponseBody List<TSellReport> tSellReport(@RequestParam("frId")int frId,@RequestParam("fromDate")String fromDate,
-			@RequestParam("toDate")String toDate)
-	{
+	public @ResponseBody List<TSellReport> tSellReport(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
 		List<TSellReport> tSellReport = new ArrayList<TSellReport>();
-		try
-		{
-			System.out.println("suppId : "+frId);
-			System.out.println("fromDate : "+fromDate);
-			System.out.println("toDate : "+toDate);
+		try {
+			System.out.println("suppId : " + frId);
+			System.out.println("fromDate : " + fromDate);
+			System.out.println("toDate : " + toDate);
 			tSellReport = tSellReportRepository.hsnCodeWiseReport(frId, fromDate, toDate);
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		  return tSellReport ;
+		return tSellReport;
 
 	}
+
 	@RequestMapping(value = { "/grnGvnReport" }, method = RequestMethod.POST)
-	public @ResponseBody List<GrnGvnReport> grnGvnReport(@RequestParam("frId")int frId,@RequestParam("fromDate")String fromDate,
-			@RequestParam("toDate")String toDate,@RequestParam("isGrn")String isGrn)
-	{
+	public @ResponseBody List<GrnGvnReport> grnGvnReport(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("isGrn") String isGrn) {
 		List<GrnGvnReport> tSellReport = new ArrayList<GrnGvnReport>();
-		try
-		{
-			System.out.println("suppId : "+frId);
-			System.out.println("fromDate : "+fromDate);
-			System.out.println("toDate : "+toDate);
-			System.out.println("isGrn : "+isGrn);
-			if(isGrn.equals("1")) {
-			tSellReport = grnGvnReportRepository.grnGvnReportDateWise(frId, fromDate, toDate, isGrn);
-			}else {
+		try {
+			System.out.println("suppId : " + frId);
+			System.out.println("fromDate : " + fromDate);
+			System.out.println("toDate : " + toDate);
+			System.out.println("isGrn : " + isGrn);
+			if (isGrn.equals("1")) {
+				tSellReport = grnGvnReportRepository.grnGvnReportDateWise(frId, fromDate, toDate, isGrn);
+			} else {
 				tSellReport = grnGvnReportRepository.grnGvnReportDateWiseOfGvn(frId, fromDate, toDate, isGrn);
-				List<GrnGvnReport> tSellList=grnGvnReportRepository.grnGvnReportDateWiseOfGvnForSp(frId, fromDate, toDate, isGrn);
-				if(tSellList.size()>0) {
-				tSellReport.addAll(tSellList);
+				List<GrnGvnReport> tSellList = grnGvnReportRepository.grnGvnReportDateWiseOfGvnForSp(frId, fromDate,
+						toDate, isGrn);
+				if (tSellList.size() > 0) {
+					tSellReport.addAll(tSellList);
 				}
 			}
-		}catch(Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		  return tSellReport ;
+		return tSellReport;
+
+	}
+
+	@RequestMapping(value = { "/grnGvnReportNew" }, method = RequestMethod.POST)
+	public @ResponseBody List<GrnGvnReportOps> grnGvnReportNew(@RequestParam("frId") int frId,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
+			@RequestParam("isGrn") String isGrn) {
+		List<GrnGvnReportOps> tSellReport = new ArrayList<GrnGvnReportOps>();
+		try {
+			System.out.println("suppId : " + frId);
+			System.out.println("fromDate : " + fromDate);
+			System.out.println("toDate : " + toDate);
+			System.out.println("isGrn : " + isGrn);
+
+			if (isGrn.equals("1")) {
+				tSellReport = grnGvnReportOpsRepository.grnGvnReportDateWise(frId, fromDate, toDate, isGrn);
+			} else {
+				tSellReport = grnGvnReportOpsRepository.grnGvnReportDateWiseOfGvn(frId, fromDate, toDate, isGrn);
+				List<GrnGvnReportOps> tSellList = grnGvnReportOpsRepository.grnGvnReportDateWiseOfGvnForSp(frId,
+						fromDate, toDate, isGrn);
+				if (tSellList.size() > 0) {
+					tSellReport.addAll(tSellList);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return tSellReport;
 
 	}
 
