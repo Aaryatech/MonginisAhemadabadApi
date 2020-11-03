@@ -2,6 +2,7 @@ package com.ats.webapi.controller;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import com.ats.webapi.model.grngvn.GrnGvnHeader;
 import com.ats.webapi.model.grngvn.PostCreditNoteHeader;
 import com.ats.webapi.model.grngvn.PostCreditNoteHeaderList;
 import com.ats.webapi.model.grngvn.TempGrnGvnBeanUp;
+import com.ats.webapi.model.newsetting.NewSetting;
 import com.ats.webapi.model.phpwebservice.Admin;
 import com.ats.webapi.model.phpwebservice.Flavor;
 import com.ats.webapi.model.phpwebservice.GetLogin;
@@ -45,6 +47,7 @@ import com.ats.webapi.repository.FranchiseForDispatchRepository;
 import com.ats.webapi.repository.FranchiseSupRepository;
 import com.ats.webapi.repository.FranchiseeRepository;
 import com.ats.webapi.repository.GenerateBillRepository;
+import com.ats.webapi.repository.GetBillAmtGroupByFrRepo;
 import com.ats.webapi.repository.GetBillDetailsRepository;
 import com.ats.webapi.repository.GetBillHeaderRepository;
 import com.ats.webapi.repository.GetRegSpCakeOrdersRepository;
@@ -55,6 +58,7 @@ import com.ats.webapi.repository.ItemResponseRepository;
 import com.ats.webapi.repository.ItemStockRepository;
 import com.ats.webapi.repository.MainMenuConfigurationRepository;
 import com.ats.webapi.repository.MessageRepository;
+import com.ats.webapi.repository.NewSettingRepository;
 import com.ats.webapi.repository.OrderLogRespository;
 import com.ats.webapi.repository.OrderRepository;
 import com.ats.webapi.repository.PostBillHeaderRepository;
@@ -416,11 +420,16 @@ public class RestApiController {
 	RouteMasterRepository routeMasterRepository;
 	@Autowired
 	SellBillDetailRepository sellBillDetailRepository;
-	
-	
+
+	@Autowired
+	GetBillAmtGroupByFrRepo getBillAmtGroupByFrRepo;
+
+	@Autowired
+	NewSettingRepository newSettingRepository;
 
 	@RequestMapping(value = { "/changeAdminUserPass" }, method = RequestMethod.POST)
-	public @ResponseBody Info changeAdminUserPass(@RequestParam int userId, @RequestParam String curPass, @RequestParam String newPass) {
+	public @ResponseBody Info changeAdminUserPass(@RequestParam int userId, @RequestParam String curPass,
+			@RequestParam String newPass) {
 
 		Info info = new Info();
 
@@ -547,7 +556,7 @@ public class RestApiController {
 	public @ResponseBody Info postCreditNoteForUpdate(@RequestBody PostCreditNoteHeaderList postCreditNoteHeader) {
 
 		Info info = new Info();
-        System.err.println("postCreditNoteHeader"+postCreditNoteHeader.toString());
+		System.err.println("postCreditNoteHeader" + postCreditNoteHeader.toString());
 		List<PostCreditNoteHeader> creditNoteHeaderList = postCreditNoteService
 				.postCreditNoteForUpdate(postCreditNoteHeader.getPostCreditNoteHeader());
 
@@ -1214,6 +1223,125 @@ public class RestApiController {
 
 	}
 
+	@RequestMapping(value = { "/insertBillDataWithTCS" }, method = RequestMethod.POST)
+	public @ResponseBody Info postBillDataWithTCS(@RequestBody PostBillDataCommon postBillDataCommon)
+			throws ParseException, JsonParseException, JsonMappingException, IOException {
+
+		List<PostBillHeader> jsonBillHeader = null;
+
+		Info info = new Info();
+		try {
+
+			String fromDate = "", toDate = "";
+
+			Calendar cal = Calendar.getInstance();
+			System.err.println("MONTH - " + cal.get(Calendar.MONTH));
+
+			int startYear = 0, endYear = 0;
+			int month = cal.get(Calendar.MONTH) + 1;
+
+			if (month < 4) {
+				startYear = cal.get(Calendar.YEAR) - 1;
+				endYear = cal.get(Calendar.YEAR);
+			} else {
+				startYear = cal.get(Calendar.YEAR);
+				endYear = cal.get(Calendar.YEAR) + 1;
+			}
+
+			Calendar start = Calendar.getInstance();
+			start.set(Calendar.DAY_OF_MONTH, 1);
+			start.set(Calendar.MONTH, 3);
+			start.set(Calendar.YEAR, startYear);
+
+			Calendar end = Calendar.getInstance();
+			end.set(Calendar.DAY_OF_MONTH, 31);
+			end.set(Calendar.MONTH, 2);
+			end.set(Calendar.YEAR, endYear);
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			fromDate = sdf.format(start.getTime());
+			toDate = sdf.format(end.getTime());
+
+			System.err.println("FROM - " + fromDate + "         TO  - " + toDate);
+			
+			DecimalFormat df = new DecimalFormat("#.00");
+
+			List<PostBillHeader> headerList = new ArrayList<>();
+
+			List<GetBillAmtGroupByFr> frWiseTotal = new ArrayList<>();
+			frWiseTotal = getBillAmtGroupByFrRepo.getBillTotalByFr(fromDate, toDate);
+			
+			System.err.println("FR_LIST ========== "+frWiseTotal);
+
+			if (frWiseTotal == null) {
+				frWiseTotal = new ArrayList<>();
+			}
+
+			NewSetting settings = newSettingRepository.findBySettingKeyAndDelStatus("TCS_PERCENT", 0);
+
+			float tcs = 0;
+			if (settings != null) {
+				tcs = Float.parseFloat(settings.getSettingValue1());
+			}
+
+			if (postBillDataCommon.getPostBillHeadersList().size() > 0) {
+
+				for (PostBillHeader bill : postBillDataCommon.getPostBillHeadersList()) {
+
+					if (frWiseTotal.size() > 0) {
+
+						for (GetBillAmtGroupByFr fr : frWiseTotal) {
+
+							if (bill.getFrId() == fr.getFrId()) {
+
+								// float taxable = bill.getTaxableAmt();
+								// float tax = bill.getTotalTax();
+								float grandTot = bill.getGrandTotal();
+								float val = grandTot * tcs;
+								float newGrandTot = Float.parseFloat(df.format(val)) + grandTot;
+
+								bill.setGrandTotal(newGrandTot);
+								bill.setVehNo("" + Float.parseFloat(df.format(val)));
+
+								headerList.add(bill);
+
+								break;
+							} else {
+
+								headerList.add(bill);
+
+							}
+
+						}
+
+					} else {
+						headerList.add(bill);
+					}
+
+				}
+
+			}
+
+			jsonBillHeader = postBillDataService.saveBillHeader(headerList);
+
+			if (jsonBillHeader != null && !jsonBillHeader.isEmpty()) {
+
+				info.setError(false);
+				info.setMessage("post bill header inserted  Successfully");
+			} else {
+				info.setError(true);
+				info.setMessage("Error in post bill header insertion : RestApi");
+			}
+
+		} catch (Exception e) {
+
+			System.out.println("Exc in insertBillData rest Api " + e.getMessage());
+			e.printStackTrace();
+		}
+		return info;
+
+	}
+
 	@RequestMapping(value = { "/updateBillData" }, method = RequestMethod.POST)
 
 	public @ResponseBody Info updateBillData(@RequestBody PostBillDataCommon postBillDataCommon)
@@ -1292,7 +1420,7 @@ public class RestApiController {
 
 	@Autowired
 	GetBillHeaderRepository getBillHeaderRepository;
-	
+
 	@RequestMapping(value = "/getBillHeader", method = RequestMethod.POST)
 	public @ResponseBody GetBillHeaderList getBillHeader(@RequestParam("frId") List<String> frId,
 			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
@@ -1316,10 +1444,9 @@ public class RestApiController {
 		GetBillHeader getBillHeader = null;
 		try {
 
-			 
 			getBillHeader = getBillHeaderRepository.getBillHeaderByBillNo(billNo);
 		} catch (Exception e) {
-			 
+
 			e.printStackTrace();
 		}
 
@@ -2077,25 +2204,26 @@ public class RestApiController {
 
 		return frResponse;
 	}
-	
+
 	@Autowired
 	PostBillHeaderRepository postBillHeaderRepository;
-	
+
 	@RequestMapping(value = { "/updateFrInformationinbillheader" }, method = RequestMethod.POST)
 	@ResponseBody
-	public Info updateFrInformationinbillheader(@RequestParam("frId") int frId,@RequestParam("billNo") int billNo) {
+	public Info updateFrInformationinbillheader(@RequestParam("frId") int frId, @RequestParam("billNo") int billNo) {
 
 		Info info = new Info();
-		
+
 		try {
-			Franchisee franchisee=franchiseeRepository.findOne(frId);
+			Franchisee franchisee = franchiseeRepository.findOne(frId);
 			System.out.println(franchisee);
-			int update = postBillHeaderRepository.updatefrinfo(billNo,franchisee.getFrId(),franchisee.getFrCode(),franchisee.getFrName(),franchisee.getFrGstNo(),franchisee.getFrAddress());
+			int update = postBillHeaderRepository.updatefrinfo(billNo, franchisee.getFrId(), franchisee.getFrCode(),
+					franchisee.getFrName(), franchisee.getFrGstNo(), franchisee.getFrAddress());
 			System.out.println(update);
 			info.setError(false);
 			info.setMessage("success");
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			info.setError(true);
 			info.setMessage("failed");
@@ -4974,7 +5102,7 @@ public class RestApiController {
 		return itemResponse;
 
 	}
-	
+
 	/*********************************************************************/
 	@RequestMapping(value = { "/getUserInfoByEmail" }, method = RequestMethod.POST)
 	public @ResponseBody User getUserInfoByEmail(@RequestParam String email) {
@@ -4983,7 +5111,7 @@ public class RestApiController {
 		res = userService.checkUniqueEmail(email);
 		return res;
 	}
-	
+
 	@RequestMapping(value = { "/getUserInfoByContact" }, method = RequestMethod.POST)
 	public @ResponseBody User getUserInfoByContact(@RequestParam String contact) {
 
@@ -4991,8 +5119,7 @@ public class RestApiController {
 		res = userService.checkUniqueContact(contact);
 		return res;
 	}
-	
-	
+
 	@RequestMapping(value = { "/getUserInfoByUser" }, method = RequestMethod.POST)
 	public @ResponseBody User getUserInfoByUser(@RequestParam String uname) {
 
@@ -5000,11 +5127,12 @@ public class RestApiController {
 		res = userService.checkUniqueUser(uname);
 		return res;
 	}
-	
-	static String senderEmail ="atsinfosoft@gmail.com";
-	static String senderPassword ="atsinfosoft@123";
+
+	static String senderEmail = "atsinfosoft@gmail.com";
+	static String senderPassword = "atsinfosoft@123";
 	static String mailsubject = "";
 	String otp1 = null;
+
 	@RequestMapping(value = { "/getUserInfoByUsername" }, method = RequestMethod.POST)
 	public @ResponseBody User getUserInfoByUsername(@RequestParam String username) {
 
@@ -5013,34 +5141,32 @@ public class RestApiController {
 		OTPVerification.setOtp(null);
 		OTPVerification.setPass(null);
 		Info info = new Info();
-		
+
 		User res = new User();
 		res = userService.getUserData(username);
-		System.err.println("Resss-------"+res);
-		
-		if(res!= null) {
+		System.err.println("Resss-------" + res);
+
+		if (res != null) {
 			OTPVerification.setUserId(res.getId());
-			
+
 			String emailId = res.getEmail();
 			String conNumber = res.getContact();
-			
+
 			char[] otp = Common.OTP(6);
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is" + otp1);
-			
-			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
-			
-			 mailsubject = " OTP  Verification ";
-			 String text = "\n OTP for change your Password: ";
-			Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword,emailId, mailsubject,
-					text, otp1);
 
-		
+			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
+
+			mailsubject = " OTP  Verification ";
+			String text = "\n OTP for change your Password: ";
+			Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text, otp1);
+
 			OTPVerification.setConNumber(conNumber);
 			OTPVerification.setEmailId(emailId);
 			OTPVerification.setOtp(otp1);
 			OTPVerification.setPass(res.getPassword());
-		}else {
+		} else {
 			System.err.println("In Else ");
 
 			info.setError(true);
@@ -5049,18 +5175,19 @@ public class RestApiController {
 		}
 		return res;
 	}
-	
+
 	@RequestMapping(value = { "/VerifyOTP" }, method = RequestMethod.POST)
 	public @ResponseBody User VerifyOTP(@RequestParam String otp) {
 		Info info = new Info();
-		
-		Object object=new Object();
-		HashMap<Integer, User>  hashMap=new HashMap<>();
-		
-		User user=new User();
-		
+
+		Object object = new Object();
+		HashMap<Integer, User> hashMap = new HashMap<>();
+
+		User user = new User();
+
 		try {
-		//	System.err.println("OTP Found------------------"+OTPVerification.getOtp()+" "+OTPVerification.getUserId());
+			// System.err.println("OTP Found------------------"+OTPVerification.getOtp()+"
+			// "+OTPVerification.getUserId());
 			if (otp.equals(OTPVerification.getOtp()) == true) {
 				info.setError(false);
 				info.setMessage("success");
@@ -5069,16 +5196,16 @@ public class RestApiController {
 				String email = OTPVerification.getEmailId();
 				String pass = Common.getAlphaNumericString(7);
 				// System.out.println("pass");
-				//int res = staffrepo.chagePass(pass, OTPVerification.getUserId());
-				
-				user=userService.findByIdAndDelStatus(OTPVerification.getUserId(),0);
+				// int res = staffrepo.chagePass(pass, OTPVerification.getUserId());
+
+				user = userService.findByIdAndDelStatus(OTPVerification.getUserId(), 0);
 				hashMap.put(1, user);
 
 			} else {
 				info.setError(true);
 				info.setMessage("failed");
 			}
-			
+
 		} catch (Exception e) {
 
 			System.err.println("Exce in getAllInstitutes Institute " + e.getMessage());
@@ -5090,12 +5217,12 @@ public class RestApiController {
 		return user;
 
 	}
-	
+
 	@RequestMapping(value = { "/updateToNewPassword" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateToNewPassword(@RequestParam int userId, @RequestParam String newPass) {
 
 		Info res = new Info();
-		
+
 		int a = updateUserRepo.changePassword(userId, newPass);
 		if (a > 0) {
 
@@ -5108,56 +5235,55 @@ public class RestApiController {
 				String emailId = usr.getEmail();
 				String password = "\n Username : " + usr.getUsername() + " \n Password : " + usr.getPassword();
 
-				Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text, password);
+				Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text,
+						password);
 			}
 			res.setError(false);
 			res.setMessage("success");
-		}else {
+		} else {
 			res.setError(true);
 			res.setMessage("fail");
 		}
-	
+
 		return res;
 	}
-	
+
 	/******************************************************************************/
-	//OPS
+	// OPS
 	@RequestMapping(value = { "/getFranchiseeByFrCode" }, method = RequestMethod.POST)
 	@ResponseBody
 	public Franchisee getFranchiseeByFrCode(@RequestParam("frCode") String frCode) {
-	
+
 		OTPVerification.setConNumber(null);
 		OTPVerification.setEmailId(null);
 		OTPVerification.setOtp(null);
 		OTPVerification.setPass(null);
 		Info info = new Info();
-		
+
 		Franchisee franchisee = franchiseeService.getFranchiseeByFrCode(frCode);
 		System.out.println("JsonString" + franchisee);
-		if(franchisee!= null) {
+		if (franchisee != null) {
 			OTPVerification.setUserId(franchisee.getFrId());
-			
+
 			String emailId = franchisee.getFrEmail();
 			String conNumber = franchisee.getFrMob();
-			
+
 			char[] otp = Common.OTP(6);
 			otp1 = String.valueOf(otp);
 			System.err.println("User otp is" + otp1);
-			
-			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
-			
-			 mailsubject = " OTP  Verification ";
-			 String text = "\n OTP for change your Password: ";
-			
-			Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword,emailId, mailsubject,
-					text, otp1);
 
-		
+			Info inf = EmailUtility.sendOtp(otp1, conNumber, "MONGII OTP Verification ");
+
+			mailsubject = " OTP  Verification ";
+			String text = "\n OTP for change your Password: ";
+
+			Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text, otp1);
+
 			OTPVerification.setConNumber(conNumber);
 			OTPVerification.setEmailId(emailId);
 			OTPVerification.setOtp(otp1);
 			OTPVerification.setPass(franchisee.getFrPassword());
-		}else {
+		} else {
 			System.err.println("In Else ");
 
 			info.setError(true);
@@ -5168,18 +5294,19 @@ public class RestApiController {
 		return franchisee;
 
 	}
-	
+
 	@RequestMapping(value = { "/verifyOPSOTP" }, method = RequestMethod.POST)
 	public @ResponseBody Franchisee VerifyOPSOTP(@RequestParam String otp) {
 		Info info = new Info();
-		
-		Object object=new Object();
-		HashMap<Integer, Franchisee>  hashMap=new HashMap<>();
-		
-		Franchisee franchisee=new Franchisee();
-		
+
+		Object object = new Object();
+		HashMap<Integer, Franchisee> hashMap = new HashMap<>();
+
+		Franchisee franchisee = new Franchisee();
+
 		try {
-			//System.err.println("OTP Found------------------"+OTPVerification.getOtp()+" "+OTPVerification.getUserId()+" "+otp);
+			// System.err.println("OTP Found------------------"+OTPVerification.getOtp()+"
+			// "+OTPVerification.getUserId()+" "+otp);
 			if (otp.equals(OTPVerification.getOtp()) == true) {
 				info.setError(false);
 				info.setMessage("success");
@@ -5188,16 +5315,16 @@ public class RestApiController {
 				String email = OTPVerification.getEmailId();
 				String pass = Common.getAlphaNumericString(7);
 				// System.out.println("pass");
-				//int res = staffrepo.chagePass(pass, OTPVerification.getUserId());
-				
-				franchisee=franchiseeService.findByFrId(OTPVerification.getUserId());
+				// int res = staffrepo.chagePass(pass, OTPVerification.getUserId());
+
+				franchisee = franchiseeService.findByFrId(OTPVerification.getUserId());
 				hashMap.put(1, franchisee);
 
 			} else {
 				info.setError(true);
 				info.setMessage("failed");
 			}
-			
+
 		} catch (Exception e) {
 
 			System.err.println("Exce in VerifyOPSOTP Institute " + e.getMessage());
@@ -5207,60 +5334,60 @@ public class RestApiController {
 		}
 		return franchisee;
 	}
-	
+
 	@RequestMapping(value = { "/updateToNewOPSPassword" }, method = RequestMethod.POST)
 	public @ResponseBody Info updateToNewOPSPassword(@RequestParam int frId, @RequestParam String newPass) {
 
 		Info res = new Info();
-		
+
 		int a = franchiseeRepository.changeOPSPassword(frId, newPass);
-		if(a>0) {
+		if (a > 0) {
 			int b = franchiseSupRepository.updatePOSFrPwd(frId, newPass);
-			if(b>0) {
-				
-			Franchisee franchisee=franchiseeService.findByFrId(OTPVerification.getUserId());
-				if(franchisee!=null) {
+			if (b > 0) {
+
+				Franchisee franchisee = franchiseeService.findByFrId(OTPVerification.getUserId());
+				if (franchisee != null) {
 					mailsubject = " New Credentials ";
-					String text = "\n Your new username and password are : \n";					
-					
-					String password = "\n Username : " + franchisee.getFrCode() + " \n Password : " + franchisee.getFrPassword();
+					String text = "\n Your new username and password are : \n";
+
+					String password = "\n Username : " + franchisee.getFrCode() + " \n Password : "
+							+ franchisee.getFrPassword();
 					String emailId = franchisee.getFrEmail();
 
-					Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text, password);
+					Info emailRes = EmailUtility.sendEmail(senderEmail, senderPassword, emailId, mailsubject, text,
+							password);
 				}
-			res.setError(false);
-			res.setMessage("success");
-			}
-			else {
+				res.setError(false);
+				res.setMessage("success");
+			} else {
 				res.setError(true);
 				res.setMessage("fail");
 			}
-		}else {
+		} else {
 			res.setError(true);
 			res.setMessage("fail");
 		}
-	
+
 		return res;
 	}
-	 
-	
+
 	/****************************************************************************/
-	 
+
 	@RequestMapping(value = "/checkServerStatus", method = RequestMethod.POST)
 	public Info checkServerStatus(@RequestParam String serverStatus) {
-	Info info = new Info();
-	try {
-		int i = settingRepository.findBySettingValueByKey(serverStatus);
-		if(i==1) {
-			info.setError(false);
-			info.setMessage("Server is down");
-		}else {
-			info.setError(true);
-			info.setMessage("Everthing is fine.");
+		Info info = new Info();
+		try {
+			int i = settingRepository.findBySettingValueByKey(serverStatus);
+			if (i == 1) {
+				info.setError(false);
+				info.setMessage("Server is down");
+			} else {
+				info.setError(true);
+				info.setMessage("Everthing is fine.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	}catch (Exception e) {
-		e.printStackTrace();
-	}
 
 		return info;
 
