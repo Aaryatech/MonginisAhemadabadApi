@@ -1224,10 +1224,12 @@ public class RestApiController {
 	}
 
 	@RequestMapping(value = { "/insertBillDataWithTCS" }, method = RequestMethod.POST)
-	public @ResponseBody Info postBillDataWithTCS(@RequestBody PostBillDataCommon postBillDataCommon)
+	public @ResponseBody List<PostBillHeader> postBillDataWithTCS(@RequestBody PostBillDataCommon postBillDataCommon)
 			throws ParseException, JsonParseException, JsonMappingException, IOException {
 
 		List<PostBillHeader> jsonBillHeader = null;
+		
+		System.err.println("BILL COUNT ---------> "+postBillDataCommon.getPostBillHeadersList().size());
 
 		Info info = new Info();
 		try {
@@ -1285,34 +1287,36 @@ public class RestApiController {
 			}
 
 			if (postBillDataCommon.getPostBillHeadersList().size() > 0) {
+				
+				
+				
 
 				for (PostBillHeader bill : postBillDataCommon.getPostBillHeadersList()) {
 
 					if (frWiseTotal.size() > 0) {
+						
+						int found=0;
 
 						for (GetBillAmtGroupByFr fr : frWiseTotal) {
-
+							
 							if (bill.getFrId() == fr.getFrId()) {
 
-								// float taxable = bill.getTaxableAmt();
-								// float tax = bill.getTotalTax();
-								float grandTot = bill.getGrandTotal();
-								float val = grandTot * tcs;
-								float newGrandTot = Float.parseFloat(df.format(val)) + grandTot;
-
-								bill.setGrandTotal(newGrandTot);
-								bill.setVehNo("" + Float.parseFloat(df.format(val)));
-
-								headerList.add(bill);
-
+								found=1;
 								break;
-							} else {
-
-								headerList.add(bill);
-
-							}
+							} 
 
 						}
+						
+						if(found==1) {
+							float grandTot = bill.getGrandTotal();
+							float val = grandTot * tcs;
+							float newGrandTot = Float.parseFloat(df.format(val)) + grandTot;
+
+							bill.setGrandTotal(newGrandTot);
+							bill.setVehNo("" + Float.parseFloat(df.format(val)));
+						}
+						
+						headerList.add(bill);
 
 					} else {
 						headerList.add(bill);
@@ -1321,6 +1325,10 @@ public class RestApiController {
 				}
 
 			}
+			
+			System.err.println("HEADER LIST COUNT ------------> "+headerList.size());
+			System.err.println("HEADER LIST ------------> "+headerList);
+			
 
 			jsonBillHeader = postBillDataService.saveBillHeader(headerList);
 
@@ -1338,7 +1346,7 @@ public class RestApiController {
 			System.out.println("Exc in insertBillData rest Api " + e.getMessage());
 			e.printStackTrace();
 		}
-		return info;
+		return jsonBillHeader;
 
 	}
 
