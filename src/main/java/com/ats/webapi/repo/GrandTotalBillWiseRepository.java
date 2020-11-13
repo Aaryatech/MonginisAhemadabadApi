@@ -18,7 +18,7 @@ public interface GrandTotalBillWiseRepository extends JpaRepository<GrandTotalBi
 			"        m_franchisee.fr_gst_no,\n" + 
 			"        t_bill_detail.bill_no, \n" + 
 			"        ROUND(SUM(t_bill_detail.grand_total),\n" + 
-			"        2) as grand_total \n" + 
+			"        2) as grand_total, t_bill_header.veh_no as tcs  \n" + 
 			"    from\n" + 
 			"        t_bill_detail,\n" + 
 			"        t_bill_header,\n" + 

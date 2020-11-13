@@ -6,31 +6,31 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class SlabwiseBill implements Serializable{
+public class SlabwiseBill implements Serializable {
 
 	@Id
 	private int billDetailNo;
 
 	private String itemHsncd;
-	
+
 	private float taxPer;
-	
+
 	private float billQty;
-	
+
 	private float taxableAmt;
-	
+
 	private float cgstAmt;
-	
+
 	private float sgstAmt;
-	
-	private float cessAmt;//new1
+
+	private float igstAmt;// new1
+
+	private float cessAmt;// new1
 
 	private float totalTax;
-	
+
 	private float grandTotal;
 
-	
-	
 	public float getCessAmt() {
 		return cessAmt;
 	}
@@ -111,13 +111,20 @@ public class SlabwiseBill implements Serializable{
 		this.billDetailNo = billDetailNo;
 	}
 
+	public float getIgstAmt() {
+		return igstAmt;
+	}
+
+	public void setIgstAmt(float igstAmt) {
+		this.igstAmt = igstAmt;
+	}
+
 	@Override
 	public String toString() {
 		return "SlabwiseBill [billDetailNo=" + billDetailNo + ", itemHsncd=" + itemHsncd + ", taxPer=" + taxPer
 				+ ", billQty=" + billQty + ", taxableAmt=" + taxableAmt + ", cgstAmt=" + cgstAmt + ", sgstAmt="
-				+ sgstAmt + ", cessAmt=" + cessAmt + ", totalTax=" + totalTax + ", grandTotal=" + grandTotal + "]";
+				+ sgstAmt + ", igstAmt=" + igstAmt + ", cessAmt=" + cessAmt + ", totalTax=" + totalTax + ", grandTotal="
+				+ grandTotal + "]";
 	}
 
-	
-	
 }
