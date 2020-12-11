@@ -101,7 +101,7 @@ public interface FranchiseSalesReportRepo extends JpaRepository<FranchiseSalesRe
 			"        t_bill_header.bill_date BETWEEN :fromDate AND :toDate AND t_bill_header.del_status=0  GROUP BY t_bill_header.fr_id\n" + 
 			") t4\n" + 
 			"ON\n" + 
-			"    t1.fr_id = t4.fr_id",nativeQuery=true)
+			"    t1.fr_id = t4.fr_id ORDER BY fr_name",nativeQuery=true)
 	List<FranchiseSalesReport> getFrSalesReport(@Param("fromDate") String fromDate, @Param("toDate") String toDate,
 			 @Param("frIdList") List<String> frIdList);
 }

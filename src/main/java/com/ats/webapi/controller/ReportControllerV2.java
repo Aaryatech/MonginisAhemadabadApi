@@ -16,6 +16,7 @@ import com.ats.webapi.model.GrandTotalCreditnoteWise;
 import com.ats.webapi.model.reportv2.CrNoteRegItem;
 import com.ats.webapi.model.reportv2.CrNoteRegSp;
 import com.ats.webapi.model.reportv2.CrNoteRegisterList;
+import com.ats.webapi.model.reportv2.FrTcsBillReport;
 import com.ats.webapi.model.reportv2.FranchiseSalesReport;
 import com.ats.webapi.model.reportv2.GstRegisterItem;
 import com.ats.webapi.model.reportv2.GstRegisterList;
@@ -25,6 +26,7 @@ import com.ats.webapi.model.reportv2.SalesReport;
 import com.ats.webapi.repo.GrandTotalCreditnoteWiseRepository;
 import com.ats.webapi.repository.reportv2.CrNoteRegItemRepo;
 import com.ats.webapi.repository.reportv2.CrNoteRegSpRepo;
+import com.ats.webapi.repository.reportv2.FrTcsBillReportRepo;
 import com.ats.webapi.repository.reportv2.FranchiseSalesReportRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterItemRepo;
 import com.ats.webapi.repository.reportv2.GstRegisterSpRepo;
@@ -315,5 +317,16 @@ public class ReportControllerV2 {
 		System.err.println("size Sp  crNoteList " + crNoteList.getCrNoteRegSpList());
 
 		return crNoteList;
+	}
+	
+	@Autowired FrTcsBillReportRepo frTcsRepo;
+	@RequestMapping(value = { "/getFrTcsReportByFrId" }, method = RequestMethod.POST)
+	public @ResponseBody List<FrTcsBillReport> getFrTcsReportByFrId(@RequestParam("frIdList") List<String> frIdList,
+			@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
+
+		List<FrTcsBillReport> tcsList = new ArrayList<FrTcsBillReport>();
+
+		tcsList = frTcsRepo.getFrTcsReportByFrId(fromDate, toDate, frIdList);
+		return tcsList;
 	}
 }
