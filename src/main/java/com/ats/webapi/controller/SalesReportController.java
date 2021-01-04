@@ -29,6 +29,8 @@ import com.ats.webapi.model.salesvaluereport.SalesReturnValueDaoList;
 import com.ats.webapi.model.salesvaluereport.SalesReturnValueItemDao;
 import com.ats.webapi.model.taxreport.NonRegFrTaxDao;
 import com.ats.webapi.model.taxreport.Tax1Report;
+import com.ats.webapi.model.taxreport.Tax1ReportNew;
+import com.ats.webapi.model.taxreport.Tax1ReportNewRepo;
 import com.ats.webapi.model.taxreport.Tax2Report;
 import com.ats.webapi.repo.GrandTotalBillWiseRepository;
 import com.ats.webapi.repository.frpurchasereport.SaleReportBillwiseAllFrRepo;
@@ -64,6 +66,9 @@ public class SalesReportController {
 
 	@Autowired
 	Tax1ReportRepository tax1ReportRepository;
+	
+	@Autowired
+	Tax1ReportNewRepo tax1ReportNewRepo;
 
 	@Autowired
 	Tax2ReportRepository tax2ReportRepository;
@@ -120,6 +125,24 @@ public class SalesReportController {
 		}
 		return tax1ReportList;
 	}
+	
+	@RequestMapping(value = { "/getTax1ReportNew" }, method = RequestMethod.POST)
+	public @ResponseBody List<Tax1ReportNew> getTax1ReportNew(@RequestParam("fromDate") String fromDate,
+			@RequestParam("toDate") String toDate) {
+
+		List<Tax1ReportNew> tax1ReportList = null;
+		try {
+			fromDate = Common.convertToYMD(fromDate);
+			toDate = Common.convertToYMD(toDate);
+
+			tax1ReportList = tax1ReportNewRepo.getTax1Report(fromDate, toDate);
+		} catch (Exception e) {
+			System.out.println(" Exce in Tax1 Report " + e.getMessage());
+			e.printStackTrace();
+		}
+		return tax1ReportList;
+	}
+	
 
 	@RequestMapping(value = { "/getGrandTotalBillWise" }, method = RequestMethod.POST)
 	public @ResponseBody List<GrandTotalBillWise> getGrandTotalBillWise(@RequestParam("fromDate") String fromDate,
