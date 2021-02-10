@@ -5,7 +5,8 @@ import javax.persistence.Id;
 
 @Entity
 public class Customer {
-	@Id	
+
+	@Id
 	private String id;
 	
 	private String userName;
@@ -13,8 +14,6 @@ public class Customer {
 	private String gstNo;
 	
 	private String phoneNo;
-	
-
 
 	public String getId() {
 		return id;
@@ -52,11 +51,6 @@ public class Customer {
 	public String toString() {
 		return "Customer [id=" + id + ", userName=" + userName + ", gstNo=" + gstNo + ", phoneNo=" + phoneNo + "]";
 	}
-
-
-	
-	
-	
 	
 
 }
